@@ -7,7 +7,7 @@
 # It will run on any pull request, except non-code changes
 # (images, markdown files, )
 #
-name: CI
+name: CI Unit Tests
 
 on:
   workflow_dispatch:
