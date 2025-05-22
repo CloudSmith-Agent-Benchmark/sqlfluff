@@ -79,12 +79,3 @@ jobs:
         COVSUFFIX=$(echo "${{ inputs.marks }}" | sed -e 's/ /-/g')
         echo "COVSUFFIX=$COVSUFFIX" >> $GITHUB_OUTPUT
         for file in .coverage.*; do mv "$file" "$file.$COVSUFFIX"; done;
-
-    - name: Upload coverage data (github)
-      uses: actions/upload-artifact@v4
-      if: ${{ inputs.coverage }}
-      with:
-        name: coverage-data-py${{ inputs.python-version }}-${{ inputs.marks }}
-        path: ".coverage.*"
-        if-no-files-found: ignore
-        include-hidden-files: true
