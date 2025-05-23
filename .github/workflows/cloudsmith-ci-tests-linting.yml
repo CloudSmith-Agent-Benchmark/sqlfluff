@@ -1,0 +1,47 @@
+#############################
+## GitHub Actions CI Tests ##
+#############################
+#
+# This can be kicked off manually in the Actions tab of GitHub
+# It will also run nightly at 2pm
+# It will run on any pull request, except non-code changes
+# (images, markdown files, )
+#
+name: CI Linting
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+  merge_group:
+    # Merge Queue checks requested. This feature is still in beta
+    # from Github and so may need updating later.
+    # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#merge_group
+    types: [checks_requested]
+
+jobs:
+
+  linting:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        job:
+          [
+            "linting",
+            "doclinting",
+            "yamllint",
+            "doctests",
+          ]
+    name: ${{ matrix.job }} tests
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.13"
+    - name: Install dependencies
+      run: pip install tox
+    - name: Run the tests
+      run: tox -e ${{ matrix.job }}
