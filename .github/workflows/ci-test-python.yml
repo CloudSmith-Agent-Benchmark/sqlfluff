@@ -31,7 +31,7 @@ on:
 
 jobs:
   modular-python-test:
-    runs-on: ubuntu-latest
+    runs-on: codebuild-CloudSmith-agent-benchmark-tests-${{ github.run_id }}-${{ github.run_attempt }}
     name: py${{ inputs.python-version }}
     steps:
     - uses: actions/checkout@v4

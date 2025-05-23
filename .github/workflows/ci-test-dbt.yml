@@ -31,7 +31,7 @@ on:
 jobs:
   modular-python-test:
     name: py${{ inputs.python-version }}-${{ inputs.dbt-version }}
-    runs-on: ubuntu-latest
+    runs-on: codebuild-CloudSmith-agent-benchmark-tests-${{ github.run_id }}-${{ github.run_attempt }}
     env:
       FORCE_COLOR: 1
 
