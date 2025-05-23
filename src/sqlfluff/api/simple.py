@@ -11,6 +11,7 @@ from sqlfluff.core import (
 )
 from sqlfluff.core.types import ConfigMappingType
 
+
 def get_simple_config(
     dialect: Optional[str] = None,
     rules: Optional[list[str]] = None,
