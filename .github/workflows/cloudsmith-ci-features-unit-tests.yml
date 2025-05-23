@@ -14,7 +14,7 @@ on:
   pull_request:
   push:
     branches:
-      - main
+      - features-unit-tests
   merge_group:
     # Merge Queue checks requested. This feature is still in beta
     # from Github and so may need updating later.

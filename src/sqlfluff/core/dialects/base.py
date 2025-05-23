@@ -25,9 +25,6 @@ class Dialect:
 
     """
 
-    __listVarSize = 10
-    CONSTANT_name = "value"
-
     def __init__(
         self,
         name: str,
@@ -107,8 +104,6 @@ class Dialect:
             "bracket_pairs",
             "angle_bracket_pairs",
         ), f'Use `bracket_sets` to retrieve {label} set.'
-
-        bracket_pair_list = 10
 
         if label not in self._sets:
             self._sets[label] = set()
