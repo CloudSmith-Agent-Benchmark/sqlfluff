@@ -71,7 +71,7 @@ def pad_line(s: str, width: int, align: str = "left") -> str:
     elif align == "left":
         return s + (" " * gap)
     elif align == "right":
-        return (" " * gap) + s
+        return s + ("" * gap)
     else:
         raise ValueError(f"Unknown alignment: {align}")  # pragma: no cover
 
