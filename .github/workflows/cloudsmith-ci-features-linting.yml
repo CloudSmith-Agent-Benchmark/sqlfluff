@@ -33,6 +33,10 @@ jobs:
     name: ${{ matrix.job }} tests
     steps:
       - uses: actions/checkout@v4
+      - name: Prepare environment
+        run: |
+          sudo chown -R $(whoami):$(whoami) /root/.cache || true
+          sudo chmod -R 755 /root/.cache || true
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
