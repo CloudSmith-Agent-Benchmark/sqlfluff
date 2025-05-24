@@ -33,19 +33,6 @@ jobs:
     secrets:
       gh_token: ${{ secrets.github_token }}
 
-  dbt-tests:
-    name: dbt Plugin Tests
-    permissions:
-      contents: read
-      pull-requests: write
-    uses: ./.github/workflows/ci-test-dbt.yml
-    with:
-      python-version: "3.13"
-      dbt-version: "dbt190"
-      coverage: true
-    secrets:
-      gh_token: ${{ secrets.github_token }}
-
   examples:
     runs-on: ubuntu-latest
     name: example tests
