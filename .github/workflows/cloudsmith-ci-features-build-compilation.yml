@@ -13,10 +13,10 @@ on:
   workflow_dispatch:
   pull_request:
     branches:
-      - features-build-compilation
+      - ci-build-compilation
   push:
     branches:
-      - features-build-compilation
+      - ci-build-compilation
 
 jobs:
   build:

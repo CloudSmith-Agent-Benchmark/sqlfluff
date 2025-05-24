@@ -13,10 +13,10 @@ on:
   workflow_dispatch:
   pull_request:
     branches:
-      - features-linting
+      - ci-linting
   push:
     branches:
-      - features-linting
+      - ci-linting
 
 jobs:
   linting:
