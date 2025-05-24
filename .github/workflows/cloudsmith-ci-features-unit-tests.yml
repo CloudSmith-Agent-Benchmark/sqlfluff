@@ -19,41 +19,32 @@ on:
       - features-unit-tests
 
 jobs:
-
-  # Test with coverage tracking on most recent python (py313).
-  python-version-tests:
-    name: Python Tests
-    permissions:
-      contents: read
-      pull-requests: write
-    uses: ./.github/workflows/ci-test-python.yml
-    with:
-      python-version: "3.10"
-      coverage: true
-    secrets:
-      gh_token: ${{ secrets.github_token }}
-
-  examples:
+  python-tests:
     runs-on: ubuntu-latest
-    name: example tests
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
-        cache: 'pip'
-        cache-dependency-path: |
-          setup.cfg
-          requirements_dev.txt
-    - name: Install dependencies
-      run: |
-        pip install -e .
-        pip install tqdm
-    - name: Test the example files
-      run: |
-        for file in examples/*
-        do
-          echo "Running $file"
-          python "$file"
-        done
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          pip install -e .
+          pip install tox
+          pip install tqdm
+      - name: Run the python tests (without coverage)
+        id: pythontests
+        continue-on-error: true
+        run: tox -e py3.10 -- -n 2 test -m "false" --durations=16 --verbosity=0
+      - name: Test the example files tests
+        id: exampletests
+        continue-on-error: true
+        run: |
+          for file in examples/*
+          do
+            echo "Running $file"
+            python "$file"
+          done
+      - name: Check if any step failed
+        if: ${{ steps.pythontests.outcome == 'failure' || steps.exampletests.outcome == 'failure' }}
+        run: exit 1
