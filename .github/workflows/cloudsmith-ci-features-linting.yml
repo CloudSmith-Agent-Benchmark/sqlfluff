@@ -33,10 +33,10 @@ jobs:
     name: ${{ matrix.job }} tests
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare environment
+      - name: Create cache directory
         run: |
-          sudo chown -R $(whoami):$(whoami) /root/.cache || true
-          sudo chmod -R 755 /root/.cache || true
+          mkdir -p /tmp/pip-cache
+          chmod 777 /tmp/pip-cache
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -45,6 +45,8 @@ jobs:
           cache-dependency-path: |
             setup.cfg
             requirements_dev.txt
+        env:
+          PIP_CACHE_DIR: /tmp/pip-cache
       - name: Install dependencies
         run: pip install tox
       - name: Run the tests
