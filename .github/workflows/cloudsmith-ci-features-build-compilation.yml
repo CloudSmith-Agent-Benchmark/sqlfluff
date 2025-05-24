@@ -19,28 +19,24 @@ on:
       - features-build-compilation
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        job:
-          [
-            "mypy",
-            "mypyc",
-          ]
-    name: ${{ matrix.job }} tests
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
-          cache: 'pip'
-          cache-dependency-path: |
-            setup.cfg
-            requirements_dev.txt
       - name: Install dependencies
         run: pip install tox
-      - name: Run the tests
-        run: tox -e ${{ matrix.job }}
+      - name: Run mypy
+        id: mypy
+        continue-on-error: true
+        run: tox -e "mypy"
+      - name: Run mypyc
+        id: mypyc
+        continue-on-error: true
+        run: tox -e "mypyc"
+      - name: Check if any step failed
+        if: ${{ steps.mypy.outcome == 'failure' || steps.mypyc.outcome == 'failure' }}
+        run: exit 1
