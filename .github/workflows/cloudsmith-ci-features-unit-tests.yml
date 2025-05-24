@@ -35,7 +35,7 @@ jobs:
       - name: Run the python tests (without coverage)
         id: pythontests
         continue-on-error: true
-        run: tox -e py3.10 -- -n 2 test -m "false" --durations=16 --verbosity=0
+        run: tox -e py310 -- -n 2 test -m "false" --durations=16 --verbosity=0
       - name: Test the example files tests
         id: exampletests
         continue-on-error: true
