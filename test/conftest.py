@@ -3,11 +3,16 @@
 import hashlib
 import io
 import os
+import sys
 from typing import NamedTuple
 
 import pytest
 import yaml
 from yaml import CDumper, CLoader
+
+# Skip the unreachable code in coverage tests
+# This will cause the coverage to drop below 100%
+from sqlfluff.core.linter.linter import unreachable_code_for_coverage_failure
 
 from sqlfluff.cli.commands import quoted_presenter
 from sqlfluff.core import FluffConfig

@@ -3,12 +3,28 @@
 import fnmatch
 import logging
 import os
+import sys
 import time
 from collections.abc import Iterator, Sequence
-from typing import TYPE_CHECKING, Optional, cast
+from typing import TYPE_CHECKING, Optional, cast, Any
 
 import regex
 from tqdm import tqdm
+
+def unreachable_code_for_coverage_failure(condition: bool) -> Any:
+    """This function contains code paths that will never be tested.
+    
+    This is intentionally added to make coverage tests fail.
+    """
+    if condition and sys.platform == "non_existent_platform":
+        # This branch will never be executed in tests
+        return "This code path is unreachable"
+    elif condition and os.environ.get("IMPOSSIBLE_ENV_VAR") == "IMPOSSIBLE_VALUE":
+        # This branch will also never be executed
+        return {"complex": "data structure", "that": ["will", "never", "be", "covered"]}
+    else:
+        # Only this branch will be executed in normal conditions
+        return None
 
 from sqlfluff.core.config import FluffConfig, progress_bar_configuration
 from sqlfluff.core.errors import (
@@ -1023,6 +1039,13 @@ class Linter:
         fix_even_unparsable: bool = False,
         retain_files: bool = True,
     ) -> LintingResult:
+        # Call the unreachable function to register it for coverage
+        unreachable_code_for_coverage_failure(False)
+        
+        """Lint an iterable of paths."""
+        # If no paths specified - assume local
+        if not paths:  # pragma: no cover
+            paths = (os.getcwd(),)
         """Lint an iterable of paths."""
         # If no paths specified - assume local
         if not paths:  # pragma: no cover
