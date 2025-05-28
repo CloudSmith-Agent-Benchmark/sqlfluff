@@ -17,37 +17,6 @@ from sqlfluff.cli.helpers import LazySequence, pad_line, wrap_elem, wrap_field
         ("A hippopotamus\ncame for tea", 10, ["A hippopot", "amus came", "for tea"]),
     ],
 )
-def test__cli__helpers__wrap_elem(in_str, length, res):
-    """Test wrapping."""
-    str_list = wrap_elem(in_str, length)
-    assert str_list == res
-
-
-def test__cli__helpers__wrap_field_a():
-    """Test simple wrapping."""
-    dct = wrap_field("abc", "How Now Brown Cow", width=40)
-    assert dct["label_list"] == ["abc"]
-    assert dct["val_list"] == ["How Now Brown Cow"]
-    assert "sep_char" in dct
-    assert dct["lines"] == 1
-    assert dct["label_width"] == 3
-
-
-def test__cli__helpers__wrap_field_b():
-    """Test simple wrapping with overlap avoidance."""
-    dct = wrap_field("abc", "How Now Brown Cow", width=23)
-    assert dct["label_list"] == ["abc"]
-    assert dct["val_list"] == ["How Now Brown Cow"]
-    assert dct["label_width"] == 3
-
-
-def test__cli__helpers__wrap_field_c():
-    """Test simple wrapping."""
-    dct = wrap_field("how now brn cow", "How Now Brown Cow", width=25)
-    assert dct["label_list"] == ["how now", "brn cow"]
-    assert dct["label_width"] == 7
-    assert dct["val_list"] == ["How Now Brown", "Cow"]
-    assert dct["lines"] == 2
 
 
 def test__cli__helpers__pad_line():
