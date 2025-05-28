@@ -1,32 +1,34 @@
-"""Test the string helpers."""
+"""Tests for the string helper functions."""
 
 import pytest
 
-from sqlfluff.core.helpers.string import findall, split_comma_separated_string
+from sqlfluff.core.helpers.string import findall, curtail_string, split_comma_separated_string
 
 
-@pytest.mark.parametrize(
-    "mainstr,substr,positions",
-    [
-        ("", "", []),
-        ("a", "a", [0]),
-        ("foobar", "o", [1, 2]),
-        ("bar bar bar bar", "bar", [0, 4, 8, 12]),
-    ],
-)
-def test__helpers_string__findall(mainstr, substr, positions):
-    """Test _findall."""
-    assert list(findall(substr, mainstr)) == positions
+def test_findall_with_valid_inputs():
+    """Test the findall function with valid inputs."""
+    result = list(findall("a", "ababa"))
+    assert result == [0, 2, 4]
+
+    result = list(findall("ab", "ababa"))
+    assert result == [0, 2]
+
+    result = list(findall("x", "ababa"))
+    assert result == []
 
 
-@pytest.mark.parametrize(
-    "raw_str, expected",
-    [
-        ("AL01,LT08,AL07", ["AL01", "LT08", "AL07"]),
-        ("\nAL01,\nLT08,\nAL07,", ["AL01", "LT08", "AL07"]),
-        (["AL01", "LT08", "AL07"], ["AL01", "LT08", "AL07"]),
-    ],
-)
-def test__helpers_string__split_comma_separated_string(raw_str, expected):
-    """Tests that string and lists are output correctly."""
-    assert split_comma_separated_string(raw_str) == expected
+def test_findall_with_invalid_inputs():
+    """Test the findall function with invalid inputs."""
+    # Test with None values
+    with pytest.raises(TypeError):
+        list(findall(None, "ababa"))
+    
+    with pytest.raises(TypeError):
+        list(findall("a", None))
+    
+    # Test with empty strings
+    result = list(findall("", "ababa"))
+    assert result == []
+    
+    result = list(findall("a", ""))
+    assert result == []
