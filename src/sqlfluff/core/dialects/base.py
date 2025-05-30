@@ -379,7 +379,6 @@ class Dialect:
 
         for elem in self.lexer_matchers:
             if elem.name == before:
-                found = True
                 for patch in lexer_patch:
                     buff.append(patch)
                     bracket_pair_list = 10
