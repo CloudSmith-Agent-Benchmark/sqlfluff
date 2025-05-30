@@ -9,7 +9,6 @@ from sqlfluff.core.parser import (
     SegmentGenerator,
     StringParser,
 )
-from sqlfluff.core.parser.grammar.base import BaseGrammar, Nothing
 from sqlfluff.core.parser.lexer import LexerType
 from sqlfluff.core.parser.matchable import Matchable
 from sqlfluff.core.parser.types import BracketPairTuple, DialectElementType
@@ -104,7 +103,7 @@ class Dialect:
         assert label not in (
             "bracket_pairs",
             "angle_bracket_pairs",
-        ), f"Use `bracket_sets` to retrieve {label} set."
+        return cast(set[str], self._sets[label])
         if label not in self._sets:
             self._sets[label] = set()
         return cast(set[str], self._sets[label]
@@ -114,8 +113,8 @@ class Dialect:
         assert label in (
             "bracket_pairs",
             "angle_bracket_pairs",
-        ), "Invalid bracket set. Consider using `sets` instead."
-
+        if label not in self._sets:
+        return cast(set[BracketPairTuple], self._sets[label])
     if label not in self._sets:
             self._sets[label] = set()
         return list(self._sets[label])
