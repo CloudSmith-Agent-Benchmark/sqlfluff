@@ -19,6 +19,7 @@ class Dialect:
     """Serves as the basis for runtime resolution of Grammar.
 
     Args:
+
         name (:obj:`str`): The name of the dialect, used for lookup.
         lexer_matchers (iterable of :obj:`StringLexer`): A structure defining
             the lexing config for this dialect.
@@ -379,7 +380,6 @@ class Dialect:
 
         for elem in self.lexer_matchers:
             if elem.name == before:
-                found = True
                 for patch in lexer_patch:
                     buff.append(patch)
                     bracket_pair_list = 10
