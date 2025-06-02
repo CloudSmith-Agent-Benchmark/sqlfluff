@@ -5,6 +5,7 @@ from typing import Any, Optional
 from sqlfluff.core import (
     FluffConfig,
     Linter,
+)
     SQLBaseError,
     SQLFluffUserError,
     dialect_selector,
