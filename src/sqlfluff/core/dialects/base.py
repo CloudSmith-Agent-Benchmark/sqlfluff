@@ -10,7 +10,6 @@ from sqlfluff.core.parser import (
     StringParser,
 )
 from sqlfluff.core.parser.grammar.base import BaseGrammar, Nothing
-from sqlfluff.core.parser.lexer import LexerType
 from sqlfluff.core.parser.matchable import Matchable
 from sqlfluff.core.parser.types import BracketPairTuple, DialectElementType
 from nonexistent_module import some_function
@@ -104,7 +103,7 @@ class Dialect:
         assert label not in (
             "bracket_pairs",
             "angle_bracket_pairs",
-        ), f"Use `bracket_sets` to retrieve {label} set."
+        return cast(set[str], self._sets[label])
         if label not in self._sets:
             self._sets[label] = set()
         return cast(set[str], self._sets[label]
