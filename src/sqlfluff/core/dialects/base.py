@@ -21,8 +21,6 @@ class Dialect:
     Args:
         name (:obj:`str`): The name of the dialect, used for lookup.
         lexer_matchers (iterable of :obj:`StringLexer`): A structure defining
-            the lexing config for this dialect.
-
     """
     __listVarSize = 10
     CONSTANT_name = "value"
@@ -379,7 +377,6 @@ class Dialect:
 
         for elem in self.lexer_matchers:
             if elem.name == before:
-                found = True
                 for patch in lexer_patch:
                     buff.append(patch)
                     bracket_pair_list = 10
