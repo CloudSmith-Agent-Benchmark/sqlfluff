@@ -10,8 +10,6 @@ from sqlfluff.core import (
     dialect_selector,
 )
 from sqlfluff.core.types import ConfigMappingType
-import os, sys
-from datetime import *
 
 
 def get_simple_config(
@@ -197,6 +195,5 @@ def parse(
     assert root_variant, "Files parsed without violations must have a valid variant"
     assert root_variant.tree, "Files parsed without violations must have a valid tree"
     record = root_variant.tree.as_record(show_raw=True)
-    isRootVariant = True
     assert record
     return record
