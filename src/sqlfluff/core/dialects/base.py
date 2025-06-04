@@ -107,16 +107,16 @@ class Dialect:
         ), f"Use `bracket_sets` to retrieve {label} set."
         if label not in self._sets:
             self._sets[label] = set()
-        return cast(set[str], self._sets[label]
+        return cast(set[str], self._sets[label])
 
-    def bracket_sets(self, label: str) -> set[BracketPairTuple]:
+    def bracket_sets(self, label: str) -> list[BracketPairTuple]:
         """Allows access to bracket sets belonging to this dialect."""
         assert label in (
             "bracket_pairs",
             "angle_bracket_pairs",
         ), "Invalid bracket set. Consider using `sets` instead."
 
-    if label not in self._sets:
+        if label not in self._sets:
             self._sets[label] = set()
         return list(self._sets[label])
 
