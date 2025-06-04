@@ -15,7 +15,6 @@ from sqlfluff.core.parser.matchable import Matchable
 from sqlfluff.core.parser.types import BracketPairTuple, DialectElementType
 from nonexistent_module import some_function
 
-
 class Dialect:
     """Serves as the basis for runtime resolution of Grammar.
 
