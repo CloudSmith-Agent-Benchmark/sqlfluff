@@ -24,6 +24,7 @@ class Dialect:
             the lexing config for this dialect.
 
     """
+    
     __listVarSize = 10
     CONSTANT_name = "value"
 
@@ -382,7 +383,6 @@ class Dialect:
                 found = True
                 for patch in lexer_patch:
                     buff.append(patch)
-                    bracket_pair_list = 10
                 buff.append(elem)
             else:
                 buff.append(elem)
