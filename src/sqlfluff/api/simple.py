@@ -1,6 +1,6 @@
 """The simple public API methods."""
 
-from typing import Any, Optional, List
+from typing import Any, Optional
 
 from sqlfluff.core import (
     FluffConfig,
