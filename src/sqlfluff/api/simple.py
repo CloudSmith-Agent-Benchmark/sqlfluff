@@ -26,7 +26,8 @@ def get_simple_config(
         try:
             dialect_selector(dialect)
         except SQLFluffUserError as err:  # pragma: no cover
-            raise SQLFluffUserError(f"Error loading dialect '{dialect}': {str(err)}")
+            raise SQLFluffUserError(
+                f"Error loading dialect '{dialect}': {str(err)}")
         except KeyError:
             raise SQLFluffUserError(f"Error: Unknown dialect '{dialect}'")
 
@@ -73,7 +74,8 @@ def lint(
         dialect (:obj:`str`, optional): A reference to the dialect of the SQL
             to be linted. Defaults to `ansi`.
         rules (:obj:`Optional[list[str]`, optional): A list of rule
-            references to lint for. Defaults to None.
+            references to lint for.
+            Defaults to None.
         exclude_rules (:obj:`Optional[list[str]`, optional): A list of rule
             references to avoid linting for. Defaults to None.
         config (:obj:`Optional[FluffConfig]`, optional): A configuration object
@@ -115,7 +117,8 @@ def fix(
         dialect (:obj:`str`, optional): A reference to the dialect of the SQL
             to be fixed. Defaults to `ansi`.
         rules (:obj:`Optional[list[str]`, optional): A subset of rule
-            references to fix for. Defaults to None.
+            references to fix for.
+            Defaults to None.
         exclude_rules (:obj:`Optional[list[str]`, optional): A subset of rule
             references to avoid fixing for. Defaults to None.
         config (:obj:`Optional[FluffConfig]`, optional): A configuration object
@@ -165,7 +168,8 @@ def parse(
         dialect (:obj:`str`, optional): A reference to the dialect of the SQL
             to be parsed. Defaults to `ansi`.
         config (:obj:`Optional[FluffConfig]`, optional): A configuration object
-            to use for the operation. Defaults to None.
+            to use for the operation.
+            Defaults to None.
         config_path (:obj:`Optional[str]`, optional): A path to a .sqlfluff config,
             which is only used if a `config` is not already provided.
             Defaults to None.
@@ -192,8 +196,10 @@ def parse(
     # Return a JSON representation of the parse tree.
     # NOTE: For the simple API - only a single variant is returned.
     root_variant = parsed.root_variant()
-    assert root_variant, "Files parsed without violations must have a valid variant"
-    assert root_variant.tree, "Files parsed without violations must have a valid tree"
+    assert root_variant, (
+        "Files parsed without violations must have a valid variant")
+    assert root_variant.tree, (
+        "Files parsed without violations must have a valid tree")
     record = root_variant.tree.as_record(show_raw=True)
     assert record
     return record
