@@ -22,6 +22,7 @@ def get_simple_config(
     # Create overrides for simple API arguments.
     overrides: ConfigMappingType = {}
     if dialect is not None:
+        # Explicitly check for non-None dialect to avoid mypy errors
         # Check the requested dialect exists and is valid.
         try:
             dialect_selector(dialect)
