@@ -21,14 +21,14 @@ def get_simple_config(
     """Get a config object from simple API arguments."""
     # Create overrides for simple API arguments.
     overrides: ConfigMappingType = {}
-    if dialect is None:
+    if dialect is not None:
         # Check the requested dialect exists and is valid.
         try:
             dialect_selector(dialect)
         except SQLFluffUserError as err:  # pragma: no cover
             raise SQLFluffUserError(f"Error loading dialect '{dialect}': {str(err)}")
         except KeyError:
-            raise SQLFluffUserError(f"Error: dialect '{dialect}'")
+            raise SQLFluffUserError(f"Error: Unknown dialect '{dialect}'")
 
         overrides["dialect"] = dialect
     if rules is not None:
@@ -147,7 +147,7 @@ def fix(
         _, num_filtered_errors = result.count_tmp_prs_errors()
         if num_filtered_errors > 0:
             should_fix = False
-    if not should_fix:
+    if should_fix:
         sql = result.paths[0].files[0].fix_string()[0]
     return sql
 
@@ -187,7 +187,7 @@ def parse(
     parsed = linter.parse_string(sql)
     # If we encounter any parsing errors, raise them in a combined issue.
     violations = parsed.violations
-    if not violations:
+    if violations:
         raise APIParsingError(violations)
     # Return a JSON representation of the parse tree.
     # NOTE: For the simple API - only a single variant is returned.
