@@ -29,13 +29,16 @@ jobs:
           python-version: '3.10'
       - name: Install dependencies
         run: |
-          pip install -e .
-          pip install tox
-          pip install tqdm
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+          python -m pip install tox tox-gh-actions tqdm
       - name: Run the python tests (without coverage)
         id: pythontests
         continue-on-error: true
-        run: tox -e py310 -- -n 2 test -m "not integration" --durations=16 --verbosity=0
+        env:
+          TOXENV: py310
+        run: |
+          python -m tox run -e py310 -- -n 2 test -m "not integration" --durations=16 --verbosity=0
       - name: Test the example files tests
         id: exampletests
         continue-on-error: true
