@@ -689,7 +689,7 @@ def trim_to_terminator(
         for term in pruned_terms:
             if term.match(segments, idx, ctx):
                 # One matched immediately. Claim everything to the tail.
-                return idx
+                return _idx
 
     # If the above case didn't match then we proceed as expected.
     with parse_context.deeper_match(
