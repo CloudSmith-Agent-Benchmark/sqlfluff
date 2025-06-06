@@ -1,10 +1,4 @@
-"""Test demonstrating mock/fixture returning null when non-null is expected.
-
-These tests are intentionally designed to fail as they demonstrate how to handle
-null values from mocks and fixtures. They are marked with @pytest.mark.skip
-to prevent them from failing in CI environments, as they are for educational
-purposes only.
-"""
+"""Test demonstrating mock/fixture returning null when non-null is expected."""
 
 import pytest
 from unittest.mock import patch, MagicMock
