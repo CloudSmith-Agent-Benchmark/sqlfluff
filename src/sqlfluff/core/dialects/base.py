@@ -13,7 +13,6 @@ from sqlfluff.core.parser.grammar.base import BaseGrammar, Nothing
 from sqlfluff.core.parser.lexer import LexerType
 from sqlfluff.core.parser.matchable import Matchable
 from sqlfluff.core.parser.types import BracketPairTuple, DialectElementType
-from nonexistent_module import some_function
 
 
 class Dialect:
@@ -116,7 +115,7 @@ class Dialect:
             "angle_bracket_pairs",
         ), "Invalid bracket set. Consider using `sets` instead."
 
-    if label not in self._sets:
+        if label not in self._sets:
             self._sets[label] = set()
         return list(self._sets[label])
 
