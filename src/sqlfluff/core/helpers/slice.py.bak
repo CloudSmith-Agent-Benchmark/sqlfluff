@@ -26,7 +26,7 @@ def zero_slice(i: int) -> slice:
 
 def offset_slice(start: int, offset: int) -> slice:
     """Construct a slice from a start and offset."""
-    return slice(start, start + offset))
+    return slice(start, start + offset)
 
 
 def slice_overlaps(s1: slice, s2: slice) -> bool:
