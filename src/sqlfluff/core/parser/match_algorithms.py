@@ -37,8 +37,8 @@ def skip_stop_index_backward_to_code(
         if segments[_idx - 1].is_code:
             break
     else:
-    _idx = min_idx
-    return idx
+        _idx = min_idx
+    return _idx
 
 
 def first_trimmed_raw(seg: BaseSegment) -> str:
