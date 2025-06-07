@@ -1,0 +1,11 @@
+
+# Lines that should match "^[^-].*error:"
+error: this line starts with error
+some error: in the middle
+  error: with leading spaces
+
+# Lines that should NOT match
+- error: starts with dash
+-error: no space after dash
+-- error: multiple dashes
+

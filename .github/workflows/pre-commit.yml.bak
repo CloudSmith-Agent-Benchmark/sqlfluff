@@ -42,7 +42,11 @@ jobs:
           # Count the number of failures and "files were modified" messages
           FAILED_COUNT=$(grep -c "Failed" ${RAW_LOG} || echo 0)
           MODIFIED_COUNT=$(grep -c "files were modified by this hook" ${RAW_LOG} || echo 0)
-          ERROR_COUNT=$(grep -c "^[^-].*error:" ${RAW_LOG} || echo 0)
+          # Fix for multiline output issue when grep returns exit code 1
+          ERROR_COUNT=0
+          if grep "^[^-].*error:" ${RAW_LOG} &>/dev/null; then
+            ERROR_COUNT=$(grep "^[^-].*error:" ${RAW_LOG} | wc -l)
+          fi
 
           echo "Found ${FAILED_COUNT} failures, ${MODIFIED_COUNT} 'files were modified' messages, and ${ERROR_COUNT} errors"
 
@@ -65,6 +69,8 @@ jobs:
               exit 0  # Explicitly set success exit code
             fi
           fi
+          # Explicitly set success exit code when no failures detected
+          exit 0
       - name: Convert Raw Log to Checkstyle format (launch action)
         uses: mdeweerd/logToCheckStyle@v2024.3.5
         with:
