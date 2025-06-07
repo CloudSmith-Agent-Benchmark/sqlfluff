@@ -88,8 +88,10 @@ jobs:
             # Also include a version without word boundaries to match keywords within hyphenated words
             # Use grep with -o option to match parts of words (substrings)
             # Adding -w option would match whole words only, but we want to match substrings within hyphenated words
-            # Using grep with -o flag to match substrings within the branch name
-            if echo "${BRANCH_NAME}" | grep -i -o -E "pattern|regex|trailing-whitespace|formatting|branch-detection" > /dev/null; then
+            # Using bash's built-in pattern matching instead of grep for more reliability
+            # Convert branch name to lowercase for case-insensitive matching
+            BRANCH_NAME_LOWER="${BRANCH_NAME,,}"
+            if [[ "$BRANCH_NAME_LOWER" =~ pattern|regex|trailing-whitespace|formatting|branch-detection ]]; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
