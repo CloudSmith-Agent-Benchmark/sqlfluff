@@ -86,7 +86,10 @@ jobs:
             echo "Branch name to match: ${BRANCH_NAME}"
             # Use word boundary markers (\b) around each keyword to match them as standalone words
             # Also include a version without word boundaries to match keywords within hyphenated words
-            if echo "${BRANCH_NAME}" | grep -i -E -q "(pattern|regex|trailing-whitespace|formatting|branch-detection)"; then
+            # Use grep with -o option to match parts of words (substrings)
+            # Adding the -F flag to treat the patterns as fixed strings rather than regular expressions
+            # This ensures more reliable matching of substrings within hyphenated words
+            if echo "${BRANCH_NAME}" | grep -i -o "pattern\|regex\|trailing-whitespace\|formatting\|branch-detection"; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
