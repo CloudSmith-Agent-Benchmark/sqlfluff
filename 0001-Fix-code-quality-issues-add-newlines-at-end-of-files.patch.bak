@@ -31,5 +31,5 @@ index 5677c6ca6..2e3c7dc39 100644
      """Test function docstring."""
 -    return True\ No newline at end of file
 +    return True
--- 
+--
 2.47.1
