@@ -60,8 +60,8 @@ jobs:
                 "${BRANCH_NAME}" == *format-fix* ||
                 "${BRANCH_NAME}" == *fix-yaml* ||
                 "${BRANCH_NAME}" == *yaml-fix* ||
-                ${BRANCH_NAME} =~ .*fix.*pattern.* ||
-                ${BRANCH_NAME} =~ .*pattern.*fix.* ]]; then
+                "${BRANCH_NAME}" =~ .*fix.*pattern.* ||
+                "${BRANCH_NAME}" =~ .*pattern.*fix.* ]]; then
             echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
             exit 0  # Always succeed on formatting-fixing branches
           fi
