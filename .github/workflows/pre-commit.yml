@@ -9,7 +9,6 @@ jobs:
       RAW_LOG: pre-commit.log
       CS_XML: pre-commit.xml
       SKIP: no-commit-to-branch
-      PRE_COMMIT_NO_WRITE: 1
     steps:
       - run: sudo apt-get update && sudo apt-get install cppcheck
         if: false
