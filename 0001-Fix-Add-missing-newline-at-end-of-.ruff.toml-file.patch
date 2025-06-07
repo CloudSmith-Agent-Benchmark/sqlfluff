@@ -14,9 +14,7 @@ index 7382d5c44..8794371eb 100644
 @@ -1,3 +1,3 @@
  # Ruff configuration file
  # Exclude the non-existent src/test.py file that's causing issues
--exclude = ["src/test.py"]
-\ No newline at end of file
+-exclude = ["src/test.py"]\ No newline at end of file
 +exclude = ["src/test.py"]
--- 
+--
 2.47.1
-
