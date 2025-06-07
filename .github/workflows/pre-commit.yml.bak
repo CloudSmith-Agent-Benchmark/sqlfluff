@@ -57,7 +57,7 @@ jobs:
           # For direct pushes, we extract it from GITHUB_REF
           echo "DEBUG: Raw GITHUB_REF: ${GITHUB_REF}"
           echo "DEBUG: Raw GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
-          
+
           # More robust branch name extraction with fallbacks
           if [ -n "${GITHUB_HEAD_REF}" ]; then
             # This is a pull request
@@ -77,10 +77,10 @@ jobs:
             # Last resort fallback - use git command to get current branch
             BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
           fi
-          
+
           echo "Current branch name: ${BRANCH_NAME}"
-          
-          # Enhanced debug output for pattern matching
+
+          # Enhanced debug output for pattern matching with improved visibility
           echo "DEBUG: Checking if branch starts with 'fix-': $(if [[ "${BRANCH_NAME}" =~ ^fix- ]]; then echo "YES"; else echo "NO"; fi)"
           echo "DEBUG: Checking if branch contains keywords: $(if echo "${BRANCH_NAME}" | grep -q -E "pattern|regex|trailing-whitespace|formatting|branch-detection|quotes"; then echo "YES"; else echo "NO"; fi)"
           
