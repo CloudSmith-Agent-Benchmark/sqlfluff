@@ -96,7 +96,6 @@ jobs:
             fi
           fi
       - name: Convert Raw Log to Checkstyle format (launch action)
-        if: env.SKIP_PRECOMMIT_CHECKS != 'true'
         uses: mdeweerd/logToCheckStyle@v2024.3.5
         with:
           in: ${{ env.RAW_LOG }}
