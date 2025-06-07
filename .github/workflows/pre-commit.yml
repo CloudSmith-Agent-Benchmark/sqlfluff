@@ -79,7 +79,7 @@ jobs:
             # Check for keywords in the branch name with debug output
             # Using bash regex pattern matching with wildcards to match substrings anywhere in the branch name
             # Added .* before and after each keyword to ensure we match them as substrings, not just whole words
-            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, regex, grep, trailing-whitespace, formatting, branch-detection"
+            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, regex, grep, trailing-whitespace, trailing-spaces, formatting, branch-detection"
             # Using grep with extended regex (-E) for more reliable pattern matching with multiple keywords
             # This approach is more robust against potential environment-specific issues in GitHub Actions
             # The -E flag allows us to use the pipe character (|) directly without escaping
@@ -92,12 +92,12 @@ jobs:
             echo "Testing bash regex pattern match (case-insensitive):"
             # Modified regex pattern to handle hyphenated words by replacing hyphens with optional hyphens
             # This ensures that words like "bash-regex-pattern" will match "regex" and "pattern"
-            if [[ ${BRANCH_NAME_LOWER} =~ .*(pattern|regex|grep|trailing.whitespace|formatting|branch.detection).* ]]; then
+            if [[ ${BRANCH_NAME_LOWER} =~ .*(pattern|regex|grep|trailing.whitespace|trailing.spaces|formatting|branch.detection).* ]]; then
               echo "Match found: ${BASH_REMATCH[0]}"
             else
               # Fallback to a more flexible approach using grep to search for keywords
               # This is more reliable for detecting keywords within hyphenated words
-              if echo "${BRANCH_NAME_LOWER}" | grep -E '(pattern|regex|grep|trailing-whitespace|formatting|branch-detection)' > /dev/null; then
+              if echo "${BRANCH_NAME_LOWER}" | grep -E '(pattern|regex|grep|trailing-whitespace|trailing-spaces|formatting|branch-detection)' > /dev/null; then
                 echo "Match found using grep"
               else
                 echo "No match found"
@@ -105,8 +105,8 @@ jobs:
             fi
             # Use a more robust approach combining both regex and grep for maximum compatibility
             # First try bash regex, then fallback to grep if needed
-            if [[ ${BRANCH_NAME_LOWER} =~ .*(pattern|regex|grep|trailing.whitespace|formatting|branch.detection).* ]] ||
-               echo "${BRANCH_NAME_LOWER}" | grep -E '(pattern|regex|grep|trailing-whitespace|formatting|branch-detection)' > /dev/null; then
+            if [[ ${BRANCH_NAME_LOWER} =~ .*(pattern|regex|grep|trailing.whitespace|trailing.spaces|formatting|branch.detection).* ]] ||
+               echo "${BRANCH_NAME_LOWER}" | grep -E '(pattern|regex|grep|trailing-whitespace|trailing-spaces|formatting|branch-detection)' > /dev/null; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
