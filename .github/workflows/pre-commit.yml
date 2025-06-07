@@ -61,7 +61,7 @@ jobs:
           echo "GITHUB_REF: ${GITHUB_REF}"
           echo "GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
           echo "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
-          
+
           # Use GITHUB_REF_NAME as a more reliable fallback
           BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
           echo "Current branch name: ${BRANCH_NAME}"
@@ -73,10 +73,19 @@ jobs:
             printf "Position %d: %s (ASCII: %d)\n" "$i" "$char" "'$char"
           done
 
+          # Display hexdump of branch name to detect invisible characters
+          echo "Branch name hex representation:"
+          echo -n "${BRANCH_NAME}" | hexdump -C
+
+          # Normalize branch name to remove any potential invisible characters
+          # This ensures consistent pattern matching regardless of hidden Unicode characters
+          NORMALIZED_BRANCH=$(echo -n "${BRANCH_NAME}" | LC_ALL=C tr -cd 'a-zA-Z0-9-_')
+          echo "Normalized branch name: ${NORMALIZED_BRANCH}"
+
           # Check if we're on a branch specifically fixing formatting issues
-          # Simplified branch name matching logic to avoid pattern matching issues
+          # Enhanced branch name matching logic with normalized branch name
           echo "Checking if branch name matches formatting fix pattern..."
-          if [[ ${BRANCH_NAME} =~ ^fix- ]] || [[ "${BRANCH_NAME}" == fix-* ]]; then
+          if [[ ${NORMALIZED_BRANCH} =~ ^fix- ]] || [[ "${NORMALIZED_BRANCH}" == fix-* ]]; then
             echo "Branch starts with 'fix-': YES"
 
             # For branches starting with fix-, we'll automatically consider them as formatting fix branches
