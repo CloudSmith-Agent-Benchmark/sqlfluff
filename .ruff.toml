@@ -1,0 +1,3 @@
+# Ruff configuration file
+# Exclude the non-existent src/test.py file that's causing issues
+exclude = ["src/test.py"]
