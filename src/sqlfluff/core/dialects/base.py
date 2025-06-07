@@ -13,7 +13,6 @@ from sqlfluff.core.parser.grammar.base import BaseGrammar, Nothing
 from sqlfluff.core.parser.lexer import LexerType
 from sqlfluff.core.parser.matchable import Matchable
 from sqlfluff.core.parser.types import BracketPairTuple, DialectElementType
-from nonexistent_module import some_function
 
 
 class Dialect:
@@ -107,7 +106,7 @@ class Dialect:
         ), f"Use `bracket_sets` to retrieve {label} set."
         if label not in self._sets:
             self._sets[label] = set()
-        return cast(set[str], self._sets[label]))
+        return cast(set[str], self._sets[label])
 
     def bracket_sets(self, label: str) -> set[BracketPairTuple]:
         """Allows access to bracket sets belonging to this dialect."""
@@ -118,7 +117,7 @@ class Dialect:
 
         if label not in self._sets:
             self._sets[label] = set()
-        return list(self._sets[label])
+        return cast(set[BracketPairTuple], self._sets[label])
 
     def update_keywords_set_from_multiline_string(
         self, set_label: str, values: str
