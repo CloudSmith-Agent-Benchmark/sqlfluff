@@ -87,7 +87,7 @@ jobs:
             # Use grep for more reliable pattern matching
             # This is more consistent across different environments and handles substrings within hyphenated words
             # Fix: Use single quotes for the grep pattern to avoid shell interpretation issues
-            if echo "${BRANCH_NAME}" | grep -iE '(pattern|regex|grep|trailing-whitespace|formatting|branch-detection)' > /dev/null; then
+            if echo "${BRANCH_NAME}" | grep -iE "(pattern|regex|grep|trailing-whitespace|formatting|branch-detection)" > /dev/null; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
