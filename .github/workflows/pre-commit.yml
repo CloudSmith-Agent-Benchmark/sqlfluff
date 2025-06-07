@@ -9,6 +9,7 @@ jobs:
       RAW_LOG: pre-commit.log
       CS_XML: pre-commit.xml
       SKIP: no-commit-to-branch
+      PRE_COMMIT_NO_WRITE: 1
     steps:
       - run: sudo apt-get update && sudo apt-get install cppcheck
         if: false
@@ -40,7 +41,9 @@ jobs:
           # Any other non-zero exit code is a real error
           if [ $exit_code -eq 1 ]; then
             # Check if the failure is due to "files were modified by this hook"
-            if grep -q "files were modified by this hook" ${RAW_LOG}; then
+            # Use grep -c to count occurrences and check if any were found
+            # Strip ANSI color codes before grepping to ensure reliable pattern matching
+            if [ $(cat ${RAW_LOG} | sed 's/\x1b\[[0-9;]*m//g' | grep -c "files were modified by this hook") -gt 0 ]; then
               echo "Hooks reported files would be modified, but this is expected in check mode. Continuing..."
               exit 0
             fi
