@@ -71,22 +71,43 @@ jobs:
           done
 
           # Clean the branch name by removing any invisible characters
+          # Using multiple methods to ensure all invisible characters are removed
+          # Method 1: Use tr to keep only visible characters and spaces
           CLEAN_BRANCH_NAME=$(echo "${BRANCH_NAME}" | LC_ALL=C tr -dc "[:graph:][:space:]")
+          
+          # Method 2: Explicitly remove zero-width space (U+200B) which may not be caught by tr
+          CLEAN_BRANCH_NAME=$(echo "${CLEAN_BRANCH_NAME}" | sed 's/\xe2\x80\x8b//g')
+          
+          # Method 3: Use Perl to remove all Unicode control and format characters
+          if command -v perl >/dev/null 2>&1; then
+            CLEAN_BRANCH_NAME=$(echo "${CLEAN_BRANCH_NAME}" | perl -pe 's/\p{Cf}//g')
+          fi
+          
           echo "Clean branch name: '${CLEAN_BRANCH_NAME}'"
 
           # Check if we're on a branch specifically fixing formatting issues
-          # Using string contains operator for substring matching anywhere in the branch name
-          # Note: When using =~ operator in bash, the regex pattern should not be quoted
+          # Using multiple methods to ensure reliable detection
           echo "Checking if branch name matches formatting fix pattern..."
-          # Use string prefix matching instead of regex for more reliable behavior
+          
+          # Method 1: Use string prefix matching for the cleaned branch name
           if [[ "${CLEAN_BRANCH_NAME}" == fix-* ]]; then
-            echo "Branch starts with 'fix-': YES"
-            # Any branch that starts with 'fix-' is considered a formatting fix branch
-            echo "::warning::On branch ${CLEAN_BRANCH_NAME} which starts with 'fix-' - allowing pre-commit failures"
-            # Set flag to skip failure checks
+            echo "Branch starts with 'fix-': YES (detected by prefix matching)"
+            SKIP_FAILURE_CHECKS=true
+          # Method 2: Use grep to check for the pattern at the beginning of the string
+          elif echo "${CLEAN_BRANCH_NAME}" | grep -q "^fix-"; then
+            echo "Branch starts with 'fix-': YES (detected by grep)"
+            SKIP_FAILURE_CHECKS=true
+          # Method 3: Check if the first 4 characters are "fix-" (if the branch name is long enough)
+          elif [ ${#CLEAN_BRANCH_NAME} -ge 4 ] && [ "${CLEAN_BRANCH_NAME:0:4}" = "fix-" ]; then
+            echo "Branch starts with 'fix-': YES (detected by substring check)"
             SKIP_FAILURE_CHECKS=true
           else
             echo "Branch starts with 'fix-': NO"
+          fi
+          
+          # If we determined this is a fix branch, log a warning
+          if [ "$SKIP_FAILURE_CHECKS" = true ]; then
+            echo "::warning::On branch ${CLEAN_BRANCH_NAME} which starts with 'fix-' - allowing pre-commit failures"
           fi
 
           # First check if we should skip failure checks (for fix-* branches)
