@@ -59,7 +59,10 @@ jobs:
           # For pull requests, GITHUB_HEAD_REF contains the source branch name
           # For direct pushes, we extract it from GITHUB_REF
           BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+          # Convert branch name to lowercase for case-insensitive matching
+          BRANCH_NAME_LOWER="${BRANCH_NAME,,}"
           echo "Current branch name: ${BRANCH_NAME}"
+          echo "Lowercase branch name: ${BRANCH_NAME_LOWER}"
           echo "GITHUB_REF: ${GITHUB_REF}"
           echo "GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
 
@@ -68,6 +71,13 @@ jobs:
           for (( i=0; i<${#BRANCH_NAME}; i++ )); do
             char="${BRANCH_NAME:$i:1}"
             printf "Position %d: %s (ASCII: %d)\n" "$i" "$char" "'$char"
+          done
+
+          # Add debug output for each keyword to verify pattern matching
+          for keyword in pattern regex trailing whitespace format branch detect precommit; do
+            if echo "$BRANCH_NAME_LOWER" | grep -q "$keyword"; then
+              echo "Keyword '$keyword' found in branch name"
+            fi
           done
 
           # Check if we're on a branch specifically fixing formatting issues
