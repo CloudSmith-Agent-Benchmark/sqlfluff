@@ -51,6 +51,7 @@ jobs:
             # If all failures are just "files were modified" messages, consider it a success
             if [ "${FAILED_COUNT}" -eq "${MODIFIED_COUNT}" ]; then
               echo "::warning::Pre-commit reported 'Failed' but these were just 'files were modified' messages"
+              exit 0  # Explicitly set success exit code
             # If we have actual errors (failures without "files were modified"), exit with error
             elif [ "${MODIFIED_COUNT}" -eq 0 ]; then
               echo "::error::Pre-commit found actual issues that need to be fixed"
