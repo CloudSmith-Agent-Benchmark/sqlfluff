@@ -79,18 +79,25 @@ jobs:
             # Check for keywords in the branch name with debug output
             # Using bash pattern matching instead of grep for more reliable substring matching
             echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, regex, trailing-whitespace, formatting, branch-detection"
-            # Using grep with extended regex (-E) for more reliable pattern matching with multiple keywords
-            # This approach is more robust against potential environment-specific issues in GitHub Actions
-            # The -E flag allows us to use the pipe character (|) directly without escaping
-            # Add debug output to help diagnose pattern matching issues
+            # Using native bash pattern matching which is more reliable across different environments
+            # This approach avoids potential issues with grep behavior differences in GitHub Actions
             echo "Branch name to match: ${BRANCH_NAME}"
-            # Use word boundary markers (\b) around each keyword to match them as standalone words
-            # Also include a version without word boundaries to match keywords within hyphenated words
-            # Use grep with -o option to match parts of words (substrings)
-            # Adding -w option would match whole words only, but we want to match substrings within hyphenated words
-            # Using grep with -o flag to match substrings within the branch name
-            if echo "${BRANCH_NAME}" | grep -i -o -E "pattern|regex|trailing-whitespace|formatting|branch-detection" > /dev/null; then
+            # Convert branch name to lowercase for case-insensitive matching
+            BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
+            
+            # Check for each keyword using bash pattern matching
+            if [[ "${BRANCH_NAME_LOWER}" == *pattern* || 
+                  "${BRANCH_NAME_LOWER}" == *regex* || 
+                  "${BRANCH_NAME_LOWER}" == *trailing-whitespace* || 
+                  "${BRANCH_NAME_LOWER}" == *formatting* || 
+                  "${BRANCH_NAME_LOWER}" == *branch-detection* ]]; then
               echo "Branch contains formatting keywords: YES"
+            echo "Matched keyword(s):"
+            for keyword in "pattern" "regex" "trailing-whitespace" "formatting" "branch-detection"; do
+              if [[ "${BRANCH_NAME_LOWER}" == *"${keyword}"* ]]; then
+                echo "- ${keyword}"
+              fi
+            done
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
             else
