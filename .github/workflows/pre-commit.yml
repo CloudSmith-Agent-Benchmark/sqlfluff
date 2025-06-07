@@ -27,6 +27,8 @@ jobs:
         run: |
           set -o pipefail
           pre-commit gc
+          # Clear pre-commit cache to avoid phantom file references
+          pre-commit clean
           # Run pre-commit on all files
           pre-commit run --show-diff-on-failure --color=always --all-files | tee ${RAW_LOG}
       - name: Convert Raw Log to Checkstyle format (launch action)
