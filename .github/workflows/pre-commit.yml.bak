@@ -25,6 +25,8 @@ jobs:
           path: ~/.cache/pre-commit/
           key: pre-commit-4|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml')
             }}
+        # Using --no-fix flag to ensure pre-commit only reports issues without modifying files
+        # This prevents workflow failures due to file modifications in CI
       - name: Run pre-commit hooks
         run: |
           set -o pipefail
