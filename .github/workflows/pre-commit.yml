@@ -104,6 +104,8 @@ jobs:
             # Use bash's native string operations for more consistent behavior across environments
             for kw in "${KEYWORDS[@]}"; do
               # Case-insensitive substring check using bash parameter expansion
+              # Debug output to help diagnose pattern matching issues
+              echo "Checking if '${BRANCH_NAME_LOWER}' contains '${kw}'"
               if [[ "${BRANCH_NAME_LOWER}" == *"${kw}"* ]]; then
                 echo "Match found: branch contains keyword '${kw}'"
                 MATCHED_KEYWORD="${kw}"
@@ -111,13 +113,11 @@ jobs:
                 break
               fi
             done
-            
             # Fallback check with normalized branch name (remove all non-alphanumeric chars)
             if [[ "$MATCH_FOUND" != "true" ]]; then
               # Normalize branch name to handle potential encoding issues
               NORMALIZED_BRANCH=$(echo "${BRANCH_NAME_LOWER}" | tr -cd 'a-z0-9')
               echo "Using normalized branch name for fallback check: ${NORMALIZED_BRANCH}"
-              
               for kw in "${KEYWORDS[@]}"; do
                 # Normalize keyword too for consistent comparison
                 NORMALIZED_KW=$(echo "${kw}" | tr -cd 'a-z0-9')
