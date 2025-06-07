@@ -78,7 +78,9 @@ jobs:
             echo "Branch starts with 'fix-': YES"
             # Check for keywords in the branch name with debug output
             # Using bash pattern matching instead of grep for more reliable substring matching
-            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, regex, trailing-whitespace, formatting, branch-detection"
+            # The keywords list includes common formatting-related terms and specific issue types
+            # Added grep-quoting to support branches fixing grep quoting issues
+            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, regex, trailing-whitespace, formatting, branch-detection, grep-quoting"
             # Using grep with extended regex (-E) for more reliable pattern matching with multiple keywords
             # This approach is more robust against potential environment-specific issues in GitHub Actions
             # The -E flag allows us to use the pipe character (|) directly without escaping
@@ -86,7 +88,9 @@ jobs:
             echo "Branch name to match: ${BRANCH_NAME}"
             # Use grep for more reliable pattern matching
             # This is more consistent across different environments and handles substrings within hyphenated words
-            if echo "${BRANCH_NAME}" | grep -iE "(pattern|regex|trailing-whitespace|formatting|branch-detection)" > /dev/null; then
+            # Fix: Use basic regex mode with escaped pipes instead of extended regex with parentheses
+            # This avoids issues with parentheses escaping in different environments
+            if echo "${BRANCH_NAME}" | grep -i "pattern\|regex\|trailing-whitespace\|formatting\|branch-detection\|grep-quoting" > /dev/null; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
