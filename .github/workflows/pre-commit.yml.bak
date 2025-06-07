@@ -59,7 +59,7 @@ jobs:
           echo "Current branch name: ${BRANCH_NAME}"
           echo "GITHUB_REF: ${GITHUB_REF}"
           echo "GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
-          
+
           # Debug branch name character by character to detect any invisible characters
           echo "Branch name character by character:"
           for (( i=0; i<${#BRANCH_NAME}; i++ )); do
@@ -71,6 +71,8 @@ jobs:
           # Using string contains operator for substring matching anywhere in the branch name
           # Note: When using =~ operator in bash, the regex pattern should not be quoted
           # Using grep for more reliable pattern matching with multiple keywords for better compatibility
+          # The previous bash pattern matching approach was replaced with grep because it's more reliable
+          # in GitHub Actions environment where there might be encoding or environment-specific issues
           echo "Checking if branch name matches formatting fix pattern..."
           if [[ ${BRANCH_NAME} =~ ^fix- ]]; then
             echo "Branch starts with 'fix-': YES"
