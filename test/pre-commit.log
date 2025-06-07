@@ -1,0 +1,7 @@
+[INFO] Initializing environment for https://github.com/pre-commit/pre-commit-hooks.
+black....................................................................Failed
+- hook id: black
+- files were modified by this hook
+mypy.....................................................................Failed
+- hook id: mypy
+- files were modified by this hook

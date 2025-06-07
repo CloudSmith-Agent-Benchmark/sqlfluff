@@ -4,7 +4,6 @@ repos:
     hooks:
       - id: no-commit-to-branch
         args: [--branch, main]
-      # If adding any exceptions here, make sure to add them to .editorconfig as well
       - id: end-of-file-fixer
         stages: [manual]
         exclude: |
