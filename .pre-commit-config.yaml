@@ -17,13 +17,15 @@ repos:
             plugins/sqlfluff-templater-dbt/test/fixtures/dbt.*/templated_output/macro_in_macro.sql|
             plugins/sqlfluff-templater-dbt/test/fixtures/dbt.*/templated_output/(dbt_utils_0.8.0/)?last_day.sql|
             test/fixtures/linter/indentation_errors.sql|
-            test/fixtures/templater/jinja_d_roundtrip/test.sql
+            test/fixtures/templater/jinja_d_roundtrip/test.sql|
+            fix-eof-newline\.patch.*
           )$
       - id: trailing-whitespace
         exclude: |
           (?x)^(
             test/fixtures/linter/indentation_errors.sql|
             test/fixtures/templater/jinja_d_roundtrip/test.sql|
+            fix-eof-newline\.patch.*|
             test/fixtures/config/inheritance_b/example.sql|
             test/fixtures/config/inheritance_b/nested/example.sql|
             plugins/sqlfluff-templater-dbt/test/fixtures/dbt.*/templated_output/macro_in_macro.sql|
