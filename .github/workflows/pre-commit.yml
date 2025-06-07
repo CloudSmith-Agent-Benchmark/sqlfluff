@@ -26,7 +26,6 @@ jobs:
           key: pre-commit-4|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml')
             }}
         # Run pre-commit in check mode without modifying files
-        # Note: The --no-fix flag was removed as it's not supported in the current pre-commit version
       - name: Run pre-commit hooks
         run: |
           set -o pipefail
