@@ -84,9 +84,9 @@ jobs:
             # The -E flag allows us to use the pipe character (|) directly without escaping
             # Add debug output to help diagnose pattern matching issues
             echo "Branch name to match: ${BRANCH_NAME}"
-            # Use word boundary markers (\b) around each keyword to match them as standalone words
-            # Also include a version without word boundaries to match keywords within hyphenated words
-            if echo "${BRANCH_NAME}" | grep -i -E -q "\bpattern\b|\bregex\b|\btrailing-whitespace\b|\bformatting\b|\bbranch-detection\b|pattern|regex|whitespace|formatting|detection"; then
+            # Note: Word boundary markers (\b) need double backslashes (\\b) when inside double quotes in bash
+            # Otherwise they're interpreted as backspace characters rather than regex word boundaries
+            if echo "${BRANCH_NAME}" | grep -i -E -q "\\bpattern\\b|\\bregex\\b|\\btrailing-whitespace\\b|\\bformatting\\b|\\bbranch-detection\\b|pattern|regex|whitespace|formatting|detection"; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
