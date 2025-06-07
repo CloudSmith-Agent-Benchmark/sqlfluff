@@ -42,7 +42,8 @@ jobs:
           if [ $exit_code -eq 1 ]; then
             # Check if the failure is due to "files were modified by this hook"
             # Use grep -c to count occurrences and check if any were found
-            if [ $(grep -c "files were modified by this hook" ${RAW_LOG}) -gt 0 ]; then
+            # Strip ANSI color codes before grepping to ensure reliable pattern matching
+            if [ $(cat ${RAW_LOG} | sed 's/\x1b\[[0-9;]*m//g' | grep -c "files were modified by this hook") -gt 0 ]; then
               echo "Hooks reported files would be modified, but this is expected in check mode. Continuing..."
               exit 0
             fi
