@@ -68,26 +68,23 @@ jobs:
           done
 
           # Check if we're on a branch specifically fixing formatting issues
-          # Using string contains operator for substring matching anywhere in the branch name
-          # Note: When using =~ operator in bash, the regex pattern should not be quoted
-          # Using grep for more reliable pattern matching with multiple keywords for better compatibility
-          # The previous bash pattern matching approach was replaced with grep because it's more reliable
-          # in GitHub Actions environment where there might be encoding or environment-specific issues
+          # Using bash's native pattern matching for more reliable substring matching
+          # This approach avoids potential issues with grep behavior in different environments
           echo "Checking if branch name matches formatting fix pattern..."
           if [[ ${BRANCH_NAME} =~ ^fix- ]]; then
             echo "Branch starts with 'fix-': YES"
             # Check for keywords in the branch name with debug output
-            # Using bash pattern matching instead of grep for more reliable substring matching
             echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, regex, trailing-whitespace, formatting, branch-detection"
-            # Using grep with extended regex (-E) for more reliable pattern matching with multiple keywords
-            # This approach is more robust against potential environment-specific issues in GitHub Actions
-            # The -E flag allows us to use the pipe character (|) directly without escaping
-            # Add debug output to help diagnose pattern matching issues
             echo "Branch name to match: ${BRANCH_NAME}"
-            # Use word boundary markers (\b) around each keyword to match them as standalone words
-            # Also include a version without word boundaries to match keywords within hyphenated words
-            # Use grep with -o option to match parts of words (substrings)
-            if echo "${BRANCH_NAME}" | grep -i -o -E "pattern|regex|trailing-whitespace|formatting|branch-detection" > /dev/null; then
+            # Use bash's native pattern matching with case-insensitive comparison
+            # Convert branch name to lowercase for case-insensitive matching
+            BRANCH_NAME_LOWER="${BRANCH_NAME,,}"
+            # Check if any of the keywords are present in the branch name
+            if [[ "$BRANCH_NAME_LOWER" == *"pattern"* || 
+                  "$BRANCH_NAME_LOWER" == *"regex"* || 
+                  "$BRANCH_NAME_LOWER" == *"trailing-whitespace"* || 
+                  "$BRANCH_NAME_LOWER" == *"formatting"* || 
+                  "$BRANCH_NAME_LOWER" == *"branch-detection"* ]]; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
