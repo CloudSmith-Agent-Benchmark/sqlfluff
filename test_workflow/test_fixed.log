@@ -1,0 +1,12 @@
+black....................................................................Failed
+- hook id: black
+- files were modified by this hook
+
+All done! ✨ 🍰 ✨
+388 files would be left unchanged.
+
+mypy.....................................................................Failed
+- hook id: mypy
+- files were modified by this hook
+
+Success: no issues found in 247 source files
