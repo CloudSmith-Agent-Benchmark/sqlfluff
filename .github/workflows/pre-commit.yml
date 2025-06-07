@@ -71,12 +71,11 @@ jobs:
           if [[ "${BRANCH_NAME}" =~ ^fix- ]]; then
             # Store all patterns in an array for cleaner code and better reliability
             patterns=("pattern" "regex" "trailing-whitespace" "formatting" "syntax" "conditional")
-            
             # Debug each pattern check explicitly
             echo "Debug: Checking each pattern against branch name: ${BRANCH_NAME}"
             for pattern in "${patterns[@]}"; do
               # Use a variable to store the result for clarity
-              if [[ "${BRANCH_NAME}" == *${pattern}* ]]; then
+              if [[ "${BRANCH_NAME}" == *"${pattern}"* ]]; then
                 echo "Debug: Found match with pattern: ${pattern}"
                 echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
                 echo "::warning::Matched pattern: ${pattern}"
