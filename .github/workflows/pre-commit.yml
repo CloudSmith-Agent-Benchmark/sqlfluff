@@ -85,35 +85,35 @@ jobs:
             echo "Branch name to match: ${BRANCH_NAME}"
             # Convert branch name to lowercase for case-insensitive matching
             BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
-            
+
             # Initialize match found flag
             MATCH_FOUND=0
 
             # Use multiple approaches to pattern matching for better reliability
             echo "Testing multiple pattern matching approaches:"
-            
-            # Approach 1: Use grep with basic pattern (no extended regex)
-            if echo "${BRANCH_NAME_LOWER}" | grep -q 'pattern\|regex\|grep\|trailing\|whitespace\|formatting\|branch\|detection'; then
+
+            # Approach 1: Use grep with extended regex for more reliable pattern matching
+            if echo "${BRANCH_NAME_LOWER}" | grep -qE 'pattern|regex|grep|trailing|whitespace|formatting|branch|detection'; then
               echo "Match found using basic grep pattern"
               MATCH_FOUND=1
             else
               echo "No match found using basic grep pattern"
               MATCH_FOUND=0
             fi
-            
+
             # Approach 2: Use bash pattern matching as fallback
-            if [[ "${BRANCH_NAME_LOWER}" == *pattern* || 
-                  "${BRANCH_NAME_LOWER}" == *regex* || 
-                  "${BRANCH_NAME_LOWER}" == *grep* || 
-                  "${BRANCH_NAME_LOWER}" == *trailing* || 
-                  "${BRANCH_NAME_LOWER}" == *whitespace* || 
-                  "${BRANCH_NAME_LOWER}" == *formatting* || 
-                  "${BRANCH_NAME_LOWER}" == *branch* || 
+            if [[ "${BRANCH_NAME_LOWER}" == *pattern* ||
+                  "${BRANCH_NAME_LOWER}" == *regex* ||
+                  "${BRANCH_NAME_LOWER}" == *grep* ||
+                  "${BRANCH_NAME_LOWER}" == *trailing* ||
+                  "${BRANCH_NAME_LOWER}" == *whitespace* ||
+                  "${BRANCH_NAME_LOWER}" == *formatting* ||
+                  "${BRANCH_NAME_LOWER}" == *branch* ||
                   "${BRANCH_NAME_LOWER}" == *detection* ]]; then
               echo "Match found using bash pattern matching"
               MATCH_FOUND=1
             fi
-            
+
             # Approach 3: Check for individual keywords one by one
             for keyword in pattern regex grep trailing whitespace formatting branch detection; do
               if [[ "${BRANCH_NAME_LOWER}" == *"${keyword}"* ]]; then
@@ -122,7 +122,7 @@ jobs:
                 break
               fi
             done
-            
+
             # Use the result of our pattern matching attempts
             if [ "${MATCH_FOUND}" -eq 1 ]; then
               echo "Branch contains formatting keywords: YES"
