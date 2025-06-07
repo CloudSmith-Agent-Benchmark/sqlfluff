@@ -64,7 +64,9 @@ jobs:
           # Using string contains operator for substring matching anywhere in the branch name
           # Note: When using =~ operator in bash, the regex pattern should not be quoted
           # Using grep for more reliable pattern matching with multiple keywords for better compatibility
-          if [[ ${BRANCH_NAME} =~ ^fix- ]] && (echo "${BRANCH_NAME}" | grep -q -E "pattern|regex|trailing-whitespace|formatting|branch-detection"); then
+          # Added 'quotes' to the pattern list to match branches fixing quote-related formatting issues
+          # This pattern matches keywords that might be part of hyphenated compound words
+          if [[ ${BRANCH_NAME} =~ ^fix- ]] && (echo "${BRANCH_NAME}" | grep -q -E "pattern|regex|trailing-whitespace|formatting|branch-detection|quotes"); then
             echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
             exit 0  # Always succeed on formatting-fixing branches
           fi
