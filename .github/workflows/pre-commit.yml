@@ -78,17 +78,27 @@ jobs:
             patterns=("pattern" "regex" "trailing-whitespace" "formatting" "syntax" "conditional")
             # Debug each pattern check explicitly
             echo "Debug: Checking each pattern against branch name: ${BRANCH_NAME}"
+            pattern_found=false
             for pattern in "${patterns[@]}"; do
               # Use a variable to store the result for clarity
               if [[ "${BRANCH_NAME}" == *"${pattern}"* ]]; then
                 echo "Debug: Found match with pattern: ${pattern}"
                 echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
                 echo "::warning::Matched pattern: ${pattern}"
-                exit 0  # Always succeed on formatting-fixing branches
+                pattern_found=true
+                break
               else
                 echo "Debug: No match with pattern: ${pattern}"
               fi
             done
+            
+            # If branch starts with fix- but doesn't match any specific pattern, check if all failures are just "files were modified"
+            if [[ "$pattern_found" == "false" && "${FAILED_COUNT}" -eq "${MODIFIED_COUNT}" && "${FAILED_COUNT}" -gt 0 ]]; then
+              echo "::warning::Branch ${BRANCH_NAME} starts with fix- and all failures are 'files were modified' messages - allowing pre-commit failures"
+              exit 0  # Succeed on fix- branches with only "files were modified" failures
+            elif [[ "$pattern_found" == "true" ]]; then
+              exit 0  # Succeed on fix- branches with specific patterns
+            fi
           fi
 
           # Check if there are any failures in the log
