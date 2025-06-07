@@ -33,7 +33,7 @@ jobs:
           # Create empty log file with newline to prevent end-of-file-fixer issues
           echo "" > ${RAW_LOG}
           # Run pre-commit on all files in check-only mode
-          pre-commit run --hook-stage manual --show-diff-on-failure --color=always --all-files -c .pre-commit-config-ci.yaml | tee -a ${RAW_LOG}
+          pre-commit run --hook-stage manual --show-diff-on-failure --color=always --all-files --no-autofix -c .pre-commit-config-ci.yaml | tee -a ${RAW_LOG}
       - name: Convert Raw Log to Checkstyle format (launch action)
         uses: mdeweerd/logToCheckStyle@v2024.3.5
         if: ${{ failure() }}
