@@ -66,7 +66,7 @@ jobs:
           # Check if we're on a branch specifically fixing formatting issues
           # Using string contains operator for substring matching anywhere in the branch name
           # Using curly braces instead of parentheses for proper grouping of OR conditions
-          if [[ "${BRANCH_NAME}" =~ ^fix- ]] && { [[ "${BRANCH_NAME}" == *"pattern"* ]] || [[ "${BRANCH_NAME}" == *"regex"* ]] || [[ "${BRANCH_NAME}" == *"trailing-whitespace"* ]] || [[ "${BRANCH_NAME}" == *"formatting"* ]]; } then
+          if [[ "${BRANCH_NAME}" =~ ^fix- ]] && { [[ "${BRANCH_NAME}" == *"pattern"* ]] || [[ "${BRANCH_NAME}" == *"regex"* ]] || [[ "${BRANCH_NAME}" == *"trailing-whitespace"* ]] || [[ "${BRANCH_NAME}" == *"formatting"* ]]; }; then
             echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
             exit 0  # Always succeed on formatting-fixing branches
           fi
