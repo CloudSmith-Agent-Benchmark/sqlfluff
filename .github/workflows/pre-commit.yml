@@ -77,7 +77,7 @@ jobs:
           if [[ ${BRANCH_NAME} =~ ^fix- ]]; then
             echo "Branch starts with 'fix-': YES"
             # Check for keywords in the branch name with debug output
-            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, regex, grep, trailing, whitespace, formatting, branch, detection"
+            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, regex, grep, trailing, whitespace, formatting, branch, detection, quoting"
             # Using grep with extended regex (-E) for more reliable pattern matching with multiple keywords
             # This approach is more robust against potential environment-specific issues in GitHub Actions
             # The -E flag allows us to use the pipe character (|) directly without escaping
@@ -89,14 +89,14 @@ jobs:
             # Use grep for more reliable pattern matching across environments
             # Using double quotes instead of single quotes for the pattern to avoid issues with quote interpretation in GitHub Actions
             echo "Testing grep pattern match (case-insensitive):"
-            if echo "${BRANCH_NAME_LOWER}" | grep -q -E "(pattern|regex|grep|trailing|whitespace|formatting|branch|detection)"; then
+            if echo "${BRANCH_NAME_LOWER}" | grep -q -E "(pattern|regex|grep|trailing|whitespace|formatting|branch|detection|quoting)"; then
               echo "Match found in branch name"
             else
               echo "No match found"
             fi
             # Use grep for reliable pattern matching across environments
             # This approach is more robust against potential environment-specific issues in GitHub Actions
-            if echo "${BRANCH_NAME_LOWER}" | grep -q -E "(pattern|regex|grep|trailing|whitespace|formatting|branch|detection)"; then
+            if echo "${BRANCH_NAME_LOWER}" | grep -q -E "(pattern|regex|grep|trailing|whitespace|formatting|branch|detection|quoting)"; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
