@@ -1,0 +1,12 @@
+#!/bin/bash
+# Simple wrapper for the act command
+# https://github.com/nektos/act
+
+# Check if act is installed
+if ! command -v act &> /dev/null; then
+    echo "act tool is not installed or not in PATH. Please install it with 'brew install act' or follow instructions at https://github.com/nektos/act"
+    exit 1
+fi
+
+# Pass all arguments to the act command
+act "$@"
