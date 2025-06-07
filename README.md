@@ -30,7 +30,8 @@ your time on what matters.
 7. [SQLFluff on Slack](#sqlfluff-on-slack)
 8. [SQLFluff on Twitter](#sqlfluff-on-twitter)
 9. [Contributing](#contributing)
-10. [Sponsors](#sponsors)
+10. [Pre-commit Configuration](#pre-commit-configuration)
+11. [Sponsors](#sponsors)
 
 ## Dialects Supported
 
@@ -175,6 +176,25 @@ find [more here](https://docs.sqlfluff.com/en/latest/perma/architecture.html).
 If you would like to contribute, check out the
 [open issues on GitHub](https://github.com/sqlfluff/sqlfluff/issues). You can also see
 the guide to [contributing](CONTRIBUTING.md).
+
+# Pre-commit Configuration
+
+This project uses [pre-commit](https://pre-commit.com/) to enforce code quality standards. There are two pre-commit configurations:
+
+1. `.pre-commit-config.yaml` - Used for local development, which will automatically fix issues
+2. `.pre-commit-config-ci.yaml` - Used in CI environments, which only checks for issues without modifying files
+
+When running pre-commit in CI, we use the check-only configuration to ensure that the workflow doesn't modify files during the CI run, which would cause the workflow to fail.
+
+To run pre-commit locally:
+```shell
+pre-commit run --all-files
+```
+
+To run pre-commit in check-only mode (like CI):
+```shell
+pre-commit run --all-files --config .pre-commit-config-ci.yaml
+```
 
 # Sponsors
 
