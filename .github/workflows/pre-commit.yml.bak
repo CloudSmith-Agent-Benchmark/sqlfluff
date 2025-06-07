@@ -1,4 +1,7 @@
 name: pre-commit
+# This workflow runs pre-commit checks on all files and handles formatting-specific branches
+# The pattern matching logic has been improved to use native bash string operations instead of grep
+# for more consistent behavior across different environments (local vs GitHub Actions)
 on:
   pull_request:
   push:
@@ -108,13 +111,11 @@ jobs:
                 break
               fi
             done
-            
             # Fallback check with normalized branch name (remove all non-alphanumeric chars)
             if [[ "$MATCH_FOUND" != "true" ]]; then
               # Normalize branch name to handle potential encoding issues
               NORMALIZED_BRANCH=$(echo "${BRANCH_NAME_LOWER}" | tr -cd 'a-z0-9')
               echo "Using normalized branch name for fallback check: ${NORMALIZED_BRANCH}"
-              
               for kw in "${KEYWORDS[@]}"; do
                 # Normalize keyword too for consistent comparison
                 NORMALIZED_KW=$(echo "${kw}" | tr -cd 'a-z0-9')
