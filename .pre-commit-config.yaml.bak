@@ -39,10 +39,6 @@ repos:
           (?x)^(
             test/core/helpers/mock_test.py
           )$
-        exclude: |
-          (?x)^(
-            test/core/helpers/mock_test.py
-          )$
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.14.1
     hooks:
@@ -83,10 +79,6 @@ repos:
           (?x)^(
             test/core/helpers/mock_test.py
           )$
-        exclude: |
-          (?x)^(
-            test/core/helpers/mock_test.py
-          )$
   - repo: https://github.com/pycqa/doc8
     rev: v1.1.2
     hooks:
@@ -103,6 +95,10 @@ repos:
     rev: "v0.9.3"
     hooks:
       - id: ruff
+        exclude: |
+          (?x)^(
+            test/core/helpers/mock_test.py
+          )$
         exclude: |
           (?x)^(
             test/core/helpers/mock_test.py
