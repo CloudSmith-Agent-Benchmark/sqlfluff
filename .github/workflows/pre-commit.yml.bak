@@ -85,8 +85,8 @@ jobs:
             # Add debug output to help diagnose pattern matching issues
             echo "Branch name to match: ${BRANCH_NAME}"
             # Debug output to show what we're matching against
-            echo "Testing bash regex pattern match:"
-            if [[ ${BRANCH_NAME} =~ (pattern|regex|grep|trailing-whitespace|formatting|branch-detection) ]]; then
+            echo "Testing bash regex pattern match (case-insensitive):"
+            if [[ ${BRANCH_NAME_LOWER} =~ (pattern|regex|grep|trailing-whitespace|formatting|branch-detection) ]]; then
               echo "Match found: ${BASH_REMATCH[0]}"
             else
               echo "No match found"
