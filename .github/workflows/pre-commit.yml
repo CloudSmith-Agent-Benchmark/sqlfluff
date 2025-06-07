@@ -39,10 +39,18 @@ jobs:
           # Run pre-commit on all files in check-only mode
           # Use || true to prevent failure due to "files were modified" messages
           pre-commit run --show-diff-on-failure --color=always --all-files -c .pre-commit-config-ci.yaml | tee -a ${RAW_LOG}
-          # Check if there are actual formatting issues by looking for specific patterns in the log
-          if grep -q "Failed" ${RAW_LOG} && ! grep -q "files were modified by this hook" ${RAW_LOG}; then
-            echo "::error::Pre-commit found actual issues that need to be fixed"
-            exit 1
+          # Check if there are actual errors (not just formatting issues)
+          # If we find "Failed" but not all failures are due to "files were modified", then we have actual errors
+          if grep -q "Failed" ${RAW_LOG}; then
+            # Count occurrences of "Failed" and "files were modified by this hook"
+            FAILED_COUNT=$(grep -c "Failed" ${RAW_LOG})
+            MODIFIED_COUNT=$(grep -c "files were modified by this hook" ${RAW_LOG})
+            
+            # If we have more failures than "files were modified" messages, we have actual errors
+            if [ ${FAILED_COUNT} -gt ${MODIFIED_COUNT} ]; then
+              echo "::error::Pre-commit found actual issues that need to be fixed"
+              exit 1
+            fi
           fi
           # If we only have "files were modified" messages but no actual errors, consider it a success
           if grep -q "files were modified by this hook" ${RAW_LOG} && ! grep -q "^[^-].*error:" ${RAW_LOG}; then
