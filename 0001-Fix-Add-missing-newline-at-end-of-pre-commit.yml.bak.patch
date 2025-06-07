@@ -12,12 +12,11 @@ index 73d665839..951ea3f65 100644
 --- a/.github/workflows/pre-commit.yml.bak
 +++ b/.github/workflows/pre-commit.yml.bak
 @@ -49,4 +49,4 @@ jobs:
-           path: |
-             ${{ env.RAW_LOG }}
-             ${{ env.CS_XML }}
+          path: |
+            ${{ env.RAW_LOG }}
+            ${{ env.CS_XML }}
 -          retention-days: 2
 \ No newline at end of file
 +          retention-days: 2
--- 
+--
 2.47.1
-
