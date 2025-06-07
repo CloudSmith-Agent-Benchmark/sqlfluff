@@ -113,10 +113,20 @@ jobs:
             # Enhanced pattern matching approach to handle hyphenated words
             # First convert hyphens to spaces to handle hyphenated words, then do the matching
             BRANCH_NAME_SPACES=$(echo "${BRANCH_NAME_LOWER}" | tr '-' ' ')
-            if [[ ${BRANCH_NAME_LOWER} =~ (pattern|regex|grep|trailing|whitespace|spaces|formatting|branch|detection|keywords|boundary|escaping|word) ]] ||
+            # Check if we have a keyword match from the individual keyword checks
+            if [ "${KEYWORD_MATCH}" = "YES" ]; then
+              KEYWORD_FOUND="YES"
+              echo "Keyword match found from individual keyword checks"
+            # If not, try the other pattern matching approaches
+            elif [[ ${BRANCH_NAME_LOWER} =~ (pattern|regex|grep|trailing|whitespace|spaces|formatting|branch|detection|keywords|boundary|escaping|word) ]] ||
                echo "${BRANCH_NAME_LOWER}" | grep -i -E "(pattern|regex|grep|trailing|whitespace|spaces|formatting|branch|detection|keywords|boundary|escaping|word)" > /dev/null ||
-               echo "${BRANCH_NAME_SPACES}" | grep -i -E "(pattern|regex|grep|trailing|whitespace|spaces|formatting|branch|detection|keywords|boundary|escaping|word)" > /dev/null ||
-               [ "${KEYWORD_MATCH}" = "YES" ]; then
+               echo "${BRANCH_NAME_SPACES}" | grep -i -E "(pattern|regex|grep|trailing|whitespace|spaces|formatting|branch|detection|keywords|boundary|escaping|word)" > /dev/null; then
+              KEYWORD_FOUND="YES"
+              echo "Keyword match found from pattern matching"
+            else
+              KEYWORD_FOUND="NO"
+            fi
+            if [ "${KEYWORD_FOUND}" = "YES" ]; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
