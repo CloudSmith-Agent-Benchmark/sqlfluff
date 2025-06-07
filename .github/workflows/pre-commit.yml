@@ -69,7 +69,7 @@ jobs:
             echo "Branch starts with 'fix-': YES"
             # Check for keywords in the branch name with debug output
             echo "Checking if branch contains any of these keywords: pattern, regex, trailing-whitespace, formatting, branch-detection"
-            if echo "${BRANCH_NAME}" | grep -q -E 'pattern|regex|trailing-whitespace|formatting|branch-detection'; then
+            if echo "${BRANCH_NAME}" | grep -q -E "pattern|regex|trailing-whitespace|formatting|branch-detection"; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
