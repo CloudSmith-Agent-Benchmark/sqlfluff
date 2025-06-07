@@ -78,7 +78,7 @@ jobs:
             echo "Branch starts with 'fix-': YES"
             # Check for keywords in the branch name with debug output
             # Using bash pattern matching instead of grep for more reliable substring matching
-            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, regex, trailing-whitespace, formatting, branch-detection"
+            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, regex, trailing-whitespace, formatting, indentation, branch-detection"
             # Using native bash pattern matching which is more reliable across different environments
             # This approach avoids potential issues with grep behavior differences in GitHub Actions
             echo "Branch name to match: ${BRANCH_NAME}"
@@ -90,10 +90,11 @@ jobs:
                   "${BRANCH_NAME_LOWER}" == *regex* ||
                   "${BRANCH_NAME_LOWER}" == *trailing-whitespace* ||
                   "${BRANCH_NAME_LOWER}" == *formatting* ||
+                  "${BRANCH_NAME_LOWER}" == *indentation* ||
                   "${BRANCH_NAME_LOWER}" == *branch-detection* ]]; then
               echo "Branch contains formatting keywords: YES"
               echo "Matched keyword(s):"
-              for keyword in "pattern" "regex" "trailing-whitespace" "formatting" "branch-detection"; do
+              for keyword in "pattern" "regex" "trailing-whitespace" "formatting" "indentation" "branch-detection"; do
                 if [[ "${BRANCH_NAME_LOWER}" == *"${keyword}"* ]]; then
                   echo "- ${keyword}"
                 fi
