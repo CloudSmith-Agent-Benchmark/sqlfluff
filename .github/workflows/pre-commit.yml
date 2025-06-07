@@ -87,10 +87,8 @@ jobs:
             # Use bash pattern matching instead of grep for more reliable substring detection
             # Convert to lowercase for case-insensitive matching (equivalent to grep -i)
             BRANCH_NAME_LOWER="${BRANCH_NAME,,}"
-            if [[ "${BRANCH_NAME_LOWER}" == *"pattern"* || "${BRANCH_NAME_LOWER}" == *"regex"* || 
-                 "${BRANCH_NAME_LOWER}" == *"trailing-whitespace"* || "${BRANCH_NAME_LOWER}" == *"formatting"* || 
-                 "${BRANCH_NAME_LOWER}" == *"branch-detection"* || "${BRANCH_NAME_LOWER}" == *"grep"* || 
-                 "${BRANCH_NAME_LOWER}" == *"escaping"* ]]; then
+            # Use regex pattern matching to detect keywords within hyphenated words
+            if [[ "${BRANCH_NAME_LOWER}" =~ pattern|regex|trailing-whitespace|formatting|branch-detection|grep|escaping ]]; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
