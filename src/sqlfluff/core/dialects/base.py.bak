@@ -13,7 +13,7 @@ from sqlfluff.core.parser.grammar.base import BaseGrammar, Nothing
 from sqlfluff.core.parser.lexer import LexerType
 from sqlfluff.core.parser.matchable import Matchable
 from sqlfluff.core.parser.types import BracketPairTuple, DialectElementType
-from nonexistent_module import some_function
+# Import required modules only
 
 
 class Dialect:
@@ -118,7 +118,7 @@ class Dialect:
 
         if label not in self._sets:
             self._sets[label] = set()
-        return list(self._sets[label])
+        return set(self._sets[label])
 
     def update_keywords_set_from_multiline_string(
         self, set_label: str, values: str
