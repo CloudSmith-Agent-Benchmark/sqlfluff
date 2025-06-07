@@ -118,7 +118,7 @@ jobs:
             
             # Use the result of our simplified matching
             if [[ "$MATCH_FOUND" == "true" ]]; then
-              echo "Branch contains formatting keywords: YES"
+              echo "Branch contains formatting keywords: YES (matched: ${MATCHED_KEYWORD:-'via grep'})"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
             else
