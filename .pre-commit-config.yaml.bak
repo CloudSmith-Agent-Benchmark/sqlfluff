@@ -86,7 +86,6 @@ repos:
       - id: doc8
         args: [--file-encoding, utf8]
         files: docs/source/.*\.rst$
-        exclude: test/core/helpers/mock_test\.py(\.bak)?$
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.35.1
     hooks:
