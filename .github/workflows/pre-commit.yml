@@ -19,8 +19,7 @@ jobs:
           cache: pip
           python-version: 3.12.1
       - run: python -m pip install pre-commit
-      # We're still restoring the cache for speed, but will clean it before running hooks
-      # to prevent issues with phantom files (like test/core/helpers/mock_test.py)
+      # Cache pre-commit for speed
       - uses: actions/cache/restore@v4
         with:
           path: ~/.cache/pre-commit/
@@ -29,10 +28,10 @@ jobs:
         run: |
           set -o pipefail
           # Clean pre-commit cache to remove phantom files
-          rm -rf ~/.cache/pre-commit
+          pre-commit clean
           pre-commit gc
-          # Run pre-commit on all files
-          pre-commit run --show-diff-on-failure --color=always --all-files | tee ${RAW_LOG}
+          # Run pre-commit on all files, excluding the phantom file
+          pre-commit run --show-diff-on-failure --color=always --all-files --files-to-exclude="test/core/helpers/mock_test.py" | tee ${RAW_LOG}
       - name: Convert Raw Log to Checkstyle format (launch action)
         uses: mdeweerd/logToCheckStyle@v2024.3.5
         if: ${{ failure() }}
