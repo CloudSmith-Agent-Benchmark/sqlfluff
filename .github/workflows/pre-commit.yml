@@ -58,8 +58,8 @@ jobs:
           # Debug output for regex pattern matching
           echo "Debug: Checking if branch matches formatting-fixing criteria"
           echo "Debug: Starts with fix-: $([[ "${BRANCH_NAME}" =~ ^fix- ]] && echo "true" || echo "false")"
-          echo "Debug: Contains pattern: $([[ "${BRANCH_NAME}" == *pattern* ]] && echo "true" || echo "false")"
-          echo "Debug: Contains regex: $([[ "${BRANCH_NAME}" == *regex* ]] && echo "true" || echo "false")"
+          echo "Debug: Contains pattern: $([[ "${BRANCH_NAME}" == *"pattern"* ]] && echo "true" || echo "false")"
+          echo "Debug: Contains regex: $([[ "${BRANCH_NAME}" == *"regex"* ]] && echo "true" || echo "false")"
           echo "Debug: Contains trailing-whitespace: $([[ "${BRANCH_NAME}" == *trailing-whitespace* ]] && echo "true" || echo "false")"
           echo "Debug: Contains formatting: $([[ "${BRANCH_NAME}" == *formatting* ]] && echo "true" || echo "false")"
           echo "Debug: Contains syntax: $([[ "${BRANCH_NAME}" == *syntax* ]] && echo "true" || echo "false")"
@@ -75,7 +75,7 @@ jobs:
             echo "Debug: Checking each pattern against branch name: ${BRANCH_NAME}"
             for pattern in "${patterns[@]}"; do
               # Use a variable to store the result for clarity
-              if [[ "${BRANCH_NAME}" == *${pattern}* ]]; then
+              if [[ "${BRANCH_NAME}" == *"${pattern}"* ]]; then
                 echo "Debug: Found match with pattern: ${pattern}"
                 echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
                 echo "::warning::Matched pattern: ${pattern}"
