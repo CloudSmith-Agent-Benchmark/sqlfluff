@@ -41,7 +41,11 @@ jobs:
           rm -f ${RAW_LOG}
           touch ${RAW_LOG}
           # Run pre-commit on all files in check-only mode and ensure output is captured
+          # Temporarily disable pipefail for pre-commit to prevent early failure
+          set +o pipefail
           pre-commit run --show-diff-on-failure --color=always --all-files -c .pre-commit-config-ci.yaml | tee ${RAW_LOG}
+          PRE_COMMIT_STATUS=${PIPESTATUS[0]}  # Capture pre-commit's exit code
+          set -o pipefail  # Re-enable pipefail
 
           # Count the number of failures and "files were modified" messages
           FAILED_COUNT=$(grep -c "Failed" ${RAW_LOG} || echo 0)
@@ -74,7 +78,8 @@ jobs:
           # Using string contains operator for substring matching anywhere in the branch name
           # Note: When using =~ operator in bash, the regex pattern should not be quoted
           echo "Checking if branch name matches formatting fix pattern..."
-          if [[ ${BRANCH_NAME} =~ ^fix- ]]; then
+          # Use string prefix matching instead of regex for more reliable behavior
+          if [[ "${BRANCH_NAME}" == fix-* ]]; then
             echo "Branch starts with 'fix-': YES"
             # Any branch that starts with 'fix-' is considered a formatting fix branch
             echo "::warning::On branch ${BRANCH_NAME} which starts with 'fix-' - allowing pre-commit failures"
@@ -85,7 +90,7 @@ jobs:
           fi
 
           # Only check for failures if we're not on a formatting fix branch
-          if [ "$SKIP_FAILURE_CHECKS" = false ] && [ "${FAILED_COUNT}" -gt 0 ]; then
+          if [ "$SKIP_FAILURE_CHECKS" = false ] && [ "${FAILED_COUNT}" -gt 0 -o "${PRE_COMMIT_STATUS}" -ne 0 ]; then
             # If all failures are just "files were modified" messages, consider it a success
             if [ "${FAILED_COUNT}" -eq "${MODIFIED_COUNT}" ]; then
               echo "::warning::Pre-commit reported 'Failed' but these were just 'files were modified' messages"
