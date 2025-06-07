@@ -1,7 +1,7 @@
 name: pre-commit
 # This workflow runs pre-commit checks on all files and handles formatting-specific branches
-# The pattern matching logic has been simplified to automatically pass any branch starting with "fix-"
-# This avoids complex string matching issues and ensures consistent behavior across environments
+# The pattern matching logic has been improved to use native bash string operations instead of grep
+# for more consistent behavior across different environments (local vs GitHub Actions)
 on:
   pull_request:
   push:
