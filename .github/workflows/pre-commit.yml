@@ -85,7 +85,7 @@ jobs:
             # Add debug output to help diagnose pattern matching issues
             echo "Branch name to match: ${BRANCH_NAME}"
             # Modified pattern to match keywords that might be part of hyphenated compound words
-            if echo "${BRANCH_NAME}" | grep -i -q "pattern\|regex\|trailing-whitespace\|formatting\|branch-detection\|grep\|escaping"; then
+            if echo "${BRANCH_NAME}" | grep -i -E -q "pattern|regex|trailing-whitespace|formatting|branch-detection|grep|escaping"; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
