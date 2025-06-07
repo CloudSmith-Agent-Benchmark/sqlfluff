@@ -86,12 +86,12 @@ jobs:
             echo "Branch name to match: ${BRANCH_NAME}"
             # Debug output to show what grep is matching
             echo "Testing grep pattern match (should show highlighted match if found):"
-            echo "${BRANCH_NAME}" | grep -i --color=always 'pattern\|regex\|grep\|trailing-whitespace\|formatting\|branch-detection' || echo "No match found"
+            echo "${BRANCH_NAME}" | grep -iE --color=always 'pattern|regex|grep|trailing-whitespace|formatting|branch-detection' || echo "No match found"
             # Use grep for more reliable pattern matching
             # This is more consistent across different environments and handles substrings within hyphenated words
             # Use single quotes around the pattern to prevent shell expansion or interpretation
             # Added explicit word boundary markers to ensure proper matching of 'grep' as a standalone word
-            if echo "${BRANCH_NAME}" | grep -i 'pattern\|regex\|grep\|trailing-whitespace\|formatting\|branch-detection' > /dev/null; then
+            if echo "${BRANCH_NAME}" | grep -iE 'pattern|regex|grep|trailing-whitespace|formatting|branch-detection' > /dev/null; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
