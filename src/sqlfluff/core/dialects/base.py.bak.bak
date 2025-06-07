@@ -394,4 +394,3 @@ class Dialect:
     def get_root_segment(self) -> Union[type[BaseSegment], Matchable]:
         """Get the root segment of the dialect."""
         return self.ref(self.root_segment_name)
-
