@@ -28,8 +28,6 @@ jobs:
       - name: Run pre-commit hooks
         run: |
           set -o pipefail
-          # Create logs directory
-          mkdir -p ${{ env.LOGS_DIR }}
           # Clean pre-commit cache to remove phantom files
           pre-commit clean
           pre-commit gc
