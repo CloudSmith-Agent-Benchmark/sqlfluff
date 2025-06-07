@@ -49,5 +49,8 @@ insert_final_newline = unset
 [test/fixtures/linter/indentation_errors.sql,test/fixtures/templater/jinja_d_roundtrip/test.sql]
 trim_trailing_whitespace = false
 
+[*.patch.bak]
+trim_trailing_whitespace = false
+
 [*.rst]
 indent_size = 3
