@@ -50,7 +50,6 @@ jobs:
           fi
       - name: Convert Raw Log to Checkstyle format (launch action)
         uses: mdeweerd/logToCheckStyle@v2024.3.5
-        if: ${{ failure() }}
         with:
           in: ${{ env.RAW_LOG }}
           out: ${{ env.CS_XML }}
