@@ -105,7 +105,7 @@ jobs:
             fi
             # Use a more robust approach combining both regex and grep for maximum compatibility
             # First try bash regex, then fallback to grep if needed
-            if [[ ${BRANCH_NAME_LOWER} =~ .*(pattern|regex|grep|trailing.whitespace|formatting|branch.detection).* ]] || 
+            if [[ ${BRANCH_NAME_LOWER} =~ .*(pattern|regex|grep|trailing.whitespace|formatting|branch.detection).* ]] ||
                echo "${BRANCH_NAME_LOWER}" | grep -E '(pattern|regex|grep|trailing-whitespace|formatting|branch-detection)' > /dev/null; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
