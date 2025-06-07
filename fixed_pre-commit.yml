@@ -71,12 +71,12 @@ jobs:
           done
 
           # Clean the branch name by removing any invisible characters
-          CLEAN_BRANCH_NAME=$(echo "${BRANCH_NAME}" | LC_ALL=C tr -dc "[:graph:][:space:]")
+          # This handles zero-width spaces and other non-printable characters
+          CLEAN_BRANCH_NAME=$(echo "${BRANCH_NAME}" | tr -cd '[:print:]')
           echo "Clean branch name: '${CLEAN_BRANCH_NAME}'"
 
           # Check if we're on a branch specifically fixing formatting issues
           # Using string contains operator for substring matching anywhere in the branch name
-          # Note: When using =~ operator in bash, the regex pattern should not be quoted
           echo "Checking if branch name matches formatting fix pattern..."
           # Use string prefix matching instead of regex for more reliable behavior
           if [[ "${CLEAN_BRANCH_NAME}" == fix-* ]]; then
