@@ -6,7 +6,7 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     env:
-      RAW_LOG: pre-commit.log
+      RAW_LOG: pre-commit-output.log
       CS_XML: pre-commit.xml
       SKIP: no-commit-to-branch
     steps:
