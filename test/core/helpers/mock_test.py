@@ -3,8 +3,9 @@
 This module demonstrates common issues with mocking.
 """
 
-import pytest
 from unittest.mock import patch
+
+import pytest
 
 from sqlfluff.core.helpers.string import split_comma_separated_string
 
