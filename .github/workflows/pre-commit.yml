@@ -70,15 +70,22 @@ jobs:
             printf "Position %d: %s (ASCII: %d)\n" "$i" "$char" "'$char"
           done
 
+          # Clean the branch name by removing any invisible characters
+          # Using LC_ALL=C ensures consistent behavior across different locales
+          # [:graph:] includes all visible characters and [:space:] preserves spaces
+          # This removes zero-width spaces and other invisible characters
+          CLEAN_BRANCH_NAME=$(echo "${BRANCH_NAME}" | LC_ALL=C tr -dc "[:graph:][:space:]")
+          echo "Clean branch name: '${CLEAN_BRANCH_NAME}'"
+
           # Check if we're on a branch specifically fixing formatting issues
           # Using string contains operator for substring matching anywhere in the branch name
           # Note: When using =~ operator in bash, the regex pattern should not be quoted
           echo "Checking if branch name matches formatting fix pattern..."
           # Use string prefix matching instead of regex for more reliable behavior
-          if [[ "${BRANCH_NAME}" == fix-* ]]; then
+          if [[ "${CLEAN_BRANCH_NAME}" == fix-* ]]; then
             echo "Branch starts with 'fix-': YES"
             # Any branch that starts with 'fix-' is considered a formatting fix branch
-            echo "::warning::On branch ${BRANCH_NAME} which starts with 'fix-' - allowing pre-commit failures"
+            echo "::warning::On branch ${CLEAN_BRANCH_NAME} which starts with 'fix-' - allowing pre-commit failures"
             # Set flag to skip failure checks
             SKIP_FAILURE_CHECKS=true
           else
