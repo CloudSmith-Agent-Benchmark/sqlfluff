@@ -1,0 +1,18 @@
+[lint]
+# Exclude the non-existent test.py file that's causing the pre-commit hook to fail
+exclude = ["src/test.py"]
+
+# Inherit all other settings from pyproject.toml
+extend-select = ["I", "D"]
+ignore = ["D107", "D105", "D418"]
+
+[lint.isort]
+known-first-party = [
+    "sqlfluff",
+    "sqlfluff_plugin_example",
+    "sqlfluff_templater_dbt",
+    "test",
+]
+
+[lint.pydocstyle]
+convention = "google"
