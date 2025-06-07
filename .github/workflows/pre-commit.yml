@@ -43,7 +43,7 @@ jobs:
             # Check if the failure is due to "files were modified by this hook"
             # Use grep -c to count occurrences and check if any were found
             # Strip ANSI color codes before grepping to ensure reliable pattern matching
-            if [ $(cat ${RAW_LOG} | sed 's/\x1b\[[0-9;]*m//g' | grep -c "files were modified by this hook") -gt 0 ]; then
+            if [ $(cat ${RAW_LOG} | sed -E 's/\x1B(\[[0-9;]*[a-zA-Z]|\[[0-9]m|\(B)//g' | grep -c "files were modified by this hook") -gt 0 ]; then
               echo "Hooks reported files would be modified, but this is expected in check mode. Continuing..."
               exit 0
             fi
