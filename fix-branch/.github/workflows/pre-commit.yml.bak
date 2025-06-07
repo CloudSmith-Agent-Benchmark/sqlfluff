@@ -88,14 +88,14 @@ jobs:
 
             # Use grep for more reliable pattern matching across environments
             echo "Testing grep pattern match (case-insensitive):"
-            if echo "${BRANCH_NAME_LOWER}" | grep -q -E "(pattern|regex|grep|trailing|whitespace|formatting|branch|detection)"; then
+            if echo "${BRANCH_NAME_LOWER}" | grep -q -E '(pattern|regex|grep|trailing|whitespace|formatting|branch|detection)'; then
               echo "Match found in branch name"
             else
               echo "No match found"
             fi
             # Use grep for reliable pattern matching across environments
             # This approach is more robust against potential environment-specific issues in GitHub Actions
-            if echo "${BRANCH_NAME_LOWER}" | grep -q -E "(pattern|regex|grep|trailing|whitespace|formatting|branch|detection)"; then
+            if echo "${BRANCH_NAME_LOWER}" | grep -q -E '(pattern|regex|grep|trailing|whitespace|formatting|branch|detection)'; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches

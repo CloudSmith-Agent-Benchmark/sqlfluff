@@ -52,60 +52,6 @@ jobs:
           echo "First few lines of log file:"
           head -n 5 ${RAW_LOG}
 
-          # Get the branch name from GitHub environment variables
-          # For pull requests, GITHUB_HEAD_REF contains the source branch name
-          # For direct pushes, we extract it from GITHUB_REF
-          BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
-          echo "Current branch name: ${BRANCH_NAME}"
-          echo "GITHUB_REF: ${GITHUB_REF}"
-          echo "GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
-
-          # Debug branch name character by character to detect any invisible characters
-          echo "Branch name character by character:"
-          for (( i=0; i<${#BRANCH_NAME}; i++ )); do
-            char="${BRANCH_NAME:$i:1}"
-            printf "Position %d: %s (ASCII: %d)\n" "$i" "$char" "'$char"
-          done
-
-          # Check if we're on a branch specifically fixing formatting issues
-          # Using string contains operator for substring matching anywhere in the branch name
-          # Note: When using =~ operator in bash, the regex pattern should not be quoted
-          # Using grep for more reliable pattern matching with multiple keywords for better compatibility
-          # The previous bash pattern matching approach was replaced with grep because it's more reliable
-          # in GitHub Actions environment where there might be encoding or environment-specific issues
-          echo "Checking if branch name matches formatting fix pattern..."
-          if [[ ${BRANCH_NAME} =~ ^fix- ]]; then
-            echo "Branch starts with 'fix-': YES"
-            # Check for keywords in the branch name with debug output
-            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, regex, grep, trailing, whitespace, formatting, branch, detection"
-            # Using grep with extended regex (-E) for more reliable pattern matching with multiple keywords
-            # This approach is more robust against potential environment-specific issues in GitHub Actions
-            # The -E flag allows us to use the pipe character (|) directly without escaping
-            # Add debug output to help diagnose pattern matching issues
-            echo "Branch name to match: ${BRANCH_NAME}"
-            # Convert branch name to lowercase for case-insensitive matching
-            BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
-
-            # Use grep for more reliable pattern matching across environments
-            echo "Testing grep pattern match (case-insensitive):"
-            if echo "${BRANCH_NAME_LOWER}" | grep -q -E "(pattern|regex|grep|trailing|whitespace|formatting|branch|detection)"; then
-              echo "Match found in branch name"
-            else
-              echo "No match found"
-            fi
-            # Use grep for reliable pattern matching across environments
-            # This approach is more robust against potential environment-specific issues in GitHub Actions
-            if echo "${BRANCH_NAME_LOWER}" | grep -q -E "(pattern|regex|grep|trailing|whitespace|formatting|branch|detection)"; then
-              echo "Branch contains formatting keywords: YES"
-              echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
-              exit 0  # Always succeed on formatting-fixing branches
-            else
-              echo "Branch contains formatting keywords: NO"
-            fi
-          else
-            echo "Branch starts with 'fix-': NO"
-          fi
-
           # Check if there are any failures in the log
           if [ "${FAILED_COUNT}" -gt 0 ]; then
             # If all failures are just "files were modified" messages, consider it a success

@@ -1,0 +1,50 @@
+#############################
+## GitHub Actions CI Tests ##
+#############################
+#
+# This can be kicked off manually in the Actions tab of GitHub
+# It will also run nightly at 2pm
+# It will run on any pull request, except non-code changes
+# (images, markdown files, )
+#
+name: CI Unit Tests
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - ci-unit-tests
+  push:
+    branches:
+      - ci-unit-tests
+
+jobs:
+  python-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          pip install -e .
+          pip install tox
+          pip install tqdm
+      - name: Run the python tests (without coverage)
+        id: pythontests
+        continue-on-error: true
+        run: tox -e py310 -- -n 2 test -m "not integration" --durations=16 --verbosity=0
+      - name: Test the example files tests
+        id: exampletests
+        continue-on-error: true
+        run: |
+          for file in examples/*
+          do
+            echo "Running $file"
+            python "$file"
+          done
+      - name: Check if any step failed
+        if: ${{ steps.pythontests.outcome == 'failure' || steps.exampletests.outcome == 'failure' }}
+        run: exit 1
