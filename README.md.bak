@@ -177,25 +177,6 @@ If you would like to contribute, check out the
 [open issues on GitHub](https://github.com/sqlfluff/sqlfluff/issues). You can also see
 the guide to [contributing](CONTRIBUTING.md).
 
-# Pre-commit Configuration
-
-This project uses [pre-commit](https://pre-commit.com/) to enforce code quality standards. There are two pre-commit configurations:
-
-1. `.pre-commit-config.yaml` - Used for local development, which will automatically fix issues
-2. `.pre-commit-config-ci.yaml` - Used in CI environments, which only checks for issues without modifying files
-
-When running pre-commit in CI, we use the check-only configuration to ensure that the workflow doesn't modify files during the CI run, which would cause the workflow to fail.
-
-To run pre-commit locally:
-```shell
-pre-commit run --all-files
-```
-
-To run pre-commit in check-only mode (like CI):
-```shell
-pre-commit run --all-files --config .pre-commit-config-ci.yaml
-```
-
 # Sponsors
 
 <img src="images/datacoves.png" alt="Datacoves" width="150"/><br>
