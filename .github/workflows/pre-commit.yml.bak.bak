@@ -1,7 +1,4 @@
 name: pre-commit
-# This workflow runs pre-commit checks on all files and handles formatting-specific branches
-# The pattern matching logic has been simplified to automatically pass any branch starting with "fix-"
-# This avoids complex string matching issues and ensures consistent behavior across environments
 on:
   pull_request:
   push:
@@ -54,34 +51,6 @@ jobs:
           echo "Log file size: $(wc -l < ${RAW_LOG}) lines"
           echo "First few lines of log file:"
           head -n 5 ${RAW_LOG}
-
-          # Get the branch name from GitHub environment variables
-          # For pull requests, GITHUB_HEAD_REF contains the source branch name
-          # For direct pushes, we extract it from GITHUB_REF
-          BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
-          echo "Current branch name: ${BRANCH_NAME}"
-          echo "GITHUB_REF: ${GITHUB_REF}"
-          echo "GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
-
-          # Debug branch name character by character to detect any invisible characters
-          echo "Branch name character by character:"
-          for (( i=0; i<${#BRANCH_NAME}; i++ )); do
-            char="${BRANCH_NAME:$i:1}"
-            printf "Position %d: %s (ASCII: %d)\n" "$i" "$char" "'$char"
-          done
-
-          # Check if we're on a branch specifically fixing formatting issues
-          # Simplified branch name matching logic to avoid pattern matching issues
-          echo "Checking if branch name matches formatting fix pattern..."
-          if [[ ${BRANCH_NAME} =~ ^fix- ]]; then
-            echo "Branch starts with 'fix-': YES"
-            # For branches starting with fix-, we'll automatically consider them as formatting fix branches
-            # This simplifies the logic and avoids pattern matching issues
-            echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
-            exit 0  # Always succeed on formatting-fixing branches
-          else
-            echo "Branch starts with 'fix-': NO"
-          fi
 
           # Check if there are any failures in the log
           if [ "${FAILED_COUNT}" -gt 0 ]; then
