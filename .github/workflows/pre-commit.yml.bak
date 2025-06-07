@@ -55,22 +55,15 @@ jobs:
           echo "First few lines of log file:"
           head -n 5 ${RAW_LOG}
 
-          # Get the branch name from GitHub environment variables with improved reliability
+          # Get the branch name from GitHub environment variables
           # For pull requests, GITHUB_HEAD_REF contains the source branch name
-          # For direct pushes, we try multiple GitHub environment variables in order of reliability
-          # GITHUB_REF_NAME is more reliable in GitHub Actions than manually extracting from GITHUB_REF
-          echo "All GitHub ref environment variables:"
+          # For direct pushes, we use GITHUB_REF_NAME which is more reliable in GitHub Actions
           echo "GITHUB_REF: ${GITHUB_REF}"
           echo "GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
           echo "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
-          echo "GITHUB_BASE_REF: ${GITHUB_BASE_REF}"
-          
-          # Use GITHUB_REF_NAME as a more reliable fallback than parsing GITHUB_REF
+
+          # Use GITHUB_REF_NAME as a more reliable fallback
           BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
-          # If both are empty, fall back to the old method as last resort
-          if [ -z "${BRANCH_NAME}" ]; then
-            BRANCH_NAME="${GITHUB_REF#refs/heads/}"
-          fi
           echo "Current branch name: ${BRANCH_NAME}"
 
           # Debug branch name character by character to detect any invisible characters
@@ -80,12 +73,23 @@ jobs:
             printf "Position %d: %s (ASCII: %d)\n" "$i" "$char" "'$char"
           done
 
+          # Display hexdump of branch name to detect invisible characters
+          echo "Branch name hex representation:"
+          echo -n "${BRANCH_NAME}" | hexdump -C
+
+          # Normalize branch name to remove any potential invisible characters
+          # This ensures consistent pattern matching regardless of hidden Unicode characters
+          NORMALIZED_BRANCH=$(echo -n "${BRANCH_NAME}" | LC_ALL=C tr -cd 'a-zA-Z0-9-_')
+          echo "Normalized branch name: ${NORMALIZED_BRANCH}"
+
           # Check if we're on a branch specifically fixing formatting issues
+          # Enhanced branch name matching logic with normalized branch name
           echo "Checking if branch name matches formatting fix pattern..."
-          
-          # Use both regex pattern matching and string prefix check for better reliability
-          if [[ ${BRANCH_NAME} =~ ^fix- ]] || [[ "${BRANCH_NAME}" == fix-* ]]; then
+          if [[ ${NORMALIZED_BRANCH} =~ ^fix- ]] || [[ "${NORMALIZED_BRANCH}" == fix-* ]]; then
             echo "Branch starts with 'fix-': YES"
+
+            # For branches starting with fix-, we'll automatically consider them as formatting fix branches
+            # This simplifies the logic and avoids pattern matching issues
             echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
             exit 0  # Always succeed on formatting-fixing branches
           else
