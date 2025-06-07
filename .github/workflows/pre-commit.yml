@@ -90,15 +90,16 @@ jobs:
 
             # Debug output to show what we're matching against
             echo "Testing bash regex pattern match (case-insensitive):"
-            # Using a simpler regex pattern without the surrounding wildcards which can cause issues in some Bash environments
-            if [[ ${BRANCH_NAME_LOWER} =~ (pattern|regex|grep|trailing-whitespace|formatting|branch-detection) ]]; then
+            # Using a pattern without grouping parentheses to ensure consistent behavior across environments
+            # This allows matching substrings anywhere in the branch name, not just whole words
+            if [[ ${BRANCH_NAME_LOWER} =~ pattern|regex|grep|trailing-whitespace|formatting|branch-detection ]]; then
               echo "Match found: ${BASH_REMATCH[0]}"
             else
               echo "No match found"
             fi
             # Use a more reliable grep-based approach for keyword detection
-            # This is more consistent across different environments and shell implementations
-            if echo "${BRANCH_NAME_LOWER}" | grep -E "(pattern|regex|grep|trailing-whitespace|formatting|branch-detection)" > /dev/null; then
+            # Removed parentheses to ensure consistent behavior across different environments
+            if echo "${BRANCH_NAME_LOWER}" | grep -E "pattern|regex|grep|trailing-whitespace|formatting|branch-detection" > /dev/null; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
