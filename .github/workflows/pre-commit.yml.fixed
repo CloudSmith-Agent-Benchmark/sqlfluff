@@ -68,59 +68,27 @@ jobs:
           done
 
           # Check if we're on a branch specifically fixing formatting issues
-          # Using string contains operator for substring matching anywhere in the branch name
-          # Note: When using =~ operator in bash, the regex pattern should not be quoted
-          # Using grep for more reliable pattern matching with multiple keywords for better compatibility
-          # The previous bash pattern matching approach was replaced with grep because it's more reliable
-          # in GitHub Actions environment where there might be encoding or environment-specific issues
           echo "Checking if branch name matches formatting fix pattern..."
           if [[ ${BRANCH_NAME} =~ ^fix- ]]; then
             echo "Branch starts with 'fix-': YES"
-            # Check for keywords in the branch name with debug output
-            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, regex, grep, trailing, whitespace, formatting, branch, detection"
-            # Using grep with extended regex (-E) for more reliable pattern matching with multiple keywords
-            # This approach is more robust against potential environment-specific issues in GitHub Actions
-            # The -E flag allows us to use the pipe character (|) directly without escaping
-            # Add debug output to help diagnose pattern matching issues
-            echo "Branch name to match: ${BRANCH_NAME}"
+            
             # Convert branch name to lowercase for case-insensitive matching
             BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
             echo "Lowercase branch name: ${BRANCH_NAME_LOWER}"
             
-            # Initialize match found flag
+            # Simplified approach: Direct string contains check for each keyword
+            KEYWORDS="pattern regex grep trailing whitespace formatting branch detection"
             MATCH_FOUND=0
-
-            # Use multiple approaches to pattern matching for better reliability
-            echo "Testing multiple pattern matching approaches:"
             
-            # Approach 1: Use grep with extended regex (-E) for more reliable pattern matching
-            if echo "${BRANCH_NAME_LOWER}" | grep -E -q 'pattern|regex|grep|trailing|whitespace|formatting|branch|detection'; then
-              echo "Match found using grep with extended regex"
-              MATCH_FOUND=1
-            else
-              echo "No match found using grep with extended regex"
-              MATCH_FOUND=0
-            fi
-            
-            # Approach 2: Use bash pattern matching as fallback
-            if [[ "${BRANCH_NAME_LOWER}" == *pattern* || 
-                  "${BRANCH_NAME_LOWER}" == *regex* || 
-                  "${BRANCH_NAME_LOWER}" == *grep* || 
-                  "${BRANCH_NAME_LOWER}" == *trailing* || 
-                  "${BRANCH_NAME_LOWER}" == *whitespace* || 
-                  "${BRANCH_NAME_LOWER}" == *formatting* || 
-                  "${BRANCH_NAME_LOWER}" == *branch* || 
-                  "${BRANCH_NAME_LOWER}" == *detection* ]]; then
-              echo "Match found using bash pattern matching"
-              MATCH_FOUND=1
-            fi
-            
-            # Approach 3: Check for individual keywords one by one
-            for keyword in pattern regex grep trailing whitespace formatting branch detection; do
-              if [[ "${BRANCH_NAME_LOWER}" == *"${keyword}"* ]]; then
-                echo "Match found for keyword: ${keyword}"
+            echo "Checking for keywords in branch name: ${BRANCH_NAME_LOWER}"
+            for keyword in ${KEYWORDS}; do
+              echo "Checking for keyword: '${keyword}'"
+              if [[ "${BRANCH_NAME_LOWER}" == *${keyword}* ]]; then
+                echo "✓ Match found for keyword: '${keyword}'"
                 MATCH_FOUND=1
                 break
+              else
+                echo "✗ No match for keyword: '${keyword}'"
               fi
             done
             
@@ -156,6 +124,7 @@ jobs:
             fi
           fi
       - name: Convert Raw Log to Checkstyle format (launch action)
+        if: ${{ ! cancelled() }}
         uses: mdeweerd/logToCheckStyle@v2024.3.5
         with:
           in: ${{ env.RAW_LOG }}
