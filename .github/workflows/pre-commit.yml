@@ -103,7 +103,7 @@ jobs:
             # Test each keyword individually for more reliable matching
             for keyword in "pattern" "regex" "grep" "trailing" "whitespace" "spaces" "formatting" "branch" "detection" "keywords"; do
               # Use word splitting to handle hyphenated words by splitting on hyphens and checking each part
-              if echo "${BRANCH_NAME_LOWER}" | tr '-' ' ' | grep -i "\b${keyword}\b" > /dev/null || echo "${BRANCH_NAME_LOWER}" | grep -i "${keyword}" > /dev/null; then
+              if echo "${BRANCH_NAME_LOWER}" | tr '-' ' ' | grep -i "\\b${keyword}\\b" > /dev/null || echo "${BRANCH_NAME_LOWER}" | grep -i "${keyword}" > /dev/null; then
                 echo "  Keyword '${keyword}': MATCH"
                 KEYWORD_MATCH="YES"
               else
