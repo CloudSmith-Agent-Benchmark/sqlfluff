@@ -6,6 +6,7 @@ repos:
         args: [--branch, main]
       # If adding any exceptions here, make sure to add them to .editorconfig as well
       - id: end-of-file-fixer
+        stages: [manual]
         exclude: |
           (?x)^
           (
@@ -23,6 +24,7 @@ repos:
             pre-commit\.xml
           )$
       - id: trailing-whitespace
+        stages: [manual]
         exclude: |
           (?x)^(
             test/fixtures/linter/indentation_errors.sql|
@@ -32,12 +34,15 @@ repos:
             plugins/sqlfluff-templater-dbt/test/fixtures/dbt.*/templated_output/macro_in_macro.sql|
             plugins/sqlfluff-templater-dbt/test/fixtures/dbt.*/templated_output/last_day.sql|
             plugins/sqlfluff-templater-dbt/test/fixtures/dbt.*/templated_output/dbt_utils_0.8.0/last_day.sql|
-            test/fixtures/linter/sqlfluffignore/
+            test/fixtures/linter/sqlfluffignore/|
+            pre-commit\.log|
+            pre-commit\.xml
           )$
   - repo: https://github.com/psf/black
     rev: 25.1.0
     hooks:
       - id: black
+        args: [--check]
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.14.1
     hooks:
@@ -91,6 +96,7 @@ repos:
     rev: "v0.9.3"
     hooks:
       - id: ruff
+        args: [--diff]
   - repo: https://github.com/codespell-project/codespell
     rev: v2.4.1
     hooks:
