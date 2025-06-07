@@ -1,0 +1,50 @@
+#############################
+## GitHub Actions CI Tests ##
+#############################
+#
+# This can be kicked off manually in the Actions tab of GitHub
+# It will also run nightly at 2pm
+# It will run on any pull request, except non-code changes
+# (images, markdown files, )
+#
+name: CI Linting
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - ci-linting
+  push:
+    branches:
+      - ci-linting
+
+jobs:
+  linting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: pip install tox
+      - name: Run linting
+        id: linting
+        continue-on-error: true
+        run: tox -e "linting"
+      - name: Run doclinting
+        id: doclinting
+        continue-on-error: true
+        run: tox -e "doclinting"
+      - name: Run yamllint
+        id: yamllint
+        continue-on-error: true
+        run: tox -e "yamllint"
+      - name: Run doctests
+        id: doctests
+        continue-on-error: true
+        run: tox -e "doctests"
+      - name: Check if any step failed
+        if: ${{ steps.linting.outcome == 'failure' || steps.doclinting.outcome == 'failure' || steps.yamllint.outcome == 'failure' || steps.doctests.outcome == 'failure' }}
+        run: exit 1
