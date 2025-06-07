@@ -88,11 +88,9 @@ jobs:
             # Also include a version without word boundaries to match keywords within hyphenated words
             # Use grep with -o option to match parts of words (substrings)
             # Adding -w option would match whole words only, but we want to match substrings within hyphenated words
-            # FIXED: Using bash's built-in pattern matching instead of grep for more reliability across environments
+            # Using bash's built-in pattern matching instead of grep for more reliability
             # Convert branch name to lowercase for case-insensitive matching
             BRANCH_NAME_LOWER="${BRANCH_NAME,,}"
-            echo "Lowercase branch name: ${BRANCH_NAME_LOWER}"
-            # Use bash pattern matching which is more reliable than grep in GitHub Actions environment
             if [[ "$BRANCH_NAME_LOWER" =~ pattern|regex|trailing-whitespace|formatting|branch-detection ]]; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
