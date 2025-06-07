@@ -135,6 +135,7 @@ jobs:
             fi
           elif [ "$SKIP_FAILURE_CHECKS" = true ]; then
             echo "::notice::Skipping failure checks because this is a formatting fix branch"
+            exit 0  # Explicitly exit with success code for formatting fix branches
           fi
       - name: Convert Raw Log to Checkstyle format (launch action)
         uses: mdeweerd/logToCheckStyle@v2024.3.5
