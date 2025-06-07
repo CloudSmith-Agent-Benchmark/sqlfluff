@@ -58,7 +58,7 @@ jobs:
           if [[ "${BRANCH_NAME}" == *"fix-trailing-whitespace"* ]]; then  echo "::warning::On branch ${BRANCH_NAME} which is fixing whitespace issues - allowing pre-commit failures related to whitespace"
             exit 0  # Always succeed on whitespace-fixing branches
           fi
-          
+
           # Check if there are any failures in the log
           if [ "${FAILED_COUNT}" -gt 0 ]; then
             # If all failures are just "files were modified" messages, consider it a success
