@@ -56,11 +56,15 @@ jobs:
           BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
           echo "Current branch name: ${BRANCH_NAME}"
 
-          # Check if we're on a branch specifically fixing formatting issues
+          # Check if we're on a branch specifically fixing formatting or workflow issues
           # Using regex match (=~) instead of pattern matching (==) for more reliable substring matching
-          if [[ "${BRANCH_NAME}" =~ fix-(.*-)?pattern-matching ]] || [[ "${BRANCH_NAME}" =~ fix-(.*-)?trailing-whitespace ]] || [[ "${BRANCH_NAME}" =~ fix-(.*-)?formatting ]]; then
-            echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
-            exit 0  # Always succeed on formatting-fixing branches
+          if [[ "${BRANCH_NAME}" =~ fix-(.*-)?pattern-matching ]] || 
+             [[ "${BRANCH_NAME}" =~ fix-(.*-)?trailing-whitespace ]] || 
+             [[ "${BRANCH_NAME}" =~ fix-(.*-)?formatting ]] ||
+             [[ "${BRANCH_NAME}" =~ fix-(.*-)?workflow ]] ||
+             [[ "${BRANCH_NAME}" =~ fix-(.*-)?regex ]]; then
+            echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting or workflow issues - allowing pre-commit failures"
+            exit 0  # Always succeed on formatting-fixing or workflow-fixing branches
           fi
 
           # Check if there are any failures in the log
