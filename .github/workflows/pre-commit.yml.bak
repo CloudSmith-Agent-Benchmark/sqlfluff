@@ -98,12 +98,14 @@ jobs:
             MATCH_FOUND=false
             MATCHED_KEYWORD=""
 
-            # Use bash's native string operations for more consistent behavior across environments
+            # Use a more direct approach with basic string operations
+            # The issue with the previous approach was that pattern matching with *"${kw}"* 
+            # was failing for keywords within hyphenated words
             for kw in "${KEYWORDS[@]}"; do
-              # Case-insensitive substring check using string contains operator instead of regex
-              # This avoids issues with special regex characters in keywords like "regex"
+              # Simple substring check using grep without any special flags or patterns
+              # This is more reliable across different environments
               echo "Checking if '${BRANCH_NAME_LOWER}' contains '${kw}'"
-              if [[ "${BRANCH_NAME_LOWER}" == *"${kw}"* ]]; then
+              if echo "${BRANCH_NAME_LOWER}" | grep -q "${kw}"; then
                 echo "Match found: branch contains keyword '${kw}'"
                 MATCHED_KEYWORD="${kw}"
                 MATCH_FOUND=true
@@ -112,6 +114,7 @@ jobs:
             done
 
             # Fallback check with normalized branch name (remove all non-alphanumeric chars)
+            # Only use this if the primary method fails
             if [[ "$MATCH_FOUND" != "true" ]]; then
               # Normalize branch name to handle potential encoding issues
               NORMALIZED_BRANCH=$(echo "${BRANCH_NAME_LOWER}" | tr -cd 'a-z0-9')
@@ -120,21 +123,9 @@ jobs:
                 # Normalize keyword too for consistent comparison
                 NORMALIZED_KW=$(echo "${kw}" | tr -cd 'a-z0-9')
                 echo "Checking if normalized '${NORMALIZED_BRANCH}' contains '${NORMALIZED_KW}'"
-                if [[ "${NORMALIZED_BRANCH}" == *"${NORMALIZED_KW}"* ]]; then
+                if echo "${NORMALIZED_BRANCH}" | grep -q "${NORMALIZED_KW}"; then
                   echo "Match found in normalized branch name: contains keyword '${kw}'"
                   MATCHED_KEYWORD="${kw} (normalized)"
-                  MATCH_FOUND=true
-                  break
-                fi
-              done
-            fi
-            # Third fallback using grep if both previous methods fail
-            if [[ "$MATCH_FOUND" != "true" ]]; then
-              echo "Trying grep fallback method..."
-              for kw in "${KEYWORDS[@]}"; do
-                if echo "${BRANCH_NAME_LOWER}" | grep -q ${kw}; then
-                  echo "Match found using grep: branch contains keyword '${kw}'"
-                  MATCHED_KEYWORD="${kw} (grep)"
                   MATCH_FOUND=true
                   break
                 fi
