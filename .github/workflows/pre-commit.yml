@@ -59,7 +59,10 @@ jobs:
           # For pull requests, GITHUB_HEAD_REF contains the source branch name
           # For direct pushes, we extract it from GITHUB_REF
           BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+          # Convert branch name to lowercase for case-insensitive matching
+          BRANCH_NAME_LOWER="${BRANCH_NAME,,}"
           echo "Current branch name: ${BRANCH_NAME}"
+          echo "Lowercase branch name: ${BRANCH_NAME_LOWER}"
           echo "GITHUB_REF: ${GITHUB_REF}"
           echo "GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
 
@@ -99,9 +102,7 @@ jobs:
             # Use grep with -o option to match parts of words (substrings)
             # Adding -w option would match whole words only, but we want to match substrings within hyphenated words
             # FIXED: Using grep with -q and -E flags for more reliable pattern matching across environments
-            # Convert branch name to lowercase for case-insensitive matching
-            BRANCH_NAME_LOWER="${BRANCH_NAME,,}"
-            echo "Lowercase branch name: ${BRANCH_NAME_LOWER}"
+            # Branch name already converted to lowercase earlier
             # Using grep for more reliable pattern matching in GitHub Actions environment
             # Previous bash pattern matching approach was unreliable with hyphenated words
             # Using grep with -q (quiet) and -E (extended regex) for better substring matching
