@@ -25,6 +25,13 @@ jobs:
           path: ~/.cache/pre-commit/
           key: pre-commit-4|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml')
             }}
+      # Clean up any phantom files that might cause issues
+      - name: Clean up phantom files
+        run: |
+          # Remove any .bak files that might be causing issues
+          find . -name "*.bak" -type f -delete
+          # Remove specific phantom files if they exist
+          rm -f test/core/helpers/mock_test.py test/core/helpers/mock_test.py.bak
       - name: Run pre-commit hooks
         run: |
           set -o pipefail
