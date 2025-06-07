@@ -84,7 +84,6 @@ repos:
       - id: yamllint
         args: [-c=.yamllint]
         exclude: ^test/fixtures/
-        exclude: ^test/fixtures/
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     # Ruff version.
     rev: "v0.9.3"

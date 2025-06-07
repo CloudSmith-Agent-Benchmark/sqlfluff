@@ -15,4 +15,3 @@ rules:
   line-length: disable
   truthy:
     check-keys: false  # .github workflow uses "on:" (but not as a truthy value)
-    check-values: false  # Disable checking truthy values in test fixtures
