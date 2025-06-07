@@ -47,11 +47,11 @@ def has_untemplated_newline(point: ReflowPoint) -> bool:
         # Make sure it's not templated.
         # NOTE: An insertion won't have a pos_marker. But that
         # also means it's not templated.
-        if seg.is_type("newline") and (
+        if seg is not None and seg.is_type("newline") and (
             not seg.pos_marker or seg.pos_marker.is_literal()
         ):
             return True
-        if seg.is_type("placeholder"):
+        if seg is not None and seg.is_type("placeholder"):
             seg = cast(TemplateSegment, seg)
             assert (
                 seg.block_type == "literal"
@@ -1174,7 +1174,7 @@ def _deduce_line_current_indent(
                 if indent_seg.is_type("whitespace") and not indent_seg.is_templated:
                     break
             # Handle edge case of no whitespace, but with newline.
-            if not indent_seg.is_type("whitespace"):
+            if indent_seg is not None and not indent_seg.is_type("whitespace"):
                 indent_seg = None
 
     if not indent_seg:

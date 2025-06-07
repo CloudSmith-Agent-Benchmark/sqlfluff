@@ -543,7 +543,7 @@ class FluffConfig:
 
         return section_dict.get(val, default)
 
-    def get_section(self, section: Union[str, Iterable[str]]) -> Any:
+    def get_section(self, section: Union[str, Iterable[str]]) -> Optional[Union[dict[str, Any], Any]]:
         """Return a whole section of config as a dict.
 
         If the element found at the address is a value and not
@@ -561,11 +561,12 @@ class FluffConfig:
             return self._configs.get(section, None)
         else:
             # Try iterating
-            buff = self._configs
+            buff: Any = self._configs
             for sec in section:
                 buff = buff.get(sec, None)
                 if buff is None:
                     return None
+            # Ensure we're not returning None when a dict is expected
             return buff
 
     def set_value(self, config_path: Iterable[str], val: Any) -> None:

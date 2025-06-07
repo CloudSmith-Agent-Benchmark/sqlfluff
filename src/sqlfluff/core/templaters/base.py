@@ -228,7 +228,7 @@ class TemplatedFile:
                         f"(found slice {tfs.templated_slice})"
                     )
             previous_slice = tfs
-        if self.sliced_file and templated_str is not None:
+        if self.sliced_file and templated_str is not None and tfs is not None:
             if tfs.templated_slice.stop != len(templated_str):
                 raise SQLFluffSkipFile(  # pragma: no cover
                     "Length of templated file mismatch with final slice: "
@@ -631,12 +631,14 @@ class RawTemplater:
         # is a silly place.
         if config:
             # This is now a nested section
-            loaded_context = (
-                config.get_section(
-                    (self.templater_selector, self.name) + self.config_subsection
-                )
-                or {}
+            section_result = config.get_section(
+                (self.templater_selector, self.name) + self.config_subsection
             )
+            # Ensure we have a dictionary even if get_section returns None
+            if isinstance(section_result, dict):
+                loaded_context = section_result
+            else:
+                loaded_context = {}
         else:
             loaded_context = {}
         live_context = {}
