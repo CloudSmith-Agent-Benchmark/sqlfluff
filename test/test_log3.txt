@@ -1,0 +1,10 @@
+
+black....................................................................Failed
+- hook id: black
+- files were modified by this hook
+
+mypy.....................................................................Failed
+- hook id: mypy
+- actual error: something went wrong
+
+Some error: this is a real error
