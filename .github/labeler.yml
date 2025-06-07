@@ -1,77 +1,77 @@
 ansi:
-  - "/(ansi)/i"
+  - /(ansi)/i
 
 athena:
-  - "/(athena)/i"
+  - /(athena)/i
 
 bigquery:
-  - "/(bigquery)/i"
+  - /(bigquery)/i
 
 clickhouse:
-  - "/(clickhouse)/i"
+  - /(clickhouse)/i
 
 databricks:
-  - "/(databricks)/i"
+  - /(databricks)/i
 
 db2:
-  - "/(db2)/i"
+  - /(db2)/i
 
 duckdb:
-  - "/(duckdb)/i"
+  - /(duckdb)/i
 
 exasol:
-  - "/(exasol)/i"
+  - /(exasol)/i
 
 greenplum:
-  - "/(greenplum)/i"
+  - /(greenplum)/i
 
 hive:
-  - "/(hive)/i"
+  - /(hive)/i
 
 impala:
-  - "/(impala)/i"
+  - /(impala)/i
 
 mariadb:
-  - "/(mariadb)/i"
+  - /(mariadb)/i
 
 materialize:
-  - "/(materialize)/i"
+  - /(materialize)/i
 
 mysql:
-  - "/(mysql)/i"
+  - /(mysql)/i
 
 oracle:
-  - "/(oracle)/i"
+  - /(oracle)/i
 
 postgres:
-  - "/(postgres)/i"
+  - /(postgres)/i
 
 redshift:
-  - "/(redshift)/i"
+  - /(redshift)/i
 
 snowflake:
-  - "/(snowflake)/i"
+  - /(snowflake)/i
 
 soql:
-  - "/(soql)/i"
+  - /(soql)/i
 
 sparksql:
-  - "/(sparksql)/i"
+  - /(sparksql)/i
 
 sqlite:
-  - "/(sqlite)/i"
+  - /(sqlite)/i
 
 starrocks:
-  - "/(starrocks)/i"
+  - /(starrocks)/i
 
 t-sql:
-  - "/(t-sql|tsql)/i"
+  - /(t-sql|tsql)/i
 
 teradata:
-  - "/(teradata)/i"
+  - /(teradata)/i
 
 trino:
-  - "/(trino)/i"
+  - /(trino)/i
 
 vertica:
-  - "/(vertica)/i"
+  - /(vertica)/i
