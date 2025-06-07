@@ -29,7 +29,13 @@ jobs:
           path: ~/.cache/pre-commit/
           key: pre-commit-4|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml', '.pre-commit-config-ci.yaml') }}
       - name: Run pre-commit hooks
+        # Note: We use 'set +e' to prevent the script from exiting immediately when
+        # pre-commit fails, allowing us to properly handle fix-* branches that are
+        # expected to have pre-commit failures. We capture the exit code using PIPESTATUS
+        # to still be able to check if pre-commit failed.
         run: |
+          # Disable exit on error to prevent early termination
+          set +e
           set -o pipefail
           # Initialize a flag to track whether we should skip failure checks
           SKIP_FAILURE_CHECKS=false
@@ -42,6 +48,8 @@ jobs:
           touch ${RAW_LOG}
           # Run pre-commit on all files in check-only mode and ensure output is captured
           pre-commit run --show-diff-on-failure --color=always --all-files -c .pre-commit-config-ci.yaml | tee ${RAW_LOG}
+          # Capture the exit code
+          PRE_COMMIT_EXIT_CODE=${PIPESTATUS[0]}
 
           # Count the number of failures and "files were modified" messages
           FAILED_COUNT=$(grep -c "Failed" ${RAW_LOG} || echo 0)
@@ -91,7 +99,8 @@ jobs:
             # Reset exit code to 0 to prevent workflow failure when we're on a formatting fix branch
             exit 0
           # Only then check for failures if we're not skipping checks
-          elif [ "${FAILED_COUNT}" -gt 0 ]; then
+          elif [ "${PRE_COMMIT_EXIT_CODE}" -ne 0 ] || [ "${FAILED_COUNT}" -gt 0 ]; then
+            echo "Pre-commit exit code: ${PRE_COMMIT_EXIT_CODE}"
             # If all failures are just "files were modified" messages, consider it a success
             if [ "${FAILED_COUNT}" -eq "${MODIFIED_COUNT}" ]; then
               echo "::warning::Pre-commit reported 'Failed' but these were just 'files were modified' messages"
