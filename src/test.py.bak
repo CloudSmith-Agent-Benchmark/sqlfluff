@@ -4,4 +4,3 @@
 def test_function():
     """Test function."""
     return True
-
