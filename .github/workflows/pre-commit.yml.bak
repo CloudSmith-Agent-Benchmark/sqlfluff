@@ -52,13 +52,9 @@ jobs:
           echo "First few lines of log file:"
           head -n 5 ${RAW_LOG}
 
-          # Get the branch name from GitHub environment variables
-          # For pull requests, GITHUB_HEAD_REF contains the source branch name
-          # For direct pushes, we extract it from GITHUB_REF
-          BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+          # Get the current branch name
+          BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
           echo "Current branch name: ${BRANCH_NAME}"
-          echo "GITHUB_REF: ${GITHUB_REF}"
-          echo "GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
 
           # Check if we're on a branch specifically fixing formatting issues
           # Using string contains operator for substring matching anywhere in the branch name
