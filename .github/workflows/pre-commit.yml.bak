@@ -120,8 +120,6 @@ jobs:
               exit 0  # Always succeed on formatting-fixing branches
             else
               echo "Branch contains formatting keywords: NO"
-              # FIXED: Added bash substring check as a fallback method
-              # This provides an additional layer of reliability in case grep still has issues
               # Try one more time with direct substring check in bash
               for keyword in "pattern" "regex" "grep" "trailing-whitespace" "formatting" "branch-detection"; do
                 if [[ "${BRANCH_NAME_LOWER}" == *"$keyword"* ]]; then
