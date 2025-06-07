@@ -90,32 +90,29 @@ jobs:
 
             # Using a simpler and more reliable keyword-based approach instead of complex regex
             echo "Using simplified keyword matching approach:"
-            
-            # Define keywords to look for
-            KEYWORDS="pattern regex grep trailing-whitespace trailing-spaces formatting branch-detection"
+
+            # Define keywords to look for - directly use them in the grep pattern for reliability
+            echo "Checking branch name '${BRANCH_NAME_LOWER}' for keywords..."
             MATCH_FOUND=false
             MATCHED_KEYWORD=""
-            
-            # Check each keyword individually
-            for keyword in $KEYWORDS; do
-              if [[ ${BRANCH_NAME_LOWER} == *"$keyword"* ]]; then
-                echo "Match found: branch contains keyword '$keyword'"
-                MATCH_FOUND=true
-                MATCHED_KEYWORD="$keyword"
-                break
-              fi
-            done
-            
-            # If no match was found with the simple approach, try grep as a fallback
-            if [[ "$MATCH_FOUND" != "true" ]]; then
-              if echo "${BRANCH_NAME_LOWER}" | grep -E 'pattern|regex|grep|trailing-whitespace|trailing-spaces|formatting|branch-detection' > /dev/null; then
-                echo "Match found using grep fallback"
-                MATCH_FOUND=true
-              else
-                echo "No match found with any method"
-              fi
+
+            # Use a single grep command with fixed patterns for maximum reliability
+            # This avoids issues with word splitting and pattern matching in different environments
+            # Using word parts to match keywords that might be part of hyphenated words
+            if echo "${BRANCH_NAME_LOWER}" | grep -E "pattern|whitespace|regex|grep|trailing|spaces|formatting|branch|detection" > /dev/null; then
+              # Try to identify which keyword matched for better debugging
+              for kw in pattern whitespace regex grep trailing spaces formatting branch detection; do
+                if echo "${BRANCH_NAME_LOWER}" | grep -q "$kw"; then
+                  echo "Match found: branch contains keyword '$kw'"
+                  MATCHED_KEYWORD="$kw"
+                  break
+                fi
+              done
+              echo "Match found using direct grep approach"
+              MATCH_FOUND=true
+            else
+              echo "No match found with grep method"
             fi
-            
             # Use the result of our simplified matching
             if [[ "$MATCH_FOUND" == "true" ]]; then
               echo "Branch contains formatting keywords: YES (matched: ${MATCHED_KEYWORD:-'via grep'})"
