@@ -88,26 +88,37 @@ jobs:
             # Convert branch name to lowercase for case-insensitive matching
             BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
 
-            # Debug output to show what we're matching against
-            echo "Testing bash regex pattern match (case-insensitive):"
-            # Modified regex pattern to handle keywords that are part of larger hyphenated words
-            # This ensures that words like "fix-regex-pattern-matching" will match "regex" and "pattern"
-            if [[ ${BRANCH_NAME_LOWER} =~ .*(pattern|regex|grep|trailing[-.]whitespace|trailing[-.]spaces|formatting|branch[-.]detection).* ]]; then
-              echo "Match found: ${BASH_REMATCH[0]}"
-            else
-              # Fallback to a more flexible approach using grep to search for keywords
-              # This is more reliable for detecting keywords within hyphenated words
-              if echo "${BRANCH_NAME_LOWER}" | grep -E '(pattern|regex|grep|trailing[-]whitespace|trailing[-]spaces|formatting|branch[-]detection)' > /dev/null; then
-                echo "Match found using grep"
+            # Using a simpler and more reliable keyword-based approach instead of complex regex
+            echo "Using simplified keyword matching approach:"
+            
+            # Define keywords to look for
+            KEYWORDS="pattern regex grep trailing-whitespace trailing-spaces formatting branch-detection"
+            MATCH_FOUND=false
+            MATCHED_KEYWORD=""
+            
+            # Check each keyword individually
+            for keyword in $KEYWORDS; do
+              if [[ ${BRANCH_NAME_LOWER} == *"$keyword"* ]]; then
+                echo "Match found: branch contains keyword '$keyword'"
+                MATCH_FOUND=true
+                MATCHED_KEYWORD="$keyword"
+                break
+              fi
+            done
+            
+            # If no match was found with the simple approach, try grep as a fallback
+            if [[ "$MATCH_FOUND" != "true" ]]; then
+              if echo "${BRANCH_NAME_LOWER}" | grep -E 'pattern|regex|grep|trailing-whitespace|trailing-spaces|formatting|branch-detection' > /dev/null; then
+                echo "Match found using grep fallback"
+                MATCH_FOUND=true
               else
-                echo "No match found"
+                echo "No match found with any method"
               fi
             fi
-            # Use a more robust approach combining both regex and grep for maximum compatibility
-            # First try bash regex, then fallback to grep if needed
-            if [[ ${BRANCH_NAME_LOWER} =~ .*(pattern|regex|grep|trailing[-.]whitespace|trailing[-.]spaces|formatting|branch[-.]detection).* ]] ||
-               echo "${BRANCH_NAME_LOWER}" | grep -E '(pattern|regex|grep|trailing[-]whitespace|trailing[-]spaces|formatting|branch[-]detection)' > /dev/null; then
-              echo "Branch contains formatting keywords: YES"
+            
+            # Use the result of our simplified matching
+            if [[ "$MATCH_FOUND" == "true" ]]; then
+              echo "Branch contains formatting keywords: YES (matched: ${MATCHED_KEYWORD:-'via grep'})"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
             else
