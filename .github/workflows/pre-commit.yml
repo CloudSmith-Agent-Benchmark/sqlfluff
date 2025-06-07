@@ -6,8 +6,9 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     env:
-      RAW_LOG: pre-commit.log
-      CS_XML: pre-commit.xml
+      LOGS_DIR: .logs
+      RAW_LOG: .logs/pre-commit.log
+      CS_XML: .logs/pre-commit.xml
       SKIP: no-commit-to-branch
     steps:
       - run: sudo apt-get update && sudo apt-get install cppcheck
@@ -27,6 +28,8 @@ jobs:
       - name: Run pre-commit hooks
         run: |
           set -o pipefail
+          # Create logs directory
+          mkdir -p ${{ env.LOGS_DIR }}
           # Clean pre-commit cache to remove phantom files
           pre-commit clean
           pre-commit gc
