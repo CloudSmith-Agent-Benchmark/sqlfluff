@@ -18,7 +18,7 @@ repos:
             plugins/sqlfluff-templater-dbt/test/fixtures/dbt.*/templated_output/(dbt_utils_0.8.0/)?last_day.sql|
             test/fixtures/linter/indentation_errors.sql|
             test/fixtures/templater/jinja_d_roundtrip/test.sql|
-            .*\.patch$
+            .*\.patch(\..*)?$
           )$
       - id: trailing-whitespace
         exclude: |
@@ -31,7 +31,7 @@ repos:
             plugins/sqlfluff-templater-dbt/test/fixtures/dbt.*/templated_output/last_day.sql|
             plugins/sqlfluff-templater-dbt/test/fixtures/dbt.*/templated_output/dbt_utils_0.8.0/last_day.sql|
             test/fixtures/linter/sqlfluffignore/|
-            .*\.patch$
+            .*\.patch(\..*)?$
           )$
   - repo: https://github.com/psf/black
     rev: 25.1.0
