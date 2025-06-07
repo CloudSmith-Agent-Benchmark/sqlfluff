@@ -1,9 +1,9 @@
 name: pre-commit
 # This workflow runs pre-commit checks on all files and handles formatting-specific branches
-# The pattern matching logic has been improved to use direct string comparison without quotes
-# and explicit checks for each keyword to avoid issues with string comparison operators
+# The pattern matching logic has been improved to use regex pattern matching (=~) instead of glob pattern matching (==)
+# and enhanced grep fallback with fixed strings (-F) for more reliable keyword detection
 # in different environments, particularly in GitHub Actions runners
-# Fixed in fix-pattern-matching-improved branch
+# Fixed in fix-pattern-matching-bash-comparison branch
 on:
   pull_request:
   push:
@@ -102,65 +102,63 @@ jobs:
             MATCH_FOUND=false
             MATCHED_KEYWORD=""
 
-            # Direct string comparison with explicit checks for each keyword
-            # This avoids any potential issues with string comparison operators in different environments
-            if [[ "${BRANCH_NAME_LOWER}" == *pattern* ]]; then
+            # Using regex pattern matching (=~) instead of glob pattern matching (==)
+            # This is more reliable in GitHub Actions environment
+            if [[ "${BRANCH_NAME_LOWER}" =~ pattern ]]; then
               echo "Match found: branch contains keyword 'pattern'"
               MATCHED_KEYWORD="pattern"
               MATCH_FOUND=true
-            elif [[ "${BRANCH_NAME_LOWER}" == *whitespace* ]]; then
+            elif [[ "${BRANCH_NAME_LOWER}" =~ whitespace ]]; then
               echo "Match found: branch contains keyword 'whitespace'"
               MATCHED_KEYWORD="whitespace"
               MATCH_FOUND=true
-            elif [[ "${BRANCH_NAME_LOWER}" == *regex* ]]; then
+            elif [[ "${BRANCH_NAME_LOWER}" =~ regex ]]; then
               echo "Match found: branch contains keyword 'regex'"
               MATCHED_KEYWORD="regex"
               MATCH_FOUND=true
-            elif [[ "${BRANCH_NAME_LOWER}" == *grep* ]]; then
+            elif [[ "${BRANCH_NAME_LOWER}" =~ grep ]]; then
               echo "Match found: branch contains keyword 'grep'"
               MATCHED_KEYWORD="grep"
               MATCH_FOUND=true
-            elif [[ "${BRANCH_NAME_LOWER}" == *trailing* ]]; then
+            elif [[ "${BRANCH_NAME_LOWER}" =~ trailing ]]; then
               echo "Match found: branch contains keyword 'trailing'"
               MATCHED_KEYWORD="trailing"
               MATCH_FOUND=true
-            elif [[ "${BRANCH_NAME_LOWER}" == *spaces* ]]; then
+            elif [[ "${BRANCH_NAME_LOWER}" =~ spaces ]]; then
               echo "Match found: branch contains keyword 'spaces'"
               MATCHED_KEYWORD="spaces"
               MATCH_FOUND=true
-            elif [[ "${BRANCH_NAME_LOWER}" == *formatting* ]]; then
+            elif [[ "${BRANCH_NAME_LOWER}" =~ formatting ]]; then
               echo "Match found: branch contains keyword 'formatting'"
               MATCHED_KEYWORD="formatting"
               MATCH_FOUND=true
-            elif [[ "${BRANCH_NAME_LOWER}" == *branch* ]]; then
+            elif [[ "${BRANCH_NAME_LOWER}" =~ branch ]]; then
               echo "Match found: branch contains keyword 'branch'"
               MATCHED_KEYWORD="branch"
               MATCH_FOUND=true
-            elif [[ "${BRANCH_NAME_LOWER}" == *detection* ]]; then
+            elif [[ "${BRANCH_NAME_LOWER}" =~ detection ]]; then
               echo "Match found: branch contains keyword 'detection'"
               MATCHED_KEYWORD="detection"
               MATCH_FOUND=true
-            elif [[ "${BRANCH_NAME_LOWER}" == *newline* ]]; then
+            elif [[ "${BRANCH_NAME_LOWER}" =~ newline ]]; then
               echo "Match found: branch contains keyword 'newline'"
               MATCHED_KEYWORD="newline"
               MATCH_FOUND=true
             fi
 
-            # Fallback check using simple grep with fixed strings if the direct approach fails
-            # This is a simpler fallback that doesn't rely on bash string operations
+            # Enhanced fallback check using grep with fixed strings
+            # This is a more reliable fallback that doesn't depend on bash string operations
             if [[ "$MATCH_FOUND" != "true" ]]; then
-              echo "Direct matching failed, trying grep fallback..."
-              if grep -q "pattern\|whitespace\|regex\|grep\|trailing\|spaces\|formatting\|branch\|detection\|newline" <<< "${BRANCH_NAME_LOWER}"; then
-                # Find which keyword matched
-                for kw in "${KEYWORDS[@]}"; do
-                  if grep -q "$kw" <<< "${BRANCH_NAME_LOWER}"; then
-                    echo "Match found using grep fallback: branch contains keyword '$kw'"
-                    MATCHED_KEYWORD="$kw (grep)"
-                    MATCH_FOUND=true
-                    break
-                  fi
-                done
-              fi
+              echo "Direct regex matching failed, trying enhanced grep fallback..."
+              # Use grep with fixed strings (-F) for exact keyword matching
+              for kw in "${KEYWORDS[@]}"; do
+                if grep -q -F "$kw" <<< "${BRANCH_NAME_LOWER}"; then
+                  echo "Match found using grep fallback: branch contains keyword '$kw'"
+                  MATCHED_KEYWORD="$kw (grep)"
+                  MATCH_FOUND=true
+                  break
+                fi
+              done
             fi
 
             # Summary of matching results
