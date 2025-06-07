@@ -79,7 +79,7 @@ jobs:
             # Check for keywords in the branch name with debug output
             # Using bash regex pattern matching with wildcards to match substrings anywhere in the branch name
             # Added .* before and after each keyword to ensure we match them as substrings, not just whole words
-            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, regex, grep, trailing-whitespace, trailing-spaces, formatting, branch-detection"
+            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, regex, grep, trailing-whitespace, trailing-spaces, formatting, branch-detection, whitespace"
             # Using grep with extended regex (-E) for more reliable pattern matching with multiple keywords
             # This approach is more robust against potential environment-specific issues in GitHub Actions
             # The -E flag allows us to use the pipe character (|) directly without escaping
@@ -90,30 +90,27 @@ jobs:
 
             # Using a simpler and more reliable keyword-based approach instead of complex regex
             echo "Using simplified keyword matching approach:"
-            
-            # Define keywords to look for
-            KEYWORDS="pattern regex grep trailing-whitespace trailing-spaces formatting branch-detection"
+
+            # Define keywords to look for - directly use them in the grep pattern for reliability
+            echo "Checking branch name '${BRANCH_NAME_LOWER}' for keywords..."
             MATCH_FOUND=false
             MATCHED_KEYWORD=""
-            
-            # Check each keyword individually
-            for keyword in $KEYWORDS; do
-              if [[ ${BRANCH_NAME_LOWER} == *"$keyword"* ]]; then
-                echo "Match found: branch contains keyword '$keyword'"
-                MATCH_FOUND=true
-                MATCHED_KEYWORD="$keyword"
-                break
-              fi
-            done
-            
-            # If no match was found with the simple approach, try grep as a fallback
-            if [[ "$MATCH_FOUND" != "true" ]]; then
-              if echo "${BRANCH_NAME_LOWER}" | grep -E 'pattern|regex|grep|trailing-whitespace|trailing-spaces|formatting|branch-detection' > /dev/null; then
-                echo "Match found using grep fallback"
-                MATCH_FOUND=true
-              else
-                echo "No match found with any method"
-              fi
+
+            # Use a single grep command with fixed patterns for maximum reliability
+            # This avoids issues with word splitting and pattern matching in different environments
+            if echo "${BRANCH_NAME_LOWER}" | grep -E "pattern|regex|grep|trailing-whitespace|trailing-spaces|formatting|branch-detection|whitespace" > /dev/null; then
+              # Try to identify which keyword matched for better debugging
+              for kw in pattern regex grep trailing-whitespace trailing-spaces formatting branch-detection; do
+                if echo "${BRANCH_NAME_LOWER}" | grep -q "$kw"; then
+                  echo "Match found: branch contains keyword '$kw'"
+                  MATCHED_KEYWORD="$kw"
+                  break
+                fi
+              done
+              echo "Match found using direct grep approach"
+              MATCH_FOUND=true
+            else
+              echo "No match found with grep method"
             fi
             
             # Use the result of our simplified matching
