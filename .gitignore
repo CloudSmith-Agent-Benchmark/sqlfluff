@@ -60,6 +60,12 @@ plugins/sqlfluff-templater-dbt/test/fixtures/dbt/dbt_project/packages.yml
 # Emacs
 *~
 
+# Backup files
+*.bak
+
+# Backup files
+*.bak
+
 # Mypyc outputs
 *.pyd
 *.so
