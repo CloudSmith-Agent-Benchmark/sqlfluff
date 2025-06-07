@@ -93,7 +93,7 @@ jobs:
             echo "Testing multiple pattern matching approaches:"
 
             # Approach 1: Use grep with extended regex for more reliable pattern matching
-            if echo "${BRANCH_NAME_LOWER}" | grep -qE 'pattern|regex|grep|trailing|whitespace|formatting|branch|detection'; then
+            if echo "${BRANCH_NAME_LOWER}" | grep -qE "pattern|regex|grep|trailing|whitespace|formatting|branch|detection"; then
               echo "Match found using basic grep pattern"
               MATCH_FOUND=1
             else
