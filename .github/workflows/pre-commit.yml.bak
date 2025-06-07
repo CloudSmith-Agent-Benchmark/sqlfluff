@@ -78,6 +78,8 @@ jobs:
             echo "Branch starts with 'fix-': YES"
             # Check for keywords in the branch name with debug output
             # Using bash pattern matching instead of grep for more reliable substring matching
+            # The keywords list includes common formatting-related terms and specific issue types
+            # Added grep-quoting to support branches fixing grep quoting issues
             echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, regex, trailing-whitespace, formatting, branch-detection, grep-quoting"
             # Using grep with extended regex (-E) for more reliable pattern matching with multiple keywords
             # This approach is more robust against potential environment-specific issues in GitHub Actions
