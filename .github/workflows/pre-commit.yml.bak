@@ -63,7 +63,7 @@ jobs:
           echo "Debug: Contains trailing-whitespace: $([[ "${BRANCH_NAME}" == *"trailing-whitespace"* ]] && echo "true" || echo "false")"
           echo "Debug: Contains formatting: $([[ "${BRANCH_NAME}" == *"formatting"* ]] && echo "true" || echo "false")"
           echo "Debug: Contains syntax: $([[ "${BRANCH_NAME}" == *"syntax"* ]] && echo "true" || echo "false")"
-          echo "Debug: Contains conditional-keywords: $([[ "${BRANCH_NAME}" == *"conditional-keywords"* ]] && echo "true" || echo "false")"
+          echo "Debug: Contains conditional: $([[ "${BRANCH_NAME}" == *"conditional"* ]] && echo "true" || echo "false")"
 
           # Check if we're on a branch specifically fixing formatting issues
           # Using string contains operator for substring matching anywhere in the branch name
@@ -71,7 +71,6 @@ jobs:
           if [[ "${BRANCH_NAME}" =~ ^fix- ]]; then
             # Store all patterns in an array for cleaner code and better reliability
             patterns=("pattern" "regex" "trailing-whitespace" "formatting" "syntax" "conditional")
-            
             # Debug each pattern check explicitly
             echo "Debug: Checking each pattern against branch name: ${BRANCH_NAME}"
             for pattern in "${patterns[@]}"; do
