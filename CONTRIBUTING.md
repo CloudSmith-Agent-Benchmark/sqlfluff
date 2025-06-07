@@ -302,6 +302,12 @@ These hooks can help the user identify and fix potential linting/typing
 violations prior to committing their code and therefore reduce having to deal
 with these sort of issues during code review.
 
+> **Note:** The pre-commit configuration is now aligned with the CI configuration.
+> Both local development and CI environments use the same pre-commit settings,
+> ensuring consistent behavior across environments. All hooks are configured in
+> check-only mode, which means they will report issues but not automatically fix them.
+> To automatically fix issues, you can run `pre-commit run --all-files --hook-stage manual`.
+
 ### Documentation Website
 
 Documentation is built using Sphinx with some pages being built based on the
