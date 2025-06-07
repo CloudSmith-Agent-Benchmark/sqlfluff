@@ -52,10 +52,6 @@ jobs:
           echo "First few lines of log file:"
           head -n 5 ${RAW_LOG}
 
-          # Debug GitHub environment variables
-          echo "GitHub ref: ${GITHUB_REF}"
-          echo "GitHub head ref: ${GITHUB_HEAD_REF}"
-          
           # Get the current branch name using GitHub Actions environment variables
           # For pull requests, use GITHUB_HEAD_REF; for direct pushes, extract from GITHUB_REF
           BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}

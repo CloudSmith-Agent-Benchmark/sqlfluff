@@ -52,20 +52,6 @@ jobs:
           echo "First few lines of log file:"
           head -n 5 ${RAW_LOG}
 
-          # Debug GitHub environment variables
-          echo "GitHub ref: ${GITHUB_REF}"
-          echo "GitHub head ref: ${GITHUB_HEAD_REF}"
-          
-          # Get the current branch name using GitHub Actions environment variables
-          # For pull requests, use GITHUB_HEAD_REF; for direct pushes, extract from GITHUB_REF
-          BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
-          echo "Detected branch name: ${BRANCH_NAME}"
-          # Check if we're on a branch specifically fixing whitespace issues
-          if [[ "${BRANCH_NAME}" == *"fix-trailing-whitespace"* ]]; then
-            echo "::warning::On branch ${BRANCH_NAME} which is fixing whitespace issues - allowing pre-commit failures related to whitespace"
-            exit 0  # Always succeed on whitespace-fixing branches
-          fi
-
           # Check if there are any failures in the log
           if [ "${FAILED_COUNT}" -gt 0 ]; then
             # If all failures are just "files were modified" messages, consider it a success
