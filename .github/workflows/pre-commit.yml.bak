@@ -89,16 +89,18 @@ jobs:
             BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
 
             # Debug output to show what we're matching against
-            echo "Testing grep pattern match (case-insensitive):"
-            if echo "${BRANCH_NAME_LOWER}" | grep -E "pattern|regex|grep|trailing-whitespace|formatting|branch-detection" > /dev/null; then
-              echo "Match found using grep"
+            echo "Testing bash regex pattern match (case-insensitive):"
+            if [[ ${BRANCH_NAME_LOWER} =~ .*(pattern|regex|grep|trailing-whitespace|formatting|branch-detection).* ]]; then
+              echo "Match found: ${BASH_REMATCH[0]}"
             else
-              echo "No match found using grep"
+              echo "No match found"
             fi
-            # Use grep instead of bash regex for more consistent behavior across environments
-            # This avoids issues with how different bash versions handle regex patterns
-            # The -E flag allows us to use extended regex with the pipe character (|) for alternation
-            if echo "${BRANCH_NAME_LOWER}" | grep -E "pattern|regex|grep|trailing-whitespace|formatting|branch-detection" > /dev/null; then
+            # Use bash's built-in regex matching for more reliable pattern matching across environments
+            # This avoids potential issues with grep and quoting in different shell environments
+            # When using =~ operator in bash, the regex pattern should not be quoted
+            # Modified to use substring matching with wildcards to match keywords anywhere in the branch name
+            # Added explicit grouping with parentheses to ensure consistent behavior across different shell environments
+            if [[ ${BRANCH_NAME_LOWER} =~ .*(pattern|regex|grep|trailing-whitespace|formatting|branch-detection).* ]]; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
