@@ -65,6 +65,8 @@ jobs:
               exit 0  # Explicitly set success exit code
             fi
           fi
+          # Explicitly set success exit code when no failures detected
+          exit 0
       - name: Convert Raw Log to Checkstyle format (launch action)
         uses: mdeweerd/logToCheckStyle@v2024.3.5
         with:
