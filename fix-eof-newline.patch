@@ -6,7 +6,5 @@ index 2e9571cb8..478fb861e 100644
 
 def test_function():
     """Test function docstring."""
--    return True
-\ No newline at end of file
+-    return True\ No newline at end of file
 +    return True
-
