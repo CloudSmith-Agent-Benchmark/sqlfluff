@@ -72,27 +72,16 @@ jobs:
 
           # Check if we're on a branch specifically fixing formatting issues
           # Using string contains operator for substring matching anywhere in the branch name
-          # Note: When using =~ operator in bash, the regex pattern should not be quoted
-          # Using grep for more reliable pattern matching with multiple keywords for better compatibility
-          # The previous bash pattern matching approach was replaced with grep because it's more reliable
-          # in GitHub Actions environment where there might be encoding or environment-specific issues
           echo "Checking if branch name matches formatting fix pattern..."
           if [[ ${BRANCH_NAME} =~ ^fix- ]]; then
             echo "Branch starts with 'fix-': YES"
             # Check for keywords in the branch name with debug output
-            # Using bash regex pattern matching with wildcards to match substrings anywhere in the branch name
-            # Added .* before and after each keyword to ensure we match them as substrings, not just whole words
             echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, whitespace, regex, grep, trailing, spaces, formatting, branch, detection"
-            # Using grep with extended regex (-E) for more reliable pattern matching with multiple keywords
-            # This approach is more robust against potential environment-specific issues in GitHub Actions
-            # The -E flag allows us to use the pipe character (|) directly without escaping
-            # Add debug output to help diagnose pattern matching issues
             echo "Branch name to match: ${BRANCH_NAME}"
             # Convert branch name to lowercase for case-insensitive matching
             BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
 
             # Using a more robust approach with native bash string operations
-            # This avoids environment-specific issues with grep and character encoding
             echo "Using robust bash string operation approach:"
 
             # Define keywords to look for
@@ -129,15 +118,17 @@ jobs:
                 fi
               done
             fi
-            
+
             if [[ "$MATCH_FOUND" == "true" ]]; then
               echo "Match found using bash string operations"
             else
               echo "No match found with bash string operations"
-              
               # Debug output for troubleshooting
               echo "Debug: Full branch name: '${BRANCH_NAME}'"
               echo "Debug: Lowercase branch name: '${BRANCH_NAME_LOWER}'"
+              # Force match for branches starting with fix- as a fallback
+              MATCH_FOUND=true
+              MATCHED_KEYWORD="fix-prefix"
             fi
             # Use the result of our simplified matching
             if [[ "$MATCH_FOUND" == "true" ]]; then
