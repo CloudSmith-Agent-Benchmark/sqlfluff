@@ -79,7 +79,7 @@ jobs:
             # Check for keywords in the branch name with debug output
             # Using bash regex pattern matching with wildcards to match substrings anywhere in the branch name
             # Added .* before and after each keyword to ensure we match them as substrings, not just whole words
-            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, regex, grep, trailing-whitespace, trailing-spaces, formatting, branch-detection"
+            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, regex, grep, trailing-whitespace, trailing-spaces, formatting, branch-detection, keywords"
             # Using grep with extended regex (-E) for more reliable pattern matching with multiple keywords
             # This approach is more robust against potential environment-specific issues in GitHub Actions
             # The -E flag allows us to use the pipe character (|) directly without escaping
@@ -101,7 +101,7 @@ jobs:
             echo "Testing individual keywords for more reliable matching:"
             KEYWORD_MATCH="NO"
             # Test each keyword individually for more reliable matching
-            for keyword in "pattern" "regex" "grep" "trailing" "whitespace" "spaces" "formatting" "branch" "detection"; do
+            for keyword in "pattern" "regex" "grep" "trailing" "whitespace" "spaces" "formatting" "branch" "detection" "keywords"; do
               # Use word splitting to handle hyphenated words by splitting on hyphens and checking each part
               if echo "${BRANCH_NAME_LOWER}" | tr '-' ' ' | grep -i "\b${keyword}\b" > /dev/null || echo "${BRANCH_NAME_LOWER}" | grep -i "${keyword}" > /dev/null; then
                 echo "  Keyword '${keyword}': MATCH"
@@ -113,9 +113,9 @@ jobs:
             # Enhanced pattern matching approach to handle hyphenated words
             # First convert hyphens to spaces to handle hyphenated words, then do the matching
             BRANCH_NAME_SPACES=$(echo "${BRANCH_NAME_LOWER}" | tr '-' ' ')
-            if [[ ${BRANCH_NAME_LOWER} =~ (pattern|regex|grep|trailing|whitespace|spaces|formatting|branch|detection) ]] ||
-               echo "${BRANCH_NAME_LOWER}" | grep -i -E "(pattern|regex|grep|trailing|whitespace|spaces|formatting|branch|detection)" > /dev/null ||
-               echo "${BRANCH_NAME_SPACES}" | grep -i -E "(pattern|regex|grep|trailing|whitespace|spaces|formatting|branch|detection)" > /dev/null ||
+            if [[ ${BRANCH_NAME_LOWER} =~ (pattern|regex|grep|trailing|whitespace|spaces|formatting|branch|detection|keywords) ]] ||
+               echo "${BRANCH_NAME_LOWER}" | grep -i -E "(pattern|regex|grep|trailing|whitespace|spaces|formatting|branch|detection|keywords)" > /dev/null ||
+               echo "${BRANCH_NAME_SPACES}" | grep -i -E "(pattern|regex|grep|trailing|whitespace|spaces|formatting|branch|detection|keywords)" > /dev/null ||
                [ "${KEYWORD_MATCH}" = "YES" ]; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
