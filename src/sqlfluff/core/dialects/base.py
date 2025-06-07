@@ -13,6 +13,7 @@ from sqlfluff.core.parser.grammar.base import BaseGrammar, Nothing
 from sqlfluff.core.parser.lexer import LexerType
 from sqlfluff.core.parser.matchable import Matchable
 from sqlfluff.core.parser.types import BracketPairTuple, DialectElementType
+
 # Import removed during fix
 
 
@@ -395,3 +396,4 @@ class Dialect:
     def get_root_segment(self) -> Union[type[BaseSegment], Matchable]:
         """Get the root segment of the dialect."""
         return self.ref(self.root_segment_name)
+
