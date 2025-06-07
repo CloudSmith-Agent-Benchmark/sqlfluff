@@ -40,10 +40,21 @@ jobs:
           # Remove any existing log file and create a new empty one
           rm -f ${RAW_LOG}
           touch ${RAW_LOG}
-          
-          # Initialize formatting fix branch flag
-          FORMATTING_FIX_BRANCH=false
-          
+          # Run pre-commit on all files in check-only mode and ensure output is captured
+          pre-commit run --show-diff-on-failure --color=always --all-files -c .pre-commit-config-ci.yaml | tee ${RAW_LOG}
+
+          # Count the number of failures and "files were modified" messages
+          FAILED_COUNT=$(grep -c "Failed" ${RAW_LOG} || echo 0)
+          MODIFIED_COUNT=$(grep -c "files were modified by this hook" ${RAW_LOG} || echo 0)
+          ERROR_COUNT=$(grep -c "^[^-].*error:" ${RAW_LOG} || echo 0)
+
+          echo "Found ${FAILED_COUNT} failures, ${MODIFIED_COUNT} 'files were modified' messages, and ${ERROR_COUNT} errors"
+
+          # Debug log file content
+          echo "Log file size: $(wc -l < ${RAW_LOG}) lines"
+          echo "First few lines of log file:"
+          head -n 5 ${RAW_LOG}
+
           # Get the branch name from GitHub environment variables
           # For pull requests, GITHUB_HEAD_REF contains the source branch name
           # For direct pushes, we extract it from GITHUB_REF
@@ -71,7 +82,7 @@ jobs:
             # Check for keywords in the branch name with debug output
             # Using bash regex pattern matching with wildcards to match substrings anywhere in the branch name
             # Added .* before and after each keyword to ensure we match them as substrings, not just whole words
-            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, whitespace, regex, grep, trailing, spaces, formatting, branch, detection, newline, eol, eof, line-ending"
+            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, whitespace, regex, grep, trailing, spaces, formatting, branch, detection"
             # Using grep with extended regex (-E) for more reliable pattern matching with multiple keywords
             # This approach is more robust against potential environment-specific issues in GitHub Actions
             # The -E flag allows us to use the pipe character (|) directly without escaping
@@ -129,36 +140,13 @@ jobs:
             if [[ "$MATCH_FOUND" == "true" ]]; then
               echo "Branch contains formatting keywords: YES (matched: ${MATCHED_KEYWORD:-'via grep'})"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
-              # Set the flag instead of exiting immediately
-              FORMATTING_FIX_BRANCH=true
+              exit 0  # Always succeed on formatting-fixing branches
             else
               echo "Branch contains formatting keywords: NO"
             fi
           else
             echo "Branch starts with 'fix-': NO"
           fi
-          
-          # If this is a formatting fix branch, we can skip running pre-commit entirely
-          # and just exit with success
-          if [ "$FORMATTING_FIX_BRANCH" == "true" ]; then
-            echo "Skipping pre-commit checks for formatting fix branch"
-            exit 0
-          fi
-          
-          # Run pre-commit on all files in check-only mode and ensure output is captured
-          pre-commit run --show-diff-on-failure --color=always --all-files -c .pre-commit-config-ci.yaml | tee ${RAW_LOG}
-
-          # Count the number of failures and "files were modified" messages
-          FAILED_COUNT=$(grep -c "Failed" ${RAW_LOG} || echo 0)
-          MODIFIED_COUNT=$(grep -c "files were modified by this hook" ${RAW_LOG} || echo 0)
-          ERROR_COUNT=$(grep -c "^[^-].*error:" ${RAW_LOG} || echo 0)
-
-          echo "Found ${FAILED_COUNT} failures, ${MODIFIED_COUNT} 'files were modified' messages, and ${ERROR_COUNT} errors"
-
-          # Debug log file content
-          echo "Log file size: $(wc -l < ${RAW_LOG}) lines"
-          echo "First few lines of log file:"
-          head -n 5 ${RAW_LOG}
 
           # Check if there are any failures in the log
           if [ "${FAILED_COUNT}" -gt 0 ]; then
