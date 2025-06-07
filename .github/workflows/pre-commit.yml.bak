@@ -62,6 +62,7 @@ jobs:
               exit 1
             else
               echo "::warning::Pre-commit reported 'files were modified' but no actual errors were found"
+              exit 0  # Explicitly set success exit code
             fi
           fi
       - name: Convert Raw Log to Checkstyle format (launch action)
