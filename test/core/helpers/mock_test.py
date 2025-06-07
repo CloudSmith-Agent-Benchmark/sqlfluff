@@ -1,11 +1,11 @@
-"""
-Tests for demonstrating mock usage in SQLFluff.
+"""Tests for demonstrating mock usage in SQLFluff.
 
 This file contains examples of mock usage and common pitfalls.
 """
 
-import pytest
 from unittest.mock import patch
+
+import pytest
 
 from sqlfluff.core.helpers.string import split_comma_separated_string
 
@@ -29,7 +29,7 @@ class TestNullValueScenario:
     @pytest.mark.skip(reason="Demonstration test that intentionally fails")
     @patch("sqlfluff.core.helpers.string.split_comma_separated_string")
     def test_split_string_returns_list(self, mock_split):
-        """Test that fails because the mocked function returns None instead of a list."""
+        """Test that fails because mock returns None instead of a list."""
         # Configure the mock to return None
         mock_split.return_value = None
 
@@ -42,7 +42,7 @@ class TestNullValueScenario:
     @pytest.mark.skip(reason="Demonstration test that intentionally fails")
     @patch("sqlfluff.core.helpers.string.split_comma_separated_string")
     def test_split_string_correct_elements(self, mock_split):
-        """Test that fails because the mocked function returns None instead of expected elements."""
+        """Test that fails because mock returns None instead of expected elements."""
         # Configure the mock to return None
         mock_split.return_value = None
 
@@ -96,8 +96,8 @@ class TestDataProcessor:
         # Use the mocked function in our process
         rules_str = "AL01,LT08,AL07"
         rules_data = split_comma_separated_string(rules_str)
-        result = self.process_sql_rules(rules_data)
+        # Process the rules data but don't store the unused result
+        self.process_sql_rules(rules_data)
 
-        # This will fail because we expect specific processed rules
-        expected = ["AL01", "LT08", "AL07"]
-        processed_expected = [rule.upper() for rule in expected]
+        # Comment explaining what would happen in a real test
+        # We would normally compare the result with the expected processed rules
