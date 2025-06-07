@@ -1,1 +1,42 @@
-Test log file
+
+don't commit to branch..................................................Skipped
+black....................................................................Failed
+- hook id: black
+- files were modified by this hook
+
+All done! ✨ 🍰 ✨
+388 files would be left unchanged.
+
+mypy.....................................................................Failed
+- hook id: mypy
+- files were modified by this hook
+
+Success: no issues found in 247 source files
+
+flake8...................................................................Failed
+- hook id: flake8
+- files were modified by this hook
+doc8.....................................................................Failed
+- hook id: doc8
+- files were modified by this hook
+
+Scanning...
+Validating...
+========
+Total files scanned = 0
+Total files ignored = 43
+Total accumulated errors = 0
+
+yamllint.................................................................Failed
+- hook id: yamllint
+- files were modified by this hook
+ruff.....................................................................Failed
+- hook id: ruff
+- files were modified by this hook
+codespell................................................................Failed
+- hook id: codespell
+- files were modified by this hook
+pre-commit hook(s) made changes.
+If you are seeing this message in CI, reproduce locally with: `pre-commit run --all-files`.
+To run `pre-commit` as part of git workflow, use `pre-commit install`.
+All changes made by hooks:

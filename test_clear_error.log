@@ -1,0 +1,10 @@
+
+black....................................................................Failed
+- hook id: black
+- files were modified by this hook
+
+flake8...................................................................Failed
+- hook id: flake8
+error: file.py:10:1: E302 expected 2 blank lines, found 1
+error: another_error_on_a_line_not_starting_with_dash
+
