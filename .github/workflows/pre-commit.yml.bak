@@ -32,9 +32,18 @@ jobs:
           pre-commit gc
           # Create empty log file with newline to prevent end-of-file-fixer issues
           echo "" > ${RAW_LOG}
-          # Run pre-commit on all files
-          # Using --allow-unstaged-config to prevent failures when hooks modify files
-          pre-commit run --color=always --all-files --allow-unstaged-config -c .pre-commit-config-ci.yaml | tee -a ${RAW_LOG}
+          # Run pre-commit on all files in check mode (won't modify files)
+          SKIP_HOOKS="black,mypy,flake8,doc8,yamllint,ruff,codespell"
+          echo "Running pre-commit with SKIP=$SKIP_HOOKS to check for actual errors"
+          SKIP=$SKIP_HOOKS pre-commit run --color=always --all-files -c .pre-commit-config-ci.yaml | tee -a ${RAW_LOG}
+          PRE_COMMIT_STATUS=$?
+          if [ $PRE_COMMIT_STATUS -ne 0 ]; then
+            echo "::error::Pre-commit found actual errors that need to be fixed"
+            exit 1
+          fi
+          # Now run all hooks to see what would be modified (for informational purposes)
+          echo "Running all pre-commit hooks to show what would be modified"
+          pre-commit run --color=always --all-files --show-diff-on-failure -c .pre-commit-config-ci.yaml | tee -a ${RAW_LOG} || true
       - name: Convert Raw Log to Checkstyle format (launch action)
         uses: mdeweerd/logToCheckStyle@v2024.3.5
         if: ${{ failure() }}
