@@ -30,8 +30,10 @@ jobs:
           # Clean pre-commit cache to remove phantom files
           pre-commit clean
           pre-commit gc
+          # Create empty log file with newline to prevent end-of-file-fixer issues
+          echo "" > ${RAW_LOG}
           # Run pre-commit on all files
-          pre-commit run --show-diff-on-failure --color=always --all-files | tee ${RAW_LOG}
+          pre-commit run --show-diff-on-failure --color=always --all-files | tee -a ${RAW_LOG}
       - name: Convert Raw Log to Checkstyle format (launch action)
         uses: mdeweerd/logToCheckStyle@v2024.3.5
         if: ${{ failure() }}
