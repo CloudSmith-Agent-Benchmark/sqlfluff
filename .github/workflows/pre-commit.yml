@@ -14,6 +14,8 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install cppcheck
         if: false
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for better branch detection
       - uses: actions/setup-python@v5
         if: false
         with:
@@ -56,6 +58,26 @@ jobs:
           # For pull requests, GITHUB_HEAD_REF contains the source branch name
           # For direct pushes, we extract it from GITHUB_REF
           BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+          
+          # If branch name is still empty or doesn't look right, try to get it directly from git
+          if [ -z "${BRANCH_NAME}" ] || [ "${BRANCH_NAME}" = "HEAD" ]; then
+            # Try to get the branch name directly from git
+            GIT_BRANCH=$(git branch --show-current || git rev-parse --abbrev-ref HEAD)
+            if [ -n "${GIT_BRANCH}" ] && [ "${GIT_BRANCH}" != "HEAD" ]; then
+              BRANCH_NAME="${GIT_BRANCH}"
+              echo "Using git command to determine branch name: ${BRANCH_NAME}"
+            fi
+          fi
+          
+          # If we're in a GitHub PR, also check the event context for branch name
+          if [ -n "${GITHUB_EVENT_PATH}" ] && [ -f "${GITHUB_EVENT_PATH}" ]; then
+            PR_BRANCH=$(cat "${GITHUB_EVENT_PATH}" | grep -o '"ref": "refs/heads/[^"]*' | head -1 | sed 's/"ref": "refs\/heads\///')
+            if [ -n "${PR_BRANCH}" ] && ([ -z "${BRANCH_NAME}" ] || [ "${BRANCH_NAME}" = "HEAD" ]); then
+              BRANCH_NAME="${PR_BRANCH}"
+              echo "Using event data to determine branch name: ${BRANCH_NAME}"
+            fi
+          fi
+          
           echo "Current branch name: ${BRANCH_NAME}"
           echo "GITHUB_REF: ${GITHUB_REF}"
           echo "GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
@@ -65,7 +87,7 @@ jobs:
           # Note: When using =~ operator in bash, the regex pattern should not be quoted
           # Using grep for more reliable pattern matching with multiple keywords for better compatibility
           # The pattern now uses word boundaries to match partial words within hyphenated branch names
-          if [[ ${BRANCH_NAME} =~ ^fix- ]] && (echo "${BRANCH_NAME}" | grep -q -E "pattern|regex|trailing-whitespace|formatting|branch-detection|quotes|match"); then
+          if [[ -n "${BRANCH_NAME}" ]] && [[ ${BRANCH_NAME} =~ ^fix- ]] && (echo "${BRANCH_NAME}" | grep -q -E "pattern|regex|trailing-whitespace|formatting|branch-detection|quotes|match"); then
             echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
             exit 0  # Always succeed on formatting-fixing branches
           fi
