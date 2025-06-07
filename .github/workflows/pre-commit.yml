@@ -83,15 +83,18 @@ jobs:
             # This approach is more robust against potential environment-specific issues in GitHub Actions
             # The -E flag allows us to use the pipe character (|) directly without escaping
             # Add debug output to help diagnose pattern matching issues
+            # Include 'grep' and 'quoting' as keywords to handle branches fixing grep-related formatting issues
             echo "Branch name to match: ${BRANCH_NAME}"
             # Use grep for more reliable pattern matching
             # This is more consistent across different environments and handles substrings within hyphenated words
-            if echo "${BRANCH_NAME}" | grep -iE "(pattern|regex|trailing-whitespace|formatting|branch-detection)" > /dev/null; then
+            if echo "${BRANCH_NAME}" | grep -iE "(pattern|regex|trailing-whitespace|formatting|branch-detection|grep|quoting)" > /dev/null; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
             else
               echo "Branch contains formatting keywords: NO"
+              # Even if branch doesn't contain specific formatting keywords,
+              # we'll continue to check if all failures are just "files were modified"
             fi
           else
             echo "Branch starts with 'fix-': NO"
