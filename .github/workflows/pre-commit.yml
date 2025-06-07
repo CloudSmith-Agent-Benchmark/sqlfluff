@@ -25,7 +25,7 @@ jobs:
           path: ~/.cache/pre-commit/
           key: pre-commit-4|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml')
             }}
-        # pre-commit run with --show-diff-on-failure will show diffs but not modify files
+        # Running pre-commit in check mode to report issues without modifying files
         # This prevents workflow failures due to file modifications in CI
       - name: Run pre-commit hooks
         run: |
