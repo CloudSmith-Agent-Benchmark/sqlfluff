@@ -82,7 +82,7 @@ jobs:
             # Check for keywords in the branch name with debug output
             # Using bash regex pattern matching with wildcards to match substrings anywhere in the branch name
             # Added .* before and after each keyword to ensure we match them as substrings, not just whole words
-            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, whitespace, regex, grep, trailing, spaces, formatting, branch, detection"
+            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, whitespace, regex, grep, trailing, spaces, formatting, branch, detection, newline"
             # Using grep with extended regex (-E) for more reliable pattern matching with multiple keywords
             # This approach is more robust against potential environment-specific issues in GitHub Actions
             # The -E flag allows us to use the pipe character (|) directly without escaping
@@ -96,7 +96,7 @@ jobs:
             echo "Using robust bash string operation approach:"
 
             # Define keywords to look for
-            KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "branch" "detection")
+            KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "branch" "detection" "newline")
             echo "Checking branch name '${BRANCH_NAME_LOWER}' for keywords..."
             MATCH_FOUND=false
             MATCHED_KEYWORD=""
