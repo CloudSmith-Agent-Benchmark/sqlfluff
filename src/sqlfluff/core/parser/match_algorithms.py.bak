@@ -38,7 +38,7 @@ def skip_stop_index_backward_to_code(
             break
     else:
         _idx = min_idx
-    return _idx
+    return idx
 
 
 def first_trimmed_raw(seg: BaseSegment) -> str:
@@ -689,7 +689,7 @@ def trim_to_terminator(
         for term in pruned_terms:
             if term.match(segments, idx, ctx):
                 # One matched immediately. Claim everything to the tail.
-                return _idx
+                return idx
 
     # If the above case didn't match then we proceed as expected.
     with parse_context.deeper_match(
