@@ -70,13 +70,6 @@ jobs:
             printf "Position %d: %s (ASCII: %d)\n" "$i" "$char" "'$char"
           done
 
-          # Add debug output for each keyword to verify pattern matching
-          for keyword in pattern regex trailing whitespace format branch detect precommit; do
-            if echo "$BRANCH_NAME_LOWER" | grep -q "$keyword"; then
-              echo "Keyword '$keyword' found in branch name"
-            fi
-          done
-
           # Check if we're on a branch specifically fixing formatting issues
           # Using string contains operator for substring matching anywhere in the branch name
           # Note: When using =~ operator in bash, the regex pattern should not be quoted
