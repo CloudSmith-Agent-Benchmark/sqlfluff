@@ -33,7 +33,7 @@ jobs:
           set -o pipefail
           # Initialize a flag to track whether we should skip failure checks
           SKIP_FAILURE_CHECKS=false
-          
+
           # Clean pre-commit cache to remove phantom files
           pre-commit clean
           pre-commit gc
