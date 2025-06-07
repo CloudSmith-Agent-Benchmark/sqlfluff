@@ -54,10 +54,8 @@ jobs:
 
           # Get the current branch name
           BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
-          
           # Check if we're on a branch specifically fixing whitespace issues
-          if [[ "${BRANCH_NAME}" == *"fix-trailing-whitespace"* ]]; then
-            echo "::warning::On branch ${BRANCH_NAME} which is fixing whitespace issues - allowing pre-commit failures related to whitespace"
+          if [[ "${BRANCH_NAME}" == *"fix-trailing-whitespace"* ]]; then  echo "::warning::On branch ${BRANCH_NAME} which is fixing whitespace issues - allowing pre-commit failures related to whitespace"
             exit 0  # Always succeed on whitespace-fixing branches
           fi
           
