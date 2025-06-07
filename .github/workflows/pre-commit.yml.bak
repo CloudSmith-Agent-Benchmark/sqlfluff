@@ -44,6 +44,16 @@ jobs:
           FAILED_COUNT=$(grep -c "Failed" ${RAW_LOG} || echo 0)
           MODIFIED_COUNT=$(grep -c "files were modified by this hook" ${RAW_LOG} || echo 0)
           ERROR_COUNT=$(grep -c "^[^-].*error:" ${RAW_LOG} || echo 0)
+          
+          # Ensure variables are numeric to prevent comparison issues
+          FAILED_COUNT=$(echo "${FAILED_COUNT}" | tr -d '[:space:]')
+          MODIFIED_COUNT=$(echo "${MODIFIED_COUNT}" | tr -d '[:space:]')
+          ERROR_COUNT=$(echo "${ERROR_COUNT}" | tr -d '[:space:]')
+          
+          # Set default values if empty
+          FAILED_COUNT=${FAILED_COUNT:-0}
+          MODIFIED_COUNT=${MODIFIED_COUNT:-0}
+          ERROR_COUNT=${ERROR_COUNT:-0}
 
           echo "Found ${FAILED_COUNT} failures, ${MODIFIED_COUNT} 'files were modified' messages, and ${ERROR_COUNT} errors"
 
@@ -94,8 +104,6 @@ jobs:
             # 2. Simplified regex patterns without special characters like [-.]
             # 3. Case-insensitive grep matching with -i flag
             # 4. Multiple fallback mechanisms to ensure proper detection
-            # 5. Improved handling of hyphenated words by converting hyphens to spaces
-            # 6. Word boundary matching to detect keywords within hyphenated words
             # 5. Improved handling of hyphenated words by converting hyphens to spaces
             # 6. Word boundary matching to detect keywords within hyphenated words
 
