@@ -3,8 +3,10 @@ index 2e9571cb8..478fb861e 100644
 --- a/src/test.py.bak
 +++ b/src/test.py.bak
 @@ -6,4 +6,4 @@ This module contains test utilities and functions.
- def test_function():
-     """Test function docstring."""
+
+def test_function():
+    """Test function docstring."""
 -    return True
 \ No newline at end of file
 +    return True
+
