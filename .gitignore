@@ -63,3 +63,7 @@ plugins/sqlfluff-templater-dbt/test/fixtures/dbt/dbt_project/packages.yml
 # Mypyc outputs
 *.pyd
 *.so
+
+# Backup files
+*.bak
+*.bak.*
