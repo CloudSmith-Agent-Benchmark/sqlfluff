@@ -38,12 +38,24 @@ jobs:
           rm -f ${RAW_LOG}
           touch ${RAW_LOG}
           # Run pre-commit on all files in check-only mode and ensure output is captured
-          pre-commit run --show-diff-on-failure --color=always --all-files -c .pre-commit-config-ci.yaml | tee ${RAW_LOG}
+          # Use script to ensure tee captures all output properly
+          script -q -c "pre-commit run --show-diff-on-failure --color=always --all-files -c .pre-commit-config-ci.yaml" /dev/null | tee ${RAW_LOG}
 
           # Count the number of failures and "files were modified" messages
           FAILED_COUNT=$(grep -c "Failed" ${RAW_LOG} || echo 0)
           MODIFIED_COUNT=$(grep -c "files were modified by this hook" ${RAW_LOG} || echo 0)
           ERROR_COUNT=$(grep -c "^[^-].*error:" ${RAW_LOG} || echo 0)
+          
+          # Check if log file is empty or contains unexpected content
+          LOG_SIZE=$(wc -l < ${RAW_LOG})
+          if [ "$LOG_SIZE" -lt 2 ]; then
+            echo "::warning::Log file is empty or contains unexpected content. Running pre-commit again with direct output."
+            pre-commit run --show-diff-on-failure --color=always --all-files -c .pre-commit-config-ci.yaml > ${RAW_LOG}
+            # Recount after direct output capture
+            FAILED_COUNT=$(grep -c "Failed" ${RAW_LOG} || echo 0)
+            MODIFIED_COUNT=$(grep -c "files were modified by this hook" ${RAW_LOG} || echo 0)
+            ERROR_COUNT=$(grep -c "^[^-].*error:" ${RAW_LOG} || echo 0)
+          fi
 
           echo "Found ${FAILED_COUNT} failures, ${MODIFIED_COUNT} 'files were modified' messages, and ${ERROR_COUNT} errors"
 
