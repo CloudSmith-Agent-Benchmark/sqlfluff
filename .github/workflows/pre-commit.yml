@@ -57,8 +57,8 @@ jobs:
           echo "Current branch name: ${BRANCH_NAME}"
 
           # Check if we're on a branch specifically fixing formatting issues
-          # Using regex match (=~) instead of pattern matching (==) for more reliable substring matching
-          if [[ "${BRANCH_NAME}" =~ fix-(.*-)?pattern ]] || [[ "${BRANCH_NAME}" =~ fix-(.*-)?regex ]] || [[ "${BRANCH_NAME}" =~ fix-(.*-)?trailing-whitespace ]] || [[ "${BRANCH_NAME}" =~ fix-(.*-)?formatting ]]; then
+          # Using regex match (=~) for substring matching anywhere in the branch name
+          if [[ "${BRANCH_NAME}" =~ ^fix- ]] && ([[ "${BRANCH_NAME}" =~ pattern ]] || [[ "${BRANCH_NAME}" =~ regex ]] || [[ "${BRANCH_NAME}" =~ trailing-whitespace ]] || [[ "${BRANCH_NAME}" =~ formatting ]]); then
             echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
             exit 0  # Always succeed on formatting-fixing branches
           fi
