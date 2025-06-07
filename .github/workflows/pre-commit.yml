@@ -89,15 +89,17 @@ jobs:
             BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
 
             # Debug output to show what we're matching against
-            echo "Testing grep pattern match (case-insensitive):"
-            KEYWORDS="pattern|regex|grep|trailing-whitespace|formatting|branch-detection"
-            if echo "${BRANCH_NAME_LOWER}" | grep -E "${KEYWORDS}" > /dev/null; then
-              # Find which keyword matched for debugging
-              for keyword in pattern regex grep trailing-whitespace formatting branch-detection; do
-                if echo "${BRANCH_NAME_LOWER}" | grep -q "${keyword}"; then
-                  echo "Match found: ${keyword}"
-                fi
-              done
+            echo "Testing pattern match for substrings (case-insensitive):"
+            MATCH_FOUND=false
+            # Use Bash substring matching to detect keywords even within hyphenated words
+            for keyword in pattern regex grep trailing-whitespace formatting branch-detection; do
+              if [[ "${BRANCH_NAME_LOWER}" == *"${keyword}"* ]]; then
+                echo "Match found: ${keyword}"
+                MATCH_FOUND=true
+              fi
+            done
+            
+            if [[ "${MATCH_FOUND}" == "true" ]]; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
