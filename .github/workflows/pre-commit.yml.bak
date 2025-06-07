@@ -88,6 +88,13 @@ jobs:
             # Convert branch name to lowercase for case-insensitive matching
             BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
 
+            # FIXED: The previous regex pattern had issues in GitHub Actions environment
+            # The fix includes:
+            # 1. Individual keyword matching for maximum reliability
+            # 2. Simplified regex patterns without special characters like [-.]
+            # 3. Case-insensitive grep matching with -i flag
+            # 4. Multiple fallback mechanisms to ensure proper detection
+
             # Debug output to show what we're matching against
             echo "Testing individual keywords for more reliable matching:"
             KEYWORD_MATCH="NO"
