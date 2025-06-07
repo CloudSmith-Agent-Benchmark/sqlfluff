@@ -84,20 +84,20 @@ jobs:
             echo "Branch name to match: ${BRANCH_NAME}"
             # Convert branch name to lowercase for case-insensitive matching
             BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
-            
+
             # Check for each keyword using bash pattern matching
-            if [[ "${BRANCH_NAME_LOWER}" == *pattern* || 
-                  "${BRANCH_NAME_LOWER}" == *regex* || 
-                  "${BRANCH_NAME_LOWER}" == *trailing-whitespace* || 
-                  "${BRANCH_NAME_LOWER}" == *formatting* || 
+            if [[ "${BRANCH_NAME_LOWER}" == *pattern* ||
+                  "${BRANCH_NAME_LOWER}" == *regex* ||
+                  "${BRANCH_NAME_LOWER}" == *trailing-whitespace* ||
+                  "${BRANCH_NAME_LOWER}" == *formatting* ||
                   "${BRANCH_NAME_LOWER}" == *branch-detection* ]]; then
               echo "Branch contains formatting keywords: YES"
-            echo "Matched keyword(s):"
-            for keyword in "pattern" "regex" "trailing-whitespace" "formatting" "branch-detection"; do
-              if [[ "${BRANCH_NAME_LOWER}" == *"${keyword}"* ]]; then
-                echo "- ${keyword}"
-              fi
-            done
+              echo "Matched keyword(s):"
+              for keyword in "pattern" "regex" "trailing-whitespace" "formatting" "branch-detection"; do
+                if [[ "${BRANCH_NAME_LOWER}" == *"${keyword}"* ]]; then
+                  echo "- ${keyword}"
+                fi
+              done
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
             else
