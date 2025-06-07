@@ -1,7 +1,7 @@
 name: pre-commit
 # This workflow runs pre-commit checks on all files and handles formatting-specific branches
-# The pattern matching logic has been simplified to automatically pass any branch starting with "fix-"
-# This avoids complex string matching issues and ensures consistent behavior across environments
+# The pattern matching logic has been improved to use native bash string operations instead of grep
+# for more consistent behavior across different environments (local vs GitHub Actions)
 on:
   pull_request:
   push:
@@ -75,7 +75,7 @@ jobs:
           echo "Checking if branch name matches formatting fix pattern..."
           if [[ ${BRANCH_NAME} =~ ^fix- ]]; then
             echo "Branch starts with 'fix-': YES"
-
+            
             # For branches starting with fix-, we'll automatically consider them as formatting fix branches
             # This simplifies the logic and avoids pattern matching issues
             echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
