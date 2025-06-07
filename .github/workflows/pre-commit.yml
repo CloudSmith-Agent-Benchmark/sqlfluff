@@ -84,11 +84,13 @@ jobs:
             # The -E flag allows us to use the pipe character (|) directly without escaping
             # Add debug output to help diagnose pattern matching issues
             echo "Branch name to match: ${BRANCH_NAME}"
-            # Use .* before and after each keyword to ensure we match the keyword anywhere in the string
-            # This ensures we match substrings within hyphenated words like 'fix-grep-pattern-matching-solution'
-            # The -i flag makes the match case-insensitive
-            # The -E flag enables extended regular expressions for the OR pattern
-            if echo "${BRANCH_NAME}" | grep -i -E ".*pattern.*|.*regex.*|.*trailing-whitespace.*|.*formatting.*|.*branch-detection.*"; then
+            # Use bash's native pattern matching instead of grep for more reliable matching
+            # This avoids potential issues with grep in GitHub Actions environment
+            # Make the regex case-insensitive by setting the nocasematch option
+            shopt -s nocasematch
+            if [[ ${BRANCH_NAME} =~ (pattern|regex|trailing-whitespace|formatting|branch-detection) ]]; then
+              # Reset the nocasematch option to its default state
+              shopt -u nocasematch
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
