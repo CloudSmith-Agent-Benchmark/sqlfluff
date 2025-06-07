@@ -88,26 +88,38 @@ jobs:
             # Convert branch name to lowercase for case-insensitive matching
             BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
 
-            # Debug output to show what we're matching against
-            echo "Testing bash regex pattern match (case-insensitive):"
-            # Modified regex pattern to handle keywords that are part of larger hyphenated words
-            # This ensures that words like "fix-regex-pattern-matching" will match "regex" and "pattern"
-            if [[ ${BRANCH_NAME_LOWER} =~ .*(pattern|regex|grep|trailing[-.]whitespace|trailing[-.]spaces|formatting|branch[-.]detection).* ]]; then
-              echo "Match found: ${BASH_REMATCH[0]}"
+            # Using a direct grep approach for more reliable pattern matching in GitHub Actions
+            echo "Using direct grep approach for pattern matching:"
+
+            # Check for keywords directly with grep
+            if echo "${BRANCH_NAME_LOWER}" | grep -E 'pattern|regex|grep|trailing-whitespace|trailing-spaces|formatting|branch-detection' > /dev/null; then
+              echo "Match found: branch contains a formatting keyword"
+              MATCH_FOUND=true
+              MATCHED_KEYWORD="via grep"
             else
-              # Fallback to a more flexible approach using grep to search for keywords
-              # This is more reliable for detecting keywords within hyphenated words
-              if echo "${BRANCH_NAME_LOWER}" | grep -E '(pattern|regex|grep|trailing[-]whitespace|trailing[-]spaces|formatting|branch[-]detection)' > /dev/null; then
-                echo "Match found using grep"
-              else
-                echo "No match found"
+              # Fallback to explicit checks for each keyword
+              KEYWORDS=("pattern" "regex" "grep" "trailing-whitespace" "trailing-spaces" "formatting" "branch-detection")
+              MATCH_FOUND=false
+              MATCHED_KEYWORD=""
+
+              for keyword in "${KEYWORDS[@]}"; do
+                echo "Checking if '${BRANCH_NAME_LOWER}' contains '${keyword}'"
+                if [[ "${BRANCH_NAME_LOWER}" == *"${keyword}"* ]]; then
+                  echo "Match found: branch contains keyword '${keyword}'"
+                  MATCH_FOUND=true
+                  MATCHED_KEYWORD="${keyword}"
+                  break
+                fi
+              done
+
+              if [[ "$MATCH_FOUND" != "true" ]]; then
+                echo "No match found with any method"
               fi
             fi
-            # Use a more robust approach combining both regex and grep for maximum compatibility
-            # First try bash regex, then fallback to grep if needed
-            if [[ ${BRANCH_NAME_LOWER} =~ .*(pattern|regex|grep|trailing[-.]whitespace|trailing[-.]spaces|formatting|branch[-.]detection).* ]] ||
-               echo "${BRANCH_NAME_LOWER}" | grep -E '(pattern|regex|grep|trailing[-]whitespace|trailing[-]spaces|formatting|branch[-]detection)' > /dev/null; then
-              echo "Branch contains formatting keywords: YES"
+
+            # Use the result of our simplified matching
+            if [[ "$MATCH_FOUND" == "true" ]]; then
+              echo "Branch contains formatting keywords: YES (matched: ${MATCHED_KEYWORD:-'via grep'})"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
             else
