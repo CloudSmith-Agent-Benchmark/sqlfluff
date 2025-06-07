@@ -41,7 +41,11 @@ jobs:
           rm -f ${RAW_LOG}
           touch ${RAW_LOG}
           # Run pre-commit on all files in check-only mode and ensure output is captured
+          # Temporarily disable pipefail for pre-commit to prevent early failure
+          set +o pipefail
           pre-commit run --show-diff-on-failure --color=always --all-files -c .pre-commit-config-ci.yaml | tee ${RAW_LOG}
+          PRE_COMMIT_STATUS=${PIPESTATUS[0]}  # Capture pre-commit's exit code
+          set -o pipefail  # Re-enable pipefail
 
           # Count the number of failures and "files were modified" messages
           FAILED_COUNT=$(grep -c "Failed" ${RAW_LOG} || echo 0)
@@ -86,7 +90,7 @@ jobs:
           fi
 
           # Only check for failures if we're not on a formatting fix branch
-          if [ "$SKIP_FAILURE_CHECKS" = false ] && [ "${FAILED_COUNT}" -gt 0 ]; then
+          if [ "$SKIP_FAILURE_CHECKS" = false ] && [ "${FAILED_COUNT}" -gt 0 -o "${PRE_COMMIT_STATUS}" -ne 0 ]; then
             # If all failures are just "files were modified" messages, consider it a success
             if [ "${FAILED_COUNT}" -eq "${MODIFIED_COUNT}" ]; then
               echo "::warning::Pre-commit reported 'Failed' but these were just 'files were modified' messages"
@@ -107,6 +111,19 @@ jobs:
             echo "::notice::Skipping failure checks because this is a formatting fix branch"
             # Reset exit code to 0 to prevent workflow failure when we're on a formatting fix branch
             exit 0
+          else
+            # If we get here, there were no failures detected but pre-commit might have returned non-zero
+            # This can happen if pre-commit made changes but our grep patterns didn't catch them
+            if [ "${PRE_COMMIT_STATUS}" -ne 0 ]; then
+              echo "::warning::Pre-commit returned non-zero exit code (${PRE_COMMIT_STATUS}) but no failures were detected in the log"
+              # For non-fix branches, we should still exit with the pre-commit status
+              if [ "$SKIP_FAILURE_CHECKS" = false ]; then
+                exit ${PRE_COMMIT_STATUS}
+              else
+                # On fix branches, we ignore the exit code
+                exit 0
+              fi
+            fi
           fi
       - name: Convert Raw Log to Checkstyle format (launch action)
         uses: mdeweerd/logToCheckStyle@v2024.3.5
