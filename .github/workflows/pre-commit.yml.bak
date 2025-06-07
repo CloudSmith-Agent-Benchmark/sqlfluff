@@ -34,10 +34,11 @@ jobs:
           # Clean pre-commit cache to remove phantom files
           pre-commit clean
           pre-commit gc
-          # Create empty log file with newline to prevent end-of-file-fixer issues
-          echo "" > ${RAW_LOG}
-          # Run pre-commit on all files in check-only mode
-          pre-commit run --show-diff-on-failure --color=always --all-files -c .pre-commit-config-ci.yaml | tee -a ${RAW_LOG}
+          # Remove any existing log file and create a new empty one
+          rm -f ${RAW_LOG}
+          touch ${RAW_LOG}
+          # Run pre-commit on all files in check-only mode and ensure output is captured
+          pre-commit run --show-diff-on-failure --color=always --all-files -c .pre-commit-config-ci.yaml | tee ${RAW_LOG}
 
           # Count the number of failures and "files were modified" messages
           FAILED_COUNT=$(grep -c "Failed" ${RAW_LOG} || echo 0)
@@ -62,6 +63,7 @@ jobs:
               exit 1
             else
               echo "::warning::Pre-commit reported 'files were modified' but no actual errors were found"
+              exit 0  # Explicitly set success exit code
             fi
           fi
       - name: Convert Raw Log to Checkstyle format (launch action)
