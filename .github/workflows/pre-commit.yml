@@ -59,7 +59,7 @@ jobs:
           echo "Current branch name: ${BRANCH_NAME}"
           echo "GITHUB_REF: ${GITHUB_REF}"
           echo "GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
-          
+
           # Enhanced debugging for branch name detection
           echo "Testing branch name pattern matching:"
           if [[ ${BRANCH_NAME} =~ ^fix- ]]; then
@@ -67,7 +67,7 @@ jobs:
           else
             echo "✗ Branch does not start with 'fix-'"
           fi
-          
+
           if echo "${BRANCH_NAME}" | grep -q -E "pattern|regex|trailing-whitespace|formatting|branch-detection|quotes|match"; then
             echo "✓ Branch contains one of the keywords"
             echo "Matched keywords: $(echo "${BRANCH_NAME}" | grep -o -E "pattern|regex|trailing-whitespace|formatting|branch-detection|quotes|match")"
