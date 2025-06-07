@@ -57,7 +57,7 @@ repos:
             # properly.
             jinja2,
             pathspec,
-            pytest, # and by extension... pluggy
+            pytest,  # and by extension... pluggy
             click,
             platformdirs
           ]
@@ -95,3 +95,4 @@ repos:
       - id: codespell
         exclude: (?x)^(test/fixtures/.*|pyproject.toml)$
         additional_dependencies: [tomli]
+# End of file
