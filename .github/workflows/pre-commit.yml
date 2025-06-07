@@ -78,7 +78,7 @@ jobs:
             echo "Branch starts with 'fix-': YES"
             # Check for keywords in the branch name with debug output
             # Using bash pattern matching instead of grep for more reliable substring matching
-            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, regex, trailing-whitespace, formatting, branch-detection"
+            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, regex, trailing-whitespace, formatting, branch-detection, backslash, escaping"
             # Using grep with extended regex (-E) for more reliable pattern matching with multiple keywords
             # This approach is more robust against potential environment-specific issues in GitHub Actions
             # The -E flag allows us to use the pipe character (|) directly without escaping
@@ -89,7 +89,7 @@ jobs:
             # Use word boundary markers (\b) around each keyword to match them as standalone words
             # Note: In bash double-quoted strings with grep -E, a single backslash is needed (\b)
             # Also include a version without word boundaries to match keywords within hyphenated words
-            if echo "${BRANCH_NAME}" | grep -i -E -q "\\bpattern\\b|\\bregex\\b|\\btrailing-whitespace\\b|\\bformatting\\b|\\bbranch-detection\\b|pattern|regex|whitespace|formatting|detection"; then
+            if echo "${BRANCH_NAME}" | grep -i -E -q "\\bpattern\\b|\\bregex\\b|\\btrailing-whitespace\\b|\\bformatting\\b|\\bbranch-detection\\b|\\bbackslash\\b|\\bescaping\\b|pattern|regex|whitespace|formatting|detection|backslash|escaping"; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
