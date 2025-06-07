@@ -85,6 +85,9 @@ jobs:
             echo "Branch name to match: ${BRANCH_NAME}"
             # Convert branch name to lowercase for case-insensitive matching
             BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
+            
+            # Initialize match found flag
+            MATCH_FOUND=0
 
             # Use multiple approaches to pattern matching for better reliability
             echo "Testing multiple pattern matching approaches:"
