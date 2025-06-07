@@ -23,11 +23,13 @@ jobs:
       - uses: actions/cache/restore@v4
         with:
           path: ~/.cache/pre-commit/
-          key: pre-commit-4|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml')
+          key: pre-commit-5|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml')
             }}
       - name: Run pre-commit hooks
         run: |
           set -o pipefail
+          # Clean pre-commit cache to prevent issues with deleted files
+          pre-commit clean
           pre-commit gc
           pre-commit run --show-diff-on-failure --color=always --all-files | tee ${RAW_LOG}
       - name: Convert Raw Log to Checkstyle format (launch action)
@@ -40,7 +42,7 @@ jobs:
         if: ${{ ! cancelled() }}
         with:
           path: ~/.cache/pre-commit/
-          key: pre-commit-4|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml')
+          key: pre-commit-5|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml')
             }}
       - name: Provide log as artifact
         uses: actions/upload-artifact@v4
