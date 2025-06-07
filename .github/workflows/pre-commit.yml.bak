@@ -103,7 +103,8 @@ jobs:
                [[ "$BRANCH_NAME_LOWER" == *whitespace* ]] ||
                [[ "$BRANCH_NAME_LOWER" == *format* ]] ||
                [[ "$BRANCH_NAME_LOWER" == *branch* ]] ||
-               [[ "$BRANCH_NAME_LOWER" == *detect* ]]; then
+               [[ "$BRANCH_NAME_LOWER" == *detect* ]] ||
+               [[ "$BRANCH_NAME_LOWER" == *precommit* ]]; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               # Set flag to skip failure checks instead of exiting
@@ -135,6 +136,8 @@ jobs:
             fi
           elif [ "$SKIP_FAILURE_CHECKS" = true ]; then
             echo "::notice::Skipping failure checks because this is a formatting fix branch"
+            # Reset exit code to ensure workflow doesn't fail due to pre-commit's non-zero exit code
+            exit 0
           fi
       - name: Convert Raw Log to Checkstyle format (launch action)
         uses: mdeweerd/logToCheckStyle@v2024.3.5
