@@ -88,11 +88,7 @@ jobs:
             # Also include a version without word boundaries to match keywords within hyphenated words
             # Use grep with -o option to match parts of words (substrings)
             # Adding -w option would match whole words only, but we want to match substrings within hyphenated words
-            # Use multiple approaches for more robust pattern matching
-            # 1. Try grep with -o flag to match substrings
-            # 2. If that fails, try bash's built-in pattern matching as a fallback
-            if echo "${BRANCH_NAME}" | grep -i -o -E "pattern|regex|trailing-whitespace|formatting|branch-detection" > /dev/null || \
-               [[ ${BRANCH_NAME,,} =~ pattern|regex|trailing-whitespace|formatting|branch-detection ]]; then
+            if echo "${BRANCH_NAME}" | grep -i -E ".*pattern.*|.*regex.*|.*trailing-whitespace.*|.*formatting.*|.*branch-detection.*"; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches

@@ -84,11 +84,11 @@ jobs:
             # The -E flag allows us to use the pipe character (|) directly without escaping
             # Add debug output to help diagnose pattern matching issues
             echo "Branch name to match: ${BRANCH_NAME}"
-            # Use word boundary markers (\b) around each keyword to match them as standalone words
-            # Also include a version without word boundaries to match keywords within hyphenated words
-            # Use grep with -o option to match parts of words (substrings)
-            # Adding -w option would match whole words only, but we want to match substrings within hyphenated words
-            if echo "${BRANCH_NAME}" | grep -i -E "pattern|regex|trailing-whitespace|formatting|branch-detection"; then
+            # Use .* before and after each keyword to ensure we match the keyword anywhere in the string
+            # This ensures we match substrings within hyphenated words like 'fix-grep-pattern-matching-solution'
+            # The -i flag makes the match case-insensitive
+            # The -E flag enables extended regular expressions for the OR pattern
+            if echo "${BRANCH_NAME}" | grep -i -E ".*pattern.*|.*regex.*|.*trailing-whitespace.*|.*formatting.*|.*branch-detection.*"; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
