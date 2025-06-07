@@ -1,18 +1,31 @@
 #!/bin/bash
 
-# Set up test environment
-BRANCH_NAME="fix-grep-pattern-matching"
-echo "Testing with branch name: ${BRANCH_NAME}"
-
-# Convert branch name to lowercase for case-insensitive matching
+BRANCH_NAME="fix-add-keywords-to-detection"
 BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
 
-# Debug output to show what we're matching against
-echo "Testing bash regex pattern match (case-insensitive):"
-if [[ ${BRANCH_NAME_LOWER} =~ (pattern|regex|grep|trailing-whitespace|formatting|branch-detection) ]]; then
-  echo "Match found: ${BASH_REMATCH[0]}"
-else
-  echo "No match found"
-fi
+echo "Testing with branch name: ${BRANCH_NAME}"
+echo "Testing individual keywords for more reliable matching:"
+KEYWORD_MATCH="NO"
 
-echo "Test completed successfully!"
+# Test each keyword individually for more reliable matching
+for keyword in "pattern" "regex" "grep" "trailing" "whitespace" "spaces" "formatting" "branch" "detection" "keywords"; do
+  # Use word splitting to handle hyphenated words by splitting on hyphens and checking each part
+  if echo "${BRANCH_NAME_LOWER}" | tr '-' ' ' | grep -i "\\b${keyword}\\b" > /dev/null || echo "${BRANCH_NAME_LOWER}" | grep -i "${keyword}" > /dev/null; then
+    echo "  Keyword '${keyword}': MATCH"
+    KEYWORD_MATCH="YES"
+  else
+    echo "  Keyword '${keyword}': NO MATCH"
+  fi
+done
+
+echo "KEYWORD_MATCH value: ${KEYWORD_MATCH}"
+
+# For comparison, test with the old pattern (single backslash)
+echo -e "\nTesting with old pattern (single backslash):"
+for keyword in "pattern" "regex" "grep" "trailing" "whitespace" "spaces" "formatting" "branch" "detection" "keywords"; do
+  if echo "${BRANCH_NAME_LOWER}" | tr '-' ' ' | grep -i "\b${keyword}\b" > /dev/null || echo "${BRANCH_NAME_LOWER}" | grep -i "${keyword}" > /dev/null; then
+    echo "  Keyword '${keyword}': MATCH"
+  else
+    echo "  Keyword '${keyword}': NO MATCH"
+  fi
+done
