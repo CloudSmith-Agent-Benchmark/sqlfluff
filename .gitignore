@@ -1,3 +1,7 @@
+# Ignore mock test files that are created during pre-commit
+test/core/helpers/mock_test.py
+test/core/helpers/mock_test.py.bak
+
 # Ignore IDE files
 .vscode
 .idea
