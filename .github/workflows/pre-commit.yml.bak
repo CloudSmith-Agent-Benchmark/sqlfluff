@@ -139,6 +139,7 @@ jobs:
           echo "FAILED_COUNT=${FAILED_COUNT} (type: $([ "${FAILED_COUNT}" -eq "${FAILED_COUNT}" ] 2>/dev/null && echo "numeric" || echo "non-numeric"))"
           echo "MODIFIED_COUNT=${MODIFIED_COUNT} (type: $([ "${MODIFIED_COUNT}" -eq "${MODIFIED_COUNT}" ] 2>/dev/null && echo "numeric" || echo "non-numeric"))"
           echo "ERROR_COUNT=${ERROR_COUNT} (type: $([ "${ERROR_COUNT}" -eq "${ERROR_COUNT}" ] 2>/dev/null && echo "numeric" || echo "non-numeric"))"
+          
 # Check if there are any failures in the log
           if [[ "${FAILED_COUNT}" =~ ^[0-9]+$ ]] && [ "${FAILED_COUNT}" -gt 0 ]; then
             # If all failures are just "files were modified" messages, consider it a success
