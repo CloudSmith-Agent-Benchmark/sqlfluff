@@ -71,19 +71,19 @@ jobs:
           echo "Checking if branch name matches formatting fix pattern..."
           if [[ ${BRANCH_NAME} =~ ^fix- ]]; then
             echo "Branch starts with 'fix-': YES"
-            
+          
             # Convert branch name to lowercase for case-insensitive matching
             BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
             echo "Lowercase branch name: ${BRANCH_NAME_LOWER}"
-            
+          
             # Simplified approach: Direct string contains check for each keyword
             KEYWORDS="pattern regex grep trailing whitespace formatting branch detection"
             MATCH_FOUND=0
-            
+          
             echo "Checking for keywords in branch name: ${BRANCH_NAME_LOWER}"
             for keyword in ${KEYWORDS}; do
               echo "Checking for keyword: '${keyword}'"
-              if [[ "${BRANCH_NAME_LOWER}" == *${keyword}* ]]; then
+              if [[ "${BRANCH_NAME_LOWER}" == *"${keyword}"* ]]; then
                 echo "✓ Match found for keyword: '${keyword}'"
                 MATCH_FOUND=1
                 break
@@ -91,7 +91,7 @@ jobs:
                 echo "✗ No match for keyword: '${keyword}'"
               fi
             done
-            
+          
             # Use the result of our pattern matching attempts
             if [ "${MATCH_FOUND}" -eq 1 ]; then
               echo "Branch contains formatting keywords: YES"
