@@ -47,7 +47,7 @@ class TestNullValueScenario:
 
         # Call the function with a valid input
         result = split_comma_separated_string("AL01,LT08,AL07")
-
+        
         # This will fail because we expect specific elements but get None
         assert result == ["AL01", "LT08", "AL07"], "Split function should return correct elements"
 
