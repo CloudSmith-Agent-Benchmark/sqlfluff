@@ -135,7 +135,7 @@ jobs:
             if [[ "$MATCH_FOUND" != "true" ]]; then
               echo "Trying grep fallback method..."
               for kw in "${KEYWORDS[@]}"; do
-                if echo "${BRANCH_NAME_LOWER}" | grep -q ${kw}; then
+                if echo "${BRANCH_NAME_LOWER}" | grep -q -F "${kw}"; then
                   echo "Match found using grep: branch contains keyword '${kw}'"
                   MATCHED_KEYWORD="${kw} (grep)"
                   MATCH_FOUND=true
