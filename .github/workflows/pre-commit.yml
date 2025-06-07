@@ -91,14 +91,13 @@ jobs:
             # Debug output to show what we're matching against
             echo "Testing pattern match for substrings (case-insensitive):"
             MATCH_FOUND=false
-            # Use Bash substring matching to detect keywords even within hyphenated words
-            for keyword in pattern regex grep trailing-whitespace formatting branch-detection; do
-              if [[ "${BRANCH_NAME_LOWER}" == *"${keyword}"* ]]; then
-                echo "Match found: ${keyword}"
-                MATCH_FOUND=true
-              fi
-            done
-            
+            # Use grep for more reliable substring matching
+            KEYWORDS="pattern|regex|grep|trailing-whitespace|formatting|branch-detection"
+            if echo "${BRANCH_NAME_LOWER}" | grep -E "${KEYWORDS}" > /dev/null; then
+              MATCH_KEYWORD=$(echo "${BRANCH_NAME_LOWER}" | grep -o -E "${KEYWORDS}" | head -n 1)
+              echo "Match found: ${MATCH_KEYWORD}"
+              MATCH_FOUND=true
+            fi
             if [[ "${MATCH_FOUND}" == "true" ]]; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
