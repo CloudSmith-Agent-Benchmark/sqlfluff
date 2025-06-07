@@ -103,7 +103,7 @@ jobs:
             # Normalize branch name by removing hyphens for more flexible matching
             BRANCH_NAME_NORMALIZED="${BRANCH_NAME_LOWER//-/}"
             echo "Normalized branch name (without hyphens): ${BRANCH_NAME_NORMALIZED}"
-            
+
             if [[ "$BRANCH_NAME_LOWER" == *pattern* ]] ||
                [[ "$BRANCH_NAME_LOWER" == *regex* ]] ||
                [[ "$BRANCH_NAME_LOWER" == *trailing* ]] ||
