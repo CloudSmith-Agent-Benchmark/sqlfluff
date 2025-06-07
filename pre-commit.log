@@ -1,1 +1,3 @@
-Test
+black....................................................................Failed
+- hook id: black
+- files were modified by this hook
