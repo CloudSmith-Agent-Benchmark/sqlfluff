@@ -1,26 +1,19 @@
 #!/bin/bash
 
-# Test script to validate pattern matching fix
-BRANCH_NAME="fix-workflow-pattern-matching"
-echo "Testing pattern matching with branch name: ${BRANCH_NAME}"
+# Test branch name
+BRANCH_NAME="fix-pattern-matching-bash"
+echo "Testing with branch name: ${BRANCH_NAME}"
 
-# Test the old pattern matching (should fail)
+# Test direct pattern matching
+echo "Direct test - Contains 'pattern': $([[ "${BRANCH_NAME}" == *"pattern"* ]] && echo "true" || echo "false")"
+
+# Test the loop from the workflow
+echo "Testing loop from workflow:"
 patterns=("pattern" "regex" "trailing-whitespace" "formatting" "syntax" "conditional")
-echo "Testing original pattern matching (without quotes):"
-for pattern in "${patterns[@]}"; do
-  if [[ "${BRANCH_NAME}" == *${pattern}* ]]; then
-    echo "✓ Found match with pattern: ${pattern}"
-  else
-    echo "✗ No match with pattern: ${pattern}"
-  fi
-done
-
-echo ""
-echo "Testing fixed pattern matching (with quotes):"
 for pattern in "${patterns[@]}"; do
   if [[ "${BRANCH_NAME}" == *"${pattern}"* ]]; then
-    echo "✓ Found match with pattern: ${pattern}"
+    echo "Found match with pattern: ${pattern}"
   else
-    echo "✗ No match with pattern: ${pattern}"
+    echo "No match with pattern: ${pattern}"
   fi
 done
