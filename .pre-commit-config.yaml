@@ -94,4 +94,3 @@ repos:
       - id: codespell
         exclude: (?x)^(test/fixtures/.*|pyproject.toml)$
         additional_dependencies: [tomli]
-
