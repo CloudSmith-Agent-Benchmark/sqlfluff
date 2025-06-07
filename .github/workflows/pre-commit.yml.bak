@@ -67,7 +67,7 @@ jobs:
           else
             echo "✗ Branch does not start with 'fix-'"
           fi
-          
+
           if echo "${BRANCH_NAME}" | grep -q -E "pattern|regex|trailing-whitespace|formatting|branch-detection|quotes|match"; then
             echo "✓ Branch contains one of the keywords"
             echo "Matched keywords: $(echo "${BRANCH_NAME}" | grep -o -E "pattern|regex|trailing-whitespace|formatting|branch-detection|quotes|match")"
