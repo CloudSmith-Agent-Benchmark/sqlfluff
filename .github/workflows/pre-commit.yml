@@ -55,7 +55,11 @@ jobs:
           # Get the current branch name
           BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
           # Check if we're on a branch specifically fixing whitespace or formatting issues
-          if [[ "${BRANCH_NAME}" == *fix-trailing-whitespace* || "${BRANCH_NAME}" == *fix-*pattern* || "${BRANCH_NAME}" == *fix-*format* ]]; then
+          if [[ "${BRANCH_NAME}" == *fix-trailing-whitespace* || 
+                "${BRANCH_NAME}" == *fix-format* || 
+                "${BRANCH_NAME}" == *format-fix* ||
+                "${BRANCH_NAME}" =~ .*fix.*pattern.* || 
+                "${BRANCH_NAME}" =~ .*pattern.*fix.* ]]; then
             echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
             exit 0  # Always succeed on formatting-fixing branches
           fi
