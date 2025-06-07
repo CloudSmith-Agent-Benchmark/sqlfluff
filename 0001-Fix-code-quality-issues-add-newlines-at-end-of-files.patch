@@ -14,11 +14,10 @@ index 81923eb14..9bb4fa736 100644
 --- a/src/sqlfluff/core/dialects/base.py.bak.bak
 +++ b/src/sqlfluff/core/dialects/base.py.bak.bak
 @@ -394,4 +394,4 @@ class Dialect:
- 
-     def get_root_segment(self) -> Union[type[BaseSegment], Matchable]:
-         """Get the root segment of the dialect."""
--        return self.ref(self.root_segment_name)
-\ No newline at end of file
+
+    def get_root_segment(self) -> Union[type[BaseSegment], Matchable]:
+        """Get the root segment of the dialect."""
+-        return self.ref(self.root_segment_name)\ No newline at end of file
 +        return self.ref(self.root_segment_name)
 diff --git a/src/test.py b/src/test.py
 index 5677c6ca6..2e3c7dc39 100644
@@ -26,13 +25,11 @@ index 5677c6ca6..2e3c7dc39 100644
 +++ b/src/test.py
 @@ -1,5 +1,6 @@
  """Test module docstring."""
- 
+
 +
  def test_function():
      """Test function docstring."""
--    return True
-\ No newline at end of file
+-    return True\ No newline at end of file
 +    return True
--- 
+--
 2.47.1
-
