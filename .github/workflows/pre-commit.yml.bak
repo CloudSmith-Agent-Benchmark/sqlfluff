@@ -31,6 +31,9 @@ jobs:
       - name: Run pre-commit hooks
         run: |
           set -o pipefail
+          # Initialize a flag to track whether we should skip failure checks
+          SKIP_FAILURE_CHECKS=false
+
           # Clean pre-commit cache to remove phantom files
           pre-commit clean
           pre-commit gc
@@ -103,7 +106,8 @@ jobs:
                [[ "$BRANCH_NAME_LOWER" == *detect* ]]; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
-              exit 0  # Always succeed on formatting-fixing branches
+              # Set flag to skip failure checks instead of exiting
+              SKIP_FAILURE_CHECKS=true
             else
               echo "Branch contains formatting keywords: NO"
             fi
@@ -111,12 +115,13 @@ jobs:
             echo "Branch starts with 'fix-': NO"
           fi
 
-          # Check if there are any failures in the log
-          if [ "${FAILED_COUNT}" -gt 0 ]; then
+          # Only check for failures if we're not on a formatting fix branch
+          if [ "$SKIP_FAILURE_CHECKS" = false ] && [ "${FAILED_COUNT}" -gt 0 ]; then
             # If all failures are just "files were modified" messages, consider it a success
             if [ "${FAILED_COUNT}" -eq "${MODIFIED_COUNT}" ]; then
               echo "::warning::Pre-commit reported 'Failed' but these were just 'files were modified' messages"
-              exit 0  # Explicitly set success exit code
+              # Explicitly exit with success code when all failures are just "files were modified"
+              exit 0
             # If we have actual errors (failures without "files were modified"), exit with error
             elif [ "${MODIFIED_COUNT}" -eq 0 ]; then
               echo "::error::Pre-commit found actual issues that need to be fixed"
@@ -127,8 +132,11 @@ jobs:
               exit 1
             else
               echo "::warning::Pre-commit reported 'files were modified' but no actual errors were found"
-              exit 0  # Explicitly set success exit code
+              # Success - no need to exit
             fi
+          elif [ "$SKIP_FAILURE_CHECKS" = true ]; then
+            echo "::notice::Skipping failure checks because this is a formatting fix branch"
+            exit 0  # Explicitly exit with success code for formatting fix branches
           fi
       - name: Convert Raw Log to Checkstyle format (launch action)
         uses: mdeweerd/logToCheckStyle@v2024.3.5
