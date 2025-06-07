@@ -99,6 +99,10 @@ repos:
           (?x)^(
             test/core/helpers/mock_test.py
           )$
+        exclude: |
+          (?x)^(
+            test/core/helpers/mock_test.py
+          )$
   - repo: https://github.com/codespell-project/codespell
     rev: v2.4.1
     hooks:
