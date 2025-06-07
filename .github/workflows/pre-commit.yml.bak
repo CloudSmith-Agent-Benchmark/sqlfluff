@@ -87,8 +87,7 @@ jobs:
             # Use word boundary markers (\b) around each keyword to match them as standalone words
             # Also include a version without word boundaries to match keywords within hyphenated words
             # Simplified pattern without word boundaries to avoid escaping issues in GitHub Actions
-            # Fix: Properly escape the grep pattern by using parentheses around the alternation
-            if echo "${BRANCH_NAME}" | grep -i -E -q "(pattern|regex|trailing-whitespace|formatting|branch-detection|whitespace|detection|grep|escaping)"; then
+            if echo "${BRANCH_NAME}" | grep -i -E -q "pattern|regex|trailing-whitespace|formatting|branch-detection|whitespace|detection|grep|escaping"; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
