@@ -88,34 +88,35 @@ jobs:
             # Convert branch name to lowercase for case-insensitive matching
             BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
 
-            # Using a simpler and more reliable keyword-based approach instead of complex regex
-            echo "Using simplified keyword matching approach:"
-            
-            # Define keywords to look for
-            KEYWORDS="pattern regex grep trailing-whitespace trailing-spaces formatting branch-detection"
-            MATCH_FOUND=false
-            MATCHED_KEYWORD=""
-            
-            # Check each keyword individually
-            for keyword in $KEYWORDS; do
-              if [[ ${BRANCH_NAME_LOWER} == *"$keyword"* ]]; then
-                echo "Match found: branch contains keyword '$keyword'"
-                MATCH_FOUND=true
-                MATCHED_KEYWORD="$keyword"
-                break
-              fi
-            done
-            
-            # If no match was found with the simple approach, try grep as a fallback
-            if [[ "$MATCH_FOUND" != "true" ]]; then
-              if echo "${BRANCH_NAME_LOWER}" | grep -E 'pattern|regex|grep|trailing-whitespace|trailing-spaces|formatting|branch-detection' > /dev/null; then
-                echo "Match found using grep fallback"
-                MATCH_FOUND=true
-              else
+            # Using a direct grep approach for more reliable pattern matching in GitHub Actions
+            echo "Using direct grep approach for pattern matching:"
+
+            # Check for keywords directly with grep
+            if echo "${BRANCH_NAME_LOWER}" | grep -E 'pattern|regex|grep|trailing-whitespace|trailing-spaces|formatting|branch-detection' > /dev/null; then
+              echo "Match found: branch contains a formatting keyword"
+              MATCH_FOUND=true
+              MATCHED_KEYWORD="via grep"
+            else
+              # Fallback to explicit checks for each keyword
+              KEYWORDS=("pattern" "regex" "grep" "trailing-whitespace" "trailing-spaces" "formatting" "branch-detection")
+              MATCH_FOUND=false
+              MATCHED_KEYWORD=""
+
+              for keyword in "${KEYWORDS[@]}"; do
+                echo "Checking if '${BRANCH_NAME_LOWER}' contains '${keyword}'"
+                if [[ "${BRANCH_NAME_LOWER}" == *"${keyword}"* ]]; then
+                  echo "Match found: branch contains keyword '${keyword}'"
+                  MATCH_FOUND=true
+                  MATCHED_KEYWORD="${keyword}"
+                  break
+                fi
+              done
+
+              if [[ "$MATCH_FOUND" != "true" ]]; then
                 echo "No match found with any method"
               fi
             fi
-            
+
             # Use the result of our simplified matching
             if [[ "$MATCH_FOUND" == "true" ]]; then
               echo "Branch contains formatting keywords: YES (matched: ${MATCHED_KEYWORD:-'via grep'})"
