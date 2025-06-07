@@ -1,3 +1,4 @@
+exclude: '^(pre-commit\.log|pre-commit\.xml)$'
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
@@ -18,7 +19,9 @@ repos:
             plugins/sqlfluff-templater-dbt/test/fixtures/dbt.*/templated_output/(dbt_utils_0.8.0/)?last_day.sql|
             test/fixtures/linter/indentation_errors.sql|
             test/fixtures/templater/jinja_d_roundtrip/test.sql|
-            fix-eof-newline\.patch.*
+            fix-eof-newline\.patch.*|
+            pre-commit\.log|
+            pre-commit\.xml
           )$
       - id: trailing-whitespace
         exclude: |
@@ -30,7 +33,9 @@ repos:
             plugins/sqlfluff-templater-dbt/test/fixtures/dbt.*/templated_output/macro_in_macro.sql|
             plugins/sqlfluff-templater-dbt/test/fixtures/dbt.*/templated_output/last_day.sql|
             plugins/sqlfluff-templater-dbt/test/fixtures/dbt.*/templated_output/dbt_utils_0.8.0/last_day.sql|
-            test/fixtures/linter/sqlfluffignore/
+            test/fixtures/linter/sqlfluffignore/|
+            pre-commit\.log|
+            pre-commit\.xml
           )$
   - repo: https://github.com/psf/black
     rev: 25.1.0
@@ -93,5 +98,5 @@ repos:
     rev: v2.4.1
     hooks:
       - id: codespell
-        exclude: (?x)^(test/fixtures/.*|pyproject.toml)$
+        exclude: (?x)^(test/fixtures/.*|pyproject.toml|pre-commit\.log|pre-commit\.xml)$
         additional_dependencies: [tomli]
