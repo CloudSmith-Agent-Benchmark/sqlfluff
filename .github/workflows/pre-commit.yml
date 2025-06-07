@@ -117,8 +117,12 @@ jobs:
             echo "Branch starts with 'fix-': NO"
           fi
 
-          # Only check for failures if we're not on a formatting fix branch
-          if [ "$SKIP_FAILURE_CHECKS" = false ] && [ "${FAILED_COUNT}" -gt 0 ]; then
+          # First check if we should skip failure checks (formatting fix branch)
+          if [ "$SKIP_FAILURE_CHECKS" = true ]; then
+            echo "::notice::Skipping failure checks because this is a formatting fix branch"
+            exit 0  # Explicitly exit with success code for formatting fix branches
+          # Only check for failures if we're not on a formatting fix branch and there are failures
+          elif [ "${FAILED_COUNT}" -gt 0 ]; then
             # If all failures are just "files were modified" messages, consider it a success
             if [ "${FAILED_COUNT}" -eq "${MODIFIED_COUNT}" ]; then
               echo "::warning::Pre-commit reported 'Failed' but these were just 'files were modified' messages"
@@ -137,9 +141,6 @@ jobs:
               # Explicitly exit with success code when no actual errors are found
               exit 0
             fi
-          elif [ "$SKIP_FAILURE_CHECKS" = true ]; then
-            echo "::notice::Skipping failure checks because this is a formatting fix branch"
-            exit 0  # Explicitly exit with success code for formatting fix branches
           fi
       - name: Convert Raw Log to Checkstyle format (launch action)
         uses: mdeweerd/logToCheckStyle@v2024.3.5
