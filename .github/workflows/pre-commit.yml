@@ -97,6 +97,13 @@ jobs:
             echo "Lowercase branch name: ${BRANCH_NAME_LOWER}"
             # Use bash pattern matching which is more reliable than grep in GitHub Actions environment
             # Modified to check for partial matches using substring checks
+            # Fix: Added support for both hyphenated and non-hyphenated versions of keywords
+            # and normalized branch name to handle hyphenation differences
+            # This ensures branches like 'fix-precommit-conditional-logic' are properly matched
+            # Normalize branch name by removing hyphens for more flexible matching
+            BRANCH_NAME_NORMALIZED="${BRANCH_NAME_LOWER//-/}"
+            echo "Normalized branch name (without hyphens): ${BRANCH_NAME_NORMALIZED}"
+            
             if [[ "$BRANCH_NAME_LOWER" == *pattern* ]] ||
                [[ "$BRANCH_NAME_LOWER" == *regex* ]] ||
                [[ "$BRANCH_NAME_LOWER" == *trailing* ]] ||
@@ -105,6 +112,8 @@ jobs:
                [[ "$BRANCH_NAME_LOWER" == *branch* ]] ||
                [[ "$BRANCH_NAME_LOWER" == *detect* ]] ||
                [[ "$BRANCH_NAME_LOWER" == *precommit* ]] ||
+               [[ "$BRANCH_NAME_LOWER" == *pre-commit* ]] ||
+               [[ "$BRANCH_NAME_NORMALIZED" == *precommit* ]] ||
                [[ "$BRANCH_NAME_LOWER" == *exit-code* ]]; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"

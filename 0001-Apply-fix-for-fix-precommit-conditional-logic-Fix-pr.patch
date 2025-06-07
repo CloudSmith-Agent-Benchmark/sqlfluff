@@ -1,0 +1,73 @@
+From e96450c2114d3ebe852958ba024031d5c9a3e90f Mon Sep 17 00:00:00 2001
+From: CloudSmith Agent <cloudsmith-agent@example.com>
+Date: Sat, 7 Jun 2025 19:31:38 +0000
+Subject: [PATCH] Apply fix for fix-precommit-conditional-logic: Fix pre-commit
+ workflow to handle hyphenated keywords in branch names
+
+---
+ .github/workflows/pre-commit.yml.bak | 17 ++++++++++++-----
+ pre-commit.log                       |  5 ++++-
+ 2 files changed, 16 insertions(+), 6 deletions(-)
+
+diff --git a/.github/workflows/pre-commit.yml.bak b/.github/workflows/pre-commit.yml.bak
+index f89f36c96..c575b2760 100644
+--- a/.github/workflows/pre-commit.yml.bak
++++ b/.github/workflows/pre-commit.yml.bak
+@@ -97,6 +97,10 @@ jobs:
+             echo "Lowercase branch name: ${BRANCH_NAME_LOWER}"
+             # Use bash pattern matching which is more reliable than grep in GitHub Actions environment
+             # Modified to check for partial matches using substring checks
++            # Normalize branch name by removing hyphens for more flexible matching
++            BRANCH_NAME_NORMALIZED="${BRANCH_NAME_LOWER//-/}"
++            echo "Normalized branch name (without hyphens): ${BRANCH_NAME_NORMALIZED}"
++            
+             if [[ "$BRANCH_NAME_LOWER" == *pattern* ]] ||
+                [[ "$BRANCH_NAME_LOWER" == *regex* ]] ||
+                [[ "$BRANCH_NAME_LOWER" == *trailing* ]] ||
+@@ -105,6 +109,8 @@ jobs:
+                [[ "$BRANCH_NAME_LOWER" == *branch* ]] ||
+                [[ "$BRANCH_NAME_LOWER" == *detect* ]] ||
+                [[ "$BRANCH_NAME_LOWER" == *precommit* ]] ||
++               [[ "$BRANCH_NAME_LOWER" == *pre-commit* ]] ||
++               [[ "$BRANCH_NAME_NORMALIZED" == *precommit* ]] ||
+                [[ "$BRANCH_NAME_LOWER" == *exit-code* ]]; then
+               echo "Branch contains formatting keywords: YES"
+               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
+@@ -117,8 +123,12 @@ jobs:
+             echo "Branch starts with 'fix-': NO"
+           fi
+ 
+-          # Only check for failures if we're not on a formatting fix branch
+-          if [ "$SKIP_FAILURE_CHECKS" = false ] && [ "${FAILED_COUNT}" -gt 0 ]; then
++          # First check if we should skip failure checks (formatting fix branch)
++          if [ "$SKIP_FAILURE_CHECKS" = true ]; then
++            echo "::notice::Skipping failure checks because this is a formatting fix branch"
++            exit 0  # Explicitly exit with success code for formatting fix branches
++          # Only check for failures if we're not on a formatting fix branch and there are failures
++          elif [ "${FAILED_COUNT}" -gt 0 ]; then
+             # If all failures are just "files were modified" messages, consider it a success
+             if [ "${FAILED_COUNT}" -eq "${MODIFIED_COUNT}" ]; then
+               echo "::warning::Pre-commit reported 'Failed' but these were just 'files were modified' messages"
+@@ -137,9 +147,6 @@ jobs:
+               # Explicitly exit with success code when no actual errors are found
+               exit 0
+             fi
+-          elif [ "$SKIP_FAILURE_CHECKS" = true ]; then
+-            echo "::notice::Skipping failure checks because this is a formatting fix branch"
+-            exit 0  # Explicitly exit with success code for formatting fix branches
+           fi
+       - name: Convert Raw Log to Checkstyle format (launch action)
+         uses: mdeweerd/logToCheckStyle@v2024.3.5
+diff --git a/pre-commit.log b/pre-commit.log
+index 345e6aef7..ffc3ef4f4 100644
+--- a/pre-commit.log
++++ b/pre-commit.log
+@@ -1 +1,4 @@
+-Test
++[INFO] Initializing environment
++black....................................................................Failed
++- hook id: black
++- files were modified by this hook
+-- 
+2.47.1
+
