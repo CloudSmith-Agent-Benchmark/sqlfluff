@@ -104,6 +104,8 @@ jobs:
             # Use bash's native string operations for more consistent behavior across environments
             for kw in "${KEYWORDS[@]}"; do
               # Case-insensitive substring check using bash parameter expansion
+              # Debug output to help diagnose pattern matching issues
+              echo "Checking if '${BRANCH_NAME_LOWER}' contains '${kw}'"
               if [[ "${BRANCH_NAME_LOWER}" == *"${kw}"* ]]; then
                 echo "Match found: branch contains keyword '${kw}'"
                 MATCHED_KEYWORD="${kw}"
@@ -127,7 +129,7 @@ jobs:
                 fi
               done
             fi
-            
+
             if [[ "$MATCH_FOUND" == "true" ]]; then
               echo "Match found using bash string operations"
             else
