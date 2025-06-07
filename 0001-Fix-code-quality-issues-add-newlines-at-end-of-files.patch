@@ -1,0 +1,38 @@
+From b5fb516a2cf853f6e59c8f3684f2d6f69a87e385 Mon Sep 17 00:00:00 2001
+From: CloudSmith Agent <cloudsmith-agent@example.com>
+Date: Sat, 7 Jun 2025 01:34:22 +0000
+Subject: [PATCH] Fix code quality issues: add newlines at end of files and
+ format code according to Black standards
+
+---
+ src/sqlfluff/core/dialects/base.py.bak.bak | 2 +-
+ src/test.py                                | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/src/sqlfluff/core/dialects/base.py.bak.bak b/src/sqlfluff/core/dialects/base.py.bak.bak
+index 81923eb14..9bb4fa736 100644
+--- a/src/sqlfluff/core/dialects/base.py.bak.bak
++++ b/src/sqlfluff/core/dialects/base.py.bak.bak
+@@ -394,4 +394,4 @@ class Dialect:
+ 
+     def get_root_segment(self) -> Union[type[BaseSegment], Matchable]:
+         """Get the root segment of the dialect."""
+-        return self.ref(self.root_segment_name)
+\ No newline at end of file
++        return self.ref(self.root_segment_name)
+diff --git a/src/test.py b/src/test.py
+index 5677c6ca6..2e3c7dc39 100644
+--- a/src/test.py
++++ b/src/test.py
+@@ -1,5 +1,6 @@
+ """Test module docstring."""
+ 
++
+ def test_function():
+     """Test function docstring."""
+-    return True
+\ No newline at end of file
++    return True
+-- 
+2.47.1
+
