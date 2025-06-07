@@ -58,7 +58,7 @@ jobs:
           # Debug output for regex pattern matching
           echo "Debug: Checking if branch matches formatting-fixing criteria"
           echo "Debug: Starts with fix-: $([[ "${BRANCH_NAME}" =~ ^fix- ]] && echo "true" || echo "false")"
-          echo "Debug: Contains pattern: $([[ "${BRANCH_NAME}" == *pattern* ]] && echo "true" || echo "false")"
+          echo "Debug: Contains pattern: $([[ "${BRANCH_NAME}" == *"pattern"* ]] && echo "true" || echo "false")"
           echo "Debug: Contains regex: $([[ "${BRANCH_NAME}" == *regex* ]] && echo "true" || echo "false")"
           echo "Debug: Contains trailing-whitespace: $([[ "${BRANCH_NAME}" == *trailing-whitespace* ]] && echo "true" || echo "false")"
           echo "Debug: Contains formatting: $([[ "${BRANCH_NAME}" == *formatting* ]] && echo "true" || echo "false")"
