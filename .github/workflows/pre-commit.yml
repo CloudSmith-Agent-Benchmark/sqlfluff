@@ -37,7 +37,7 @@ jobs:
           # Remove any existing log file and create a new empty one
           rm -f ${RAW_LOG}
           touch ${RAW_LOG}
-          
+
           # Temporarily disable exit-on-error to prevent premature script termination
           set +e
           # Run pre-commit on all files in check-only mode and ensure output is captured
@@ -46,7 +46,7 @@ jobs:
           PRE_COMMIT_STATUS=${PIPESTATUS[0]}
           # Re-enable exit-on-error
           set -e
-          
+
           echo "Pre-commit exited with status: ${PRE_COMMIT_STATUS}"
 
           # Count the number of failures and "files were modified" messages
