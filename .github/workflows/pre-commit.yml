@@ -52,8 +52,13 @@ jobs:
           echo "First few lines of log file:"
           head -n 5 ${RAW_LOG}
 
-          # Get the current branch name
-          BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+          # Get the current branch name using GitHub Actions environment variables
+          # For pull requests, use github.head_ref; for pushes, use github.ref_name
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            BRANCH_NAME="${{ github.head_ref }}"
+          else
+            BRANCH_NAME="${{ github.ref_name }}"
+          fi
           echo "Current branch name: ${BRANCH_NAME}"
           # Debug output for regex pattern matching
           echo "Debug: Checking if branch matches formatting-fixing criteria"
