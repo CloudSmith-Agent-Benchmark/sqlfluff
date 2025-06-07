@@ -84,7 +84,7 @@ jobs:
             MATCH_FOUND=0
             for keyword in $KEYWORDS; do
               echo "Checking for keyword: $keyword"
-              if [[ "$BRANCH_NAME_LOWER" == *$keyword* ]]; then
+              if [[ "$BRANCH_NAME_LOWER" == *"$keyword"* ]]; then
                 echo "Match found: $keyword"
                 MATCH_FOUND=1
                 break
