@@ -1,58 +1,62 @@
 #!/bin/bash
 
-# Test script to validate the pattern matching fix
+# Test script to verify our pattern matching solution works correctly
+# This simulates the branch name detection logic in the GitHub Actions workflow
 
 # Test cases
-test_branches=(
-  "fix-grep-pattern-matching-solution-fix"
-  "fix-regex-update"
-  "fix-trailing-whitespace-removal"
-  "fix-formatting-improvements"
-  "fix-branch-detection-logic"
-  "fix-something-else"
+TEST_BRANCHES=(
+  "fix-pattern-matching-and-whitespace-improved"
+  "fix-formatting-issues"
+  "fix-branch-detection"
   "feature-new-functionality"
+  "bugfix-unrelated"
 )
 
-# Function to test the original grep approach
-test_grep_approach() {
-  local branch=$1
-  if echo "${branch}" | grep -i -E ".*pattern.*|.*regex.*|.*trailing-whitespace.*|.*formatting.*|.*branch-detection.*" > /dev/null; then
-    echo "GREP: ${branch} - MATCH"
-    return 0
-  else
-    echo "GREP: ${branch} - NO MATCH"
-    return 1
-  fi
-}
-
-# Function to test the new bash regex approach
-test_bash_regex_approach() {
-  local branch=$1
-  shopt -s nocasematch
-  if [[ ${branch} =~ (pattern|regex|trailing-whitespace|formatting|branch-detection) ]]; then
-    shopt -u nocasematch
-    echo "BASH: ${branch} - MATCH"
-    return 0
-  else
-    shopt -u nocasematch
-    echo "BASH: ${branch} - NO MATCH"
-    return 1
-  fi
-}
-
-echo "Testing pattern matching approaches:"
-echo "===================================="
-
-for branch in "${test_branches[@]}"; do
-  echo -e "\nBranch: ${branch}"
-  test_grep_approach "${branch}"
-  grep_result=$?
-  test_bash_regex_approach "${branch}"
-  bash_result=$?
+for BRANCH_NAME in "${TEST_BRANCHES[@]}"; do
+  echo "========================================"
+  echo "Testing branch name: $BRANCH_NAME"
+  echo "========================================"
   
-  if [ $grep_result -ne $bash_result ]; then
-    echo "WARNING: Different results between grep and bash regex approaches!"
+  # Convert to lowercase
+  BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
+  
+  # Define keywords to look for
+  KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "branch" "detection")
+  echo "Checking branch name '${BRANCH_NAME_LOWER}' for keywords..."
+  MATCH_FOUND=false
+  MATCHED_KEYWORD=""
+  
+  # Use bash's native string operations
+  for kw in "${KEYWORDS[@]}"; do
+    if [[ "${BRANCH_NAME_LOWER}" == *"${kw}"* ]]; then
+      echo "Match found: branch contains keyword '${kw}'"
+      MATCHED_KEYWORD="${kw}"
+      MATCH_FOUND=true
+      break
+    fi
+  done
+  
+  # Fallback check with normalized branch name
+  if [[ "$MATCH_FOUND" != "true" ]]; then
+    NORMALIZED_BRANCH=$(echo "${BRANCH_NAME_LOWER}" | tr -cd 'a-z0-9')
+    echo "Using normalized branch name for fallback check: ${NORMALIZED_BRANCH}"
+    
+    for kw in "${KEYWORDS[@]}"; do
+      NORMALIZED_KW=$(echo "${kw}" | tr -cd 'a-z0-9')
+      if [[ "${NORMALIZED_BRANCH}" == *"${NORMALIZED_KW}"* ]]; then
+        echo "Match found in normalized branch name: contains keyword '${kw}'"
+        MATCHED_KEYWORD="${kw} (normalized)"
+        MATCH_FOUND=true
+        break
+      fi
+    done
   fi
+  
+  # Output result
+  if [[ "$MATCH_FOUND" == "true" ]]; then
+    echo "RESULT: Branch contains formatting keywords: YES (matched: ${MATCHED_KEYWORD})"
+  else
+    echo "RESULT: Branch contains formatting keywords: NO"
+  fi
+  echo ""
 done
-
-echo -e "\nTest completed."
