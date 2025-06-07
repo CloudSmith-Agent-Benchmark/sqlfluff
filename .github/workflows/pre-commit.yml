@@ -52,9 +52,10 @@ jobs:
           echo "First few lines of log file:"
           head -n 5 ${RAW_LOG}
 
-          # Get the current branch name
-          BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
-          echo "Current branch name: ${BRANCH_NAME}"
+          # Get the current branch name using GitHub Actions context variables
+          # For pull requests, use GITHUB_HEAD_REF, otherwise extract from GITHUB_REF
+          BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+          echo "Current branch name from GitHub context: ${BRANCH_NAME}"
           # Debug output for regex pattern matching
           echo "Debug: Checking if branch matches formatting-fixing criteria"
           echo "Debug: Starts with fix-: $([[ "${BRANCH_NAME}" =~ ^fix- ]] && echo "true" || echo "false")"
