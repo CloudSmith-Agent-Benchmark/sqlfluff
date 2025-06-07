@@ -67,17 +67,17 @@ jobs:
 
           # Check if we're on a branch specifically fixing formatting issues
           # Using string contains operator for substring matching anywhere in the branch name
-          # Using nested if statements for clearer syntax and better reliability
+          # Rewritten to avoid line continuation issues
           if [[ "${BRANCH_NAME}" =~ ^fix- ]]; then
-            if [[ "${BRANCH_NAME}" == *"pattern"* ]] || \
-               [[ "${BRANCH_NAME}" == *"regex"* ]] || \
-               [[ "${BRANCH_NAME}" == *"trailing-whitespace"* ]] || \
-               [[ "${BRANCH_NAME}" == *"formatting"* ]] || \
-               [[ "${BRANCH_NAME}" == *"syntax"* ]] || \
-               [[ "${BRANCH_NAME}" == *"conditional-keywords"* ]]; then
-              echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
-              exit 0  # Always succeed on formatting-fixing branches
-            fi
+            # Store all patterns in an array for cleaner code and better reliability
+            patterns=("pattern" "regex" "trailing-whitespace" "formatting" "syntax" "conditional-keywords")
+            for pattern in "${patterns[@]}"; do
+              if [[ "${BRANCH_NAME}" == *"${pattern}"* ]]; then
+                echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
+                echo "::warning::Matched pattern: ${pattern}"
+                exit 0  # Always succeed on formatting-fixing branches
+              fi
+            done
           fi
 
           # Check if there are any failures in the log
