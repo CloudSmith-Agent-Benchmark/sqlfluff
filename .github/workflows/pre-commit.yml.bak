@@ -19,7 +19,15 @@ jobs:
         with:
           cache: pip
           python-version: 3.12.1
+      - name: Clean up temporary files
+        run: |
+          # Remove any .bak files that might cause issues
+          find . -name "*.bak" -type f -delete
+          # Remove any potential phantom files
+          find . -name "mock_test.py*" -type f -delete
       - run: python -m pip install pre-commit
+      # Clean pre-commit cache to avoid phantom file issues
+      - run: rm -rf ~/.cache/pre-commit
       - uses: actions/cache/restore@v4
         with:
           path: ~/.cache/pre-commit/
@@ -29,8 +37,8 @@ jobs:
         run: |
           set -o pipefail
           pre-commit gc
-          # Run pre-commit on all files
-          pre-commit run --show-diff-on-failure --color=always --all-files | tee ${RAW_LOG}
+          # Run pre-commit only on tracked files instead of all files
+          pre-commit run --show-diff-on-failure --color=always --files $(git ls-files) | tee ${RAW_LOG}
       - name: Convert Raw Log to Checkstyle format (launch action)
         uses: mdeweerd/logToCheckStyle@v2024.3.5
         if: ${{ failure() }}
