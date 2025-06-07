@@ -18,8 +18,7 @@ repos:
             plugins/sqlfluff-templater-dbt/test/fixtures/dbt.*/templated_output/(dbt_utils_0.8.0/)?last_day.sql|
             test/fixtures/linter/indentation_errors.sql|
             test/fixtures/templater/jinja_d_roundtrip/test.sql|
-            fix-eof-newline\.patch.*|
-            test/core/helpers/mock_test\.py
+            fix-eof-newline\.patch.*
           )$
       - id: trailing-whitespace
         exclude: |
@@ -38,6 +37,10 @@ repos:
     rev: 25.1.0
     hooks:
       - id: black
+        exclude: |
+          (?x)^(
+            test/core/helpers/mock_test\.py
+          )$
         exclude: |
           (?x)^(
             test/core/helpers/mock_test\.py
@@ -82,6 +85,10 @@ repos:
           (?x)^(
             test/core/helpers/mock_test\.py
           )$
+        exclude: |
+          (?x)^(
+            test/core/helpers/mock_test\.py
+          )$
   - repo: https://github.com/pycqa/doc8
     rev: v1.1.2
     hooks:
@@ -106,5 +113,5 @@ repos:
     rev: v2.4.1
     hooks:
       - id: codespell
-        exclude: (?x)^(test/fixtures/.*|pyproject.toml|test/core/helpers/mock_test\.py)$
+        exclude: (?x)^(test/fixtures/.*|pyproject.toml)$
         additional_dependencies: [tomli]
