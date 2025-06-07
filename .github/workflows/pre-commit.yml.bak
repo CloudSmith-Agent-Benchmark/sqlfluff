@@ -30,8 +30,8 @@ jobs:
           # Clean pre-commit cache to remove phantom files
           pre-commit clean
           pre-commit gc
-          # Run pre-commit on all files, excluding the phantom file
-          pre-commit run --show-diff-on-failure --color=always --all-files --files test/core/helpers/mock_test.py --exclude | tee ${RAW_LOG}
+          # Run pre-commit on all files except the phantom file
+          find . -type f -not -path "./test/core/helpers/mock_test.py" | xargs pre-commit run --show-diff-on-failure --color=always --files | tee ${RAW_LOG}
       - name: Convert Raw Log to Checkstyle format (launch action)
         uses: mdeweerd/logToCheckStyle@v2024.3.5
         if: ${{ failure() }}
