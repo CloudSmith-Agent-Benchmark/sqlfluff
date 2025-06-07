@@ -45,7 +45,7 @@ jobs:
             # Count occurrences of "Failed" and "files were modified by this hook"
             FAILED_COUNT=$(grep -c "Failed" ${RAW_LOG})
             MODIFIED_COUNT=$(grep -c "files were modified by this hook" ${RAW_LOG})
-            
+
             # If we have more failures than "files were modified" messages, we have actual errors
             if [ ${FAILED_COUNT} -gt ${MODIFIED_COUNT} ]; then
               echo "::error::Pre-commit found actual issues that need to be fixed"
