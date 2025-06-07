@@ -1,45 +1,31 @@
 #!/bin/bash
 
-# Test script to verify branch pattern detection
+# Test script to validate branch detection logic
 
-# Test branches
+# Test cases
 test_branches=(
-  "fix-branch-pattern-matching-v2"
-  "fix-regex-issue"
-  "fix-formatting-problem"
-  "feature-new-stuff"
-  "bugfix-trailing-whitespace"
-  "fix-branch-detection-issue"
+  "fix-branch-detection-improvement"
+  "fix-formatting-issues"
+  "fix-regex-pattern"
+  "feature-new-functionality"
+  "main"
+  "develop"
 )
 
-# Function to test branch pattern detection
-test_branch_pattern() {
-  local branch=$1
-  echo "Testing branch: $branch"
-  
-  # Test with single quotes (original issue)
-  if [[ $branch =~ ^fix- ]] && (echo "$branch" | grep -q -E 'pattern|regex|trailing-whitespace|formatting|branch-detection'); then
-    echo "  ✅ PASS with single quotes"
-  else
-    echo "  ❌ FAIL with single quotes"
-  fi
-  
-  # Test with double quotes (fixed version)
-  if [[ $branch =~ ^fix- ]] && (echo "$branch" | grep -q -E "pattern|regex|trailing-whitespace|formatting|branch-detection"); then
-    echo "  ✅ PASS with double quotes"
-  else
-    echo "  ❌ FAIL with double quotes"
-  fi
-  
-  echo ""
-}
-
-# Run tests for each branch
-echo "=== Branch Pattern Detection Test ==="
-echo ""
+echo "Testing branch detection logic..."
+echo "=================================="
+echo
 
 for branch in "${test_branches[@]}"; do
-  test_branch_pattern "$branch"
+  echo "Testing branch: $branch"
+  
+  # Apply the same logic as in the workflow
+  if [[ -n "${branch}" ]] && [[ ${branch} =~ ^fix- ]] && (echo "${branch}" | grep -q -E "pattern|regex|trailing-whitespace|formatting|branch-detection|quotes|match"); then
+    echo "  RESULT: MATCH - This branch would be recognized as a formatting fix branch"
+  else
+    echo "  RESULT: NO MATCH - This branch would NOT be recognized as a formatting fix branch"
+  fi
+  echo
 done
 
-echo "=== Test Complete ==="
+echo "Test completed."
