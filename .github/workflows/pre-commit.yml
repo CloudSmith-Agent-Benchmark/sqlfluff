@@ -46,7 +46,6 @@ jobs:
           ERROR_COUNT=$(grep -c "^[^-].*error:" ${RAW_LOG} || echo 0)
 
           echo "Found ${FAILED_COUNT} failures, ${MODIFIED_COUNT} 'files were modified' messages, and ${ERROR_COUNT} errors"
-          
           # Debug log file content
           echo "Log file size: $(wc -l < ${RAW_LOG}) lines"
           echo "First few lines of log file:"
