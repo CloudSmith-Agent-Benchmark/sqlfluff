@@ -1,7 +1,6 @@
 # Ignore CI logs
 pre-commit.log
 pre-commit.xml
-pre-commit-output.log
 
 # Ignore IDE files
 .vscode
