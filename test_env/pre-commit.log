@@ -1,0 +1,23 @@
+[INFO] Initializing environment for https://github.com/pre-commit/pre-commit-hooks.
+[INFO] Initializing environment for https://github.com/psf/black.
+black....................................................................Failed
+- hook id: black
+- files were modified by this hook
+mypy.....................................................................Failed
+- hook id: mypy
+- files were modified by this hook
+flake8...................................................................Failed
+- hook id: flake8
+- files were modified by this hook
+doc8.....................................................................Failed
+- hook id: doc8
+- files were modified by this hook
+yamllint.................................................................Failed
+- hook id: yamllint
+- files were modified by this hook
+ruff.....................................................................Failed
+- hook id: ruff
+- files were modified by this hook
+codespell................................................................Failed
+- hook id: codespell
+- files were modified by this hook
