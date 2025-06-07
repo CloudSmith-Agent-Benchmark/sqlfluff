@@ -92,6 +92,12 @@ jobs:
                   "${BRANCH_NAME_LOWER}" == *formatting* || 
                   "${BRANCH_NAME_LOWER}" == *branch-detection* ]]; then
               echo "Branch contains formatting keywords: YES"
+            echo "Matched keyword(s):"
+            for keyword in "pattern" "regex" "trailing-whitespace" "formatting" "branch-detection"; do
+              if [[ "${BRANCH_NAME_LOWER}" == *"${keyword}"* ]]; then
+                echo "- ${keyword}"
+              fi
+            done
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               exit 0  # Always succeed on formatting-fixing branches
             else
