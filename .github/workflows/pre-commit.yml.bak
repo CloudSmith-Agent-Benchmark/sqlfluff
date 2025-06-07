@@ -143,6 +143,16 @@ jobs:
                 fi
               done
             fi
+            
+            # Summary of matching results
+            if [[ "$MATCH_FOUND" == "true" ]]; then
+              echo "Match found using one of the pattern matching methods"
+            else
+              echo "No match found with any pattern matching method"
+              # Debug output for troubleshooting
+              echo "Debug: Full branch name: '${BRANCH_NAME}'"
+              echo "Debug: Lowercase branch name: '${BRANCH_NAME_LOWER}'"
+            fi
             # Use the result of our simplified matching
             if [[ "$MATCH_FOUND" == "true" ]]; then
               echo "Branch contains formatting keywords: YES (matched: ${MATCHED_KEYWORD:-'via grep'})"
