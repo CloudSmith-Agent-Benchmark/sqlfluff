@@ -1,7 +1,7 @@
 name: pre-commit
 # This workflow runs pre-commit checks on all files and handles formatting-specific branches
-# The pattern matching logic has been improved to use native bash string operations instead of grep
-# for more consistent behavior across different environments (local vs GitHub Actions)
+# The pattern matching logic uses bash string contains operator (==) instead of regex operator (=~)
+# to properly handle keywords like "regex" that have special meaning in regex patterns
 on:
   pull_request:
   push:
@@ -71,11 +71,8 @@ jobs:
           done
 
           # Check if we're on a branch specifically fixing formatting issues
-          # Using string contains operator for substring matching anywhere in the branch name
-          # Note: When using =~ operator in bash, the regex pattern should not be quoted
-          # Using grep for more reliable pattern matching with multiple keywords for better compatibility
-          # The previous bash pattern matching approach was replaced with grep because it's more reliable
-          # in GitHub Actions environment where there might be encoding or environment-specific issues
+          # Using string contains operator (==) with wildcards for substring matching
+          # This avoids issues with regex special characters in keywords like "regex"
           echo "Checking if branch name matches formatting fix pattern..."
           if [[ ${BRANCH_NAME} =~ ^fix- ]]; then
             echo "Branch starts with 'fix-': YES"
@@ -103,10 +100,10 @@ jobs:
 
             # Use bash's native string operations for more consistent behavior across environments
             for kw in "${KEYWORDS[@]}"; do
-              # Case-insensitive substring check using bash parameter expansion
-              # Explicitly print the comparison being made for debugging
+              # Case-insensitive substring check using string contains operator instead of regex
+              # This avoids issues with special regex characters in keywords like "regex"
               echo "Checking if '${BRANCH_NAME_LOWER}' contains '${kw}'"
-              if [[ "${BRANCH_NAME_LOWER}" =~ ${kw} ]]; then
+              if [[ "${BRANCH_NAME_LOWER}" == *"${kw}"* ]]; then
                 echo "Match found: branch contains keyword '${kw}'"
                 MATCHED_KEYWORD="${kw}"
                 MATCH_FOUND=true
@@ -123,7 +120,7 @@ jobs:
                 # Normalize keyword too for consistent comparison
                 NORMALIZED_KW=$(echo "${kw}" | tr -cd 'a-z0-9')
                 echo "Checking if normalized '${NORMALIZED_BRANCH}' contains '${NORMALIZED_KW}'"
-                if [[ "${NORMALIZED_BRANCH}" =~ ${NORMALIZED_KW} ]]; then
+                if [[ "${NORMALIZED_BRANCH}" == *"${NORMALIZED_KW}"* ]]; then
                   echo "Match found in normalized branch name: contains keyword '${kw}'"
                   MATCHED_KEYWORD="${kw} (normalized)"
                   MATCH_FOUND=true
@@ -135,7 +132,7 @@ jobs:
             if [[ "$MATCH_FOUND" != "true" ]]; then
               echo "Trying grep fallback method..."
               for kw in "${KEYWORDS[@]}"; do
-                if echo "${BRANCH_NAME_LOWER}" | grep -q ${kw}; then
+                if echo "${BRANCH_NAME_LOWER}" | grep -q -F "${kw}"; then
                   echo "Match found using grep: branch contains keyword '${kw}'"
                   MATCHED_KEYWORD="${kw} (grep)"
                   MATCH_FOUND=true
