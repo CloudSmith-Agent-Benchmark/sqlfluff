@@ -26,10 +26,10 @@ index 5677c6ca6..2e3c7dc39 100644
 @@ -1,5 +1,6 @@
  """Test module docstring."""
 
-+
+
  def test_function():
      """Test function docstring."""
 -    return True\ No newline at end of file
 +    return True
---
+-- 
 2.47.1
