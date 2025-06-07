@@ -1,1 +1,12 @@
-Test log file
+
+black....................................................................Failed
+- hook id: black
+- files were modified by this hook
+
+mypy.....................................................................Failed
+- hook id: mypy
+- actual error found
+
+flake8...................................................................Failed
+- hook id: flake8
+- files were modified by this hook
