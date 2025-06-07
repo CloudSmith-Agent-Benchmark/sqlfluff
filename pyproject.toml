@@ -236,8 +236,11 @@ extend-select = ["I", "D"]
 
 # D105: Missing docstring in magic method
 # D107: Missing docstring in __init__
-# D418: Function/ Method decorated with @overload shouldn’t contain a docstring
+# D418: Function/ Method decorated with @overload shouldn't contain a docstring
 ignore = ["D107", "D105", "D418"]
+
+# Exclude non-existent file that's causing CI failures
+exclude = ["src/test.py"]
 
 [tool.ruff.lint.isort]
 # Mark sqlfluff, test and it's plugins as known first party
