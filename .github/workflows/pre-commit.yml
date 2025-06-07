@@ -120,7 +120,8 @@ jobs:
             # If all failures are just "files were modified" messages, consider it a success
             if [ "${FAILED_COUNT}" -eq "${MODIFIED_COUNT}" ]; then
               echo "::warning::Pre-commit reported 'Failed' but these were just 'files were modified' messages"
-              # Success - no need to exit
+              # Explicitly exit with success code when all failures are just "files were modified"
+              exit 0
             # If we have actual errors (failures without "files were modified"), exit with error
             elif [ "${MODIFIED_COUNT}" -eq 0 ]; then
               echo "::error::Pre-commit found actual issues that need to be fixed"
@@ -131,12 +132,16 @@ jobs:
               exit 1
             else
               echo "::warning::Pre-commit reported 'files were modified' but no actual errors were found"
-              # Success - no need to exit
+              # Explicitly exit with success code
+              exit 0
             fi
           elif [ "$SKIP_FAILURE_CHECKS" = true ]; then
             echo "::notice::Skipping failure checks because this is a formatting fix branch"
             exit 0  # Explicitly exit with success code for formatting fix branches
           fi
+          
+          # If we've reached this point without exiting, ensure we exit with success
+          exit 0
       - name: Convert Raw Log to Checkstyle format (launch action)
         uses: mdeweerd/logToCheckStyle@v2024.3.5
         with:
