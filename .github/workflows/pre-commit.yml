@@ -40,10 +40,10 @@ jobs:
           # Remove any existing log file and create a new empty one
           rm -f ${RAW_LOG}
           touch ${RAW_LOG}
-          
+
           # Initialize formatting fix branch flag
           FORMATTING_FIX_BRANCH=false
-          
+
           # Get the branch name from GitHub environment variables
           # For pull requests, GITHUB_HEAD_REF contains the source branch name
           # For direct pushes, we extract it from GITHUB_REF
@@ -137,14 +137,14 @@ jobs:
           else
             echo "Branch starts with 'fix-': NO"
           fi
-          
+
           # If this is a formatting fix branch, we can skip running pre-commit entirely
           # and just exit with success
           if [ "$FORMATTING_FIX_BRANCH" == "true" ]; then
             echo "Skipping pre-commit checks for formatting fix branch"
             exit 0
           fi
-          
+
           # Run pre-commit on all files in check-only mode and ensure output is captured
           pre-commit run --show-diff-on-failure --color=always --all-files -c .pre-commit-config-ci.yaml | tee ${RAW_LOG}
 
