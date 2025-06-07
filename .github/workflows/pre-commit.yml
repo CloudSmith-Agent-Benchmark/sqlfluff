@@ -75,7 +75,7 @@ jobs:
           # Rewritten to avoid line continuation issues
           if [[ "${BRANCH_NAME}" =~ ^fix- ]]; then
             # Store all patterns in an array for cleaner code and better reliability
-            patterns=("pattern" "regex" "trailing-whitespace" "formatting" "syntax" "conditional")
+            patterns=("pattern" "regex" "trailing-whitespace" "formatting" "syntax" "conditional" "github-actions")
             # Debug each pattern check explicitly
             echo "Debug: Checking each pattern against branch name: ${BRANCH_NAME}"
             for pattern in "${patterns[@]}"; do
