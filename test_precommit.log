@@ -1,0 +1,12 @@
+
+black....................................................................Failed
+- hook id: black
+- files were modified by this hook
+
+mypy.....................................................................Failed
+- hook id: mypy
+- files were modified by this hook
+
+flake8...................................................................Failed
+- hook id: flake8
+- files were modified by this hook
