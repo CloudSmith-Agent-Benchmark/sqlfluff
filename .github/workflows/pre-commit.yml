@@ -107,10 +107,9 @@ jobs:
                 echo "  Keyword '${keyword}': NO MATCH"
               fi
             done
-            
             # Simplified pattern matching approach without special characters
-            if [[ ${BRANCH_NAME_LOWER} =~ (pattern|regex|grep|trailing|whitespace|spaces|formatting|branch|detection) ]] || 
-               echo "${BRANCH_NAME_LOWER}" | grep -i -E "(pattern|regex|grep|trailing|whitespace|spaces|formatting|branch|detection)" > /dev/null || 
+            if [[ ${BRANCH_NAME_LOWER} =~ (pattern|regex|grep|trailing|whitespace|spaces|formatting|branch|detection) ]] ||
+               echo "${BRANCH_NAME_LOWER}" | grep -i -E "(pattern|regex|grep|trailing|whitespace|spaces|formatting|branch|detection)" > /dev/null ||
                [ "${KEYWORD_MATCH}" = "YES" ]; then
               echo "Branch contains formatting keywords: YES"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
