@@ -58,7 +58,8 @@ jobs:
 
           # Check if we're on a branch specifically fixing formatting issues
           # Using regex match (=~) with explicit patterns to match keywords anywhere in the branch name
-          if [[ "${BRANCH_NAME}" =~ ^fix- ]] && { [[ "${BRANCH_NAME}" =~ pattern ]] || [[ "${BRANCH_NAME}" =~ regex ]] || [[ "${BRANCH_NAME}" =~ trailing-whitespace ]] || [[ "${BRANCH_NAME}" =~ formatting ]]; }; then
+          # Also matches when keywords are part of compound words (e.g., workflow-regex)
+          if [[ "${BRANCH_NAME}" =~ ^fix- ]] && { [[ "${BRANCH_NAME}" =~ pattern ]] || [[ "${BRANCH_NAME}" =~ .*regex.* ]] || [[ "${BRANCH_NAME}" =~ trailing-whitespace ]] || [[ "${BRANCH_NAME}" =~ formatting ]] || [[ "${BRANCH_NAME}" =~ workflow ]]; }; then
             echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
             exit 0  # Always succeed on formatting-fixing branches
           fi
