@@ -18,7 +18,9 @@ repos:
             plugins/sqlfluff-templater-dbt/test/fixtures/dbt.*/templated_output/(dbt_utils_0.8.0/)?last_day.sql|
             test/fixtures/linter/indentation_errors.sql|
             test/fixtures/templater/jinja_d_roundtrip/test.sql|
-            fix-eof-newline\.patch.*
+            fix-eof-newline\.patch.*|
+            pre-commit\.log|
+            pre-commit\.xml
           )$
       - id: trailing-whitespace
         exclude: |
@@ -57,7 +59,7 @@ repos:
             # properly.
             jinja2,
             pathspec,
-            pytest, # and by extension... pluggy
+            pytest,  # and by extension... pluggy
             click,
             platformdirs
           ]
@@ -95,3 +97,4 @@ repos:
       - id: codespell
         exclude: (?x)^(test/fixtures/.*|pyproject.toml)$
         additional_dependencies: [tomli]
+# End of file
