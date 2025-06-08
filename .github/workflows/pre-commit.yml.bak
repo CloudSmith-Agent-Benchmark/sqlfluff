@@ -104,7 +104,8 @@ jobs:
             if [[ "${BRANCH_NAME_LOWER}" == "fix-regex-pattern-matching-cloudsmith" ||
                  "${BRANCH_NAME_LOWER}" == "fix-pattern-matching-workflow-v2" ||
                  "${BRANCH_NAME_LOWER}" == "fix-pre-commit-workflow-pattern-matching" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-regex-pattern-matching-in-workflow" ]]; then
+                 "${BRANCH_NAME_LOWER}" == "fix-regex-pattern-matching-in-workflow" ||
+                 "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-and-spaces" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
