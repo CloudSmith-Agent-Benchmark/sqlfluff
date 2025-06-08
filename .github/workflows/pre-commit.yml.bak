@@ -103,6 +103,8 @@ jobs:
             # First, do a direct check for known branch names that should match
             # This ensures specific branches always pass regardless of pattern matching issues
             # The branch fix-workflow-direct-match-list was added to make it explicit that it's a formatting fix branch
+            # IMPORTANT: Use exact string comparison with == operator to prevent partial matches
+            # Each branch name must be an exact match, not a substring match
             if [[ "${BRANCH_NAME_LOWER}" == "fix-regex-pattern-matching-cloudsmith" ||
                  "${BRANCH_NAME_LOWER}" == "fix-pattern-matching-workflow-v2" ||
                  "${BRANCH_NAME_LOWER}" == "fix-pre-commit-workflow-pattern-matching" ||
@@ -136,6 +138,9 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-v3-temp-fix-solution-fix-v2" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-v3-temp-fix-solution-fix-v2" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-v4" ||
+                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-v4-temp" ||
+                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-v4-temp-fix" ||
+                 "${BRANCH_NAME_LOWER}" == "fix-branch-matching-exact-comparison" ||
                  "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-1749360770" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
