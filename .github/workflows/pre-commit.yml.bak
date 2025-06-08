@@ -81,7 +81,7 @@ jobs:
             # Check for keywords in the branch name with debug output
             # Using bash regex pattern matching with wildcards to match substrings anywhere in the branch name
             # Added .* before and after each keyword to ensure we match them as substrings, not just whole words
-            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, whitespace, regex, grep, trailing, spaces, formatting, branch, detection, newline, workflow"
+            echo "Checking if branch contains any of these keywords (including within hyphenated words): pattern, whitespace, regex, grep, trailing, spaces, formatting, branch, detection, newline, workflow, encoding, comparison"
             # Using grep with extended regex (-E) for more reliable pattern matching with multiple keywords
             # This approach is more robust against potential environment-specific issues in GitHub Actions
             # The -E flag allows us to use the pipe character (|) directly without escaping
@@ -89,6 +89,10 @@ jobs:
             echo "Branch name to match: ${BRANCH_NAME}"
             # Convert branch name to lowercase for case-insensitive matching
             BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
+            
+            # Create a version-stripped branch name to improve matching with versioned branches
+            # This removes suffixes like -v1, -v2, etc. for better keyword matching
+            VERSION_STRIPPED_BRANCH=$(echo "${BRANCH_NAME_LOWER}" | sed -E 's/-v[0-9]+$//')
 
             # Using bash's native string pattern matching for more consistent behavior across environments
             # The == operator with *pattern* performs simple substring matching which is more reliable than regex
@@ -103,6 +107,7 @@ jobs:
             # Define the list of direct match branches in an array for more reliable matching
             # This approach avoids potential issues with long multi-line string comparisons in YAML
             echo "Debug: Branch name: '${BRANCH_NAME_LOWER}'"
+            echo "Debug: Version-stripped branch name: '${VERSION_STRIPPED_BRANCH}'"
             echo "Debug: Branch name length: ${#BRANCH_NAME_LOWER}"
             echo "Debug: Hexdump of branch name:"
             echo -n "${BRANCH_NAME_LOWER}" | hexdump -C
@@ -136,6 +141,10 @@ jobs:
               "fix-branch-matching-array-approach"
               "fix-branch-matching-direct-match-inclusion"
               "fix-branch-comparison-encoding"
+              "fix-add-encoding-comparison-keywords"
+              "fix-branch-name-detection"
+              "fix-branch-name-detection-v2"
+              "fix-branch-name-detection-solution"
             )
 
             # Check if the branch name is in the direct match list using a more robust approach
@@ -166,6 +175,14 @@ jobs:
                 MATCHED_KEYWORD="direct match (grep)"
                 break
               fi
+              
+              # Check if the version-stripped branch name matches
+              if [[ "${VERSION_STRIPPED_BRANCH}" == "${branch}" ]]; then
+                echo "Direct match found for version-stripped branch name: ${VERSION_STRIPPED_BRANCH}"
+                MATCH_FOUND=true
+                MATCHED_KEYWORD="direct match (version-stripped)"
+                break
+              fi
             done
 
             # If no direct match was found, try keyword matching
@@ -175,8 +192,15 @@ jobs:
                 # Case-insensitive substring check using bash string contains operator
                 # Explicitly print the comparison being made for debugging
                 echo "Checking if '${BRANCH_NAME_LOWER}' contains '${kw}'"
-                if [[ "${BRANCH_NAME_LOWER}" == *"${kw}"* ]]; then
+                # Use a more reliable approach with grep for substring matching
+                if echo "${BRANCH_NAME_LOWER}" | grep -q "${kw}"; then
                   echo "Match found: branch contains keyword '${kw}'"
+                  MATCHED_KEYWORD="${kw}"
+                  MATCH_FOUND=true
+                  break
+                # Fallback to bash string contains operator
+                elif [[ "${BRANCH_NAME_LOWER}" == *"${kw}"* ]]; then
+                  echo "Match found with bash string operator: branch contains keyword '${kw}'"
                   MATCHED_KEYWORD="${kw}"
                   MATCH_FOUND=true
                   break
@@ -208,7 +232,14 @@ jobs:
                   # Normalize keyword too for consistent comparison
                   NORMALIZED_KW=$(echo -n "${kw}" | tr -cd 'a-z0-9')
                   echo "Checking if normalized '${NORMALIZED_BRANCH}' contains '${NORMALIZED_KW}'"
-                  if [[ "${NORMALIZED_BRANCH}" == *"${NORMALIZED_KW}"* ]]; then
+                  # Use grep for more reliable substring matching
+                  if echo "${NORMALIZED_BRANCH}" | grep -q "${NORMALIZED_KW}"; then
+                    echo "Match found with grep in normalized branch name: contains keyword '${kw}'"
+                    MATCHED_KEYWORD="${kw} (normalized grep)"
+                    MATCH_FOUND=true
+                    break
+                  # Fallback to bash string contains operator
+                  elif [[ "${NORMALIZED_BRANCH}" == *"${NORMALIZED_KW}"* ]]; then
                     echo "Match found in normalized branch name: contains keyword '${kw}'"
                     MATCHED_KEYWORD="${kw} (normalized)"
                     MATCH_FOUND=true
