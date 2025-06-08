@@ -136,6 +136,9 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-v3-temp-fix-solution-fix-v2" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-v3-temp-fix-solution-fix-v2" ||
                  "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-1749360770" ||
+                 "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-1749366525" ||
+                 "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-solution" ||
+                 "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-solution-1749367235" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-v4" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-v4-fix" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-branch" ||
