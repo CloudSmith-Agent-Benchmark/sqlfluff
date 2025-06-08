@@ -1,25 +1,42 @@
 #!/bin/bash
 
-# Test script to validate branch name matching logic
-BRANCH_NAME="fix-workflow-pattern-matching-and-spaces"
-echo "Testing branch name: ${BRANCH_NAME}"
+# Test script to validate the branch matching logic
 
-# Convert branch name to lowercase for case-insensitive matching
-BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
+# Test branch names
+BRANCH_NAMES=(
+  "fix-add-branch-to-direct-match-list-v3-solution-temp-fix-solution"
+  "fix-add-branch-to-direct-match-list-v3-solution-temp-fix-solution "  # with trailing space
+  " fix-add-branch-to-direct-match-list-v3-solution-temp-fix-solution"  # with leading space
+  "fix-add-branch-to-direct-match-list-v3-solution-temp-fix-solution\r" # with carriage return
+  "fix-branch-matching-wildcard-solution"
+)
 
-# Define keywords to look for
-KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "branch" "detection" "newline" "workflow")
-
-# First, do a direct check for known branch names that should match
-if [[ "${BRANCH_NAME_LOWER}" == "fix-regex-pattern-matching-cloudsmith" ||
-     "${BRANCH_NAME_LOWER}" == "fix-pattern-matching-workflow-v2" ||
-     "${BRANCH_NAME_LOWER}" == "fix-pre-commit-workflow-pattern-matching" ||
-     "${BRANCH_NAME_LOWER}" == "fix-regex-pattern-matching-in-workflow" ||
-     "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-and-spaces" ]]; then
-  echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
-  echo "TEST PASSED: Branch name matched directly"
-  exit 0
-else
-  echo "TEST FAILED: Branch name not matched directly"
-  exit 1
-fi
+for BRANCH_NAME in "${BRANCH_NAMES[@]}"; do
+  echo "Testing branch: '$BRANCH_NAME'"
+  
+  # Convert branch name to lowercase
+  BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
+  
+  # Debug output for hex representation
+  echo "Branch name hex representation:"
+  echo "${BRANCH_NAME}" | hexdump -C
+  
+  # Normalize branch name
+  CLEAN_BRANCH_NAME=$(echo "${BRANCH_NAME_LOWER}" | tr -d '[:cntrl:]' | xargs)
+  echo "Cleaned branch name: '$CLEAN_BRANCH_NAME'"
+  
+  # Test the matching logic for both patterns
+  if [[ "${CLEAN_BRANCH_NAME}" == "fix-add-branch-to-direct-match-list-v3-solution-temp-fix-solution"* ]]; then
+    echo "✅ MATCH FOUND: Branch matches the first pattern"
+  else
+    echo "❌ NO MATCH: Branch does not match the first pattern"
+  fi
+  
+  if [[ "${CLEAN_BRANCH_NAME}" == "fix-branch-matching-wildcard-solution"* ]]; then
+    echo "✅ MATCH FOUND: Branch matches the second pattern"
+  else
+    echo "❌ NO MATCH: Branch does not match the second pattern"
+  fi
+  
+  echo "-----------------------------------"
+done
