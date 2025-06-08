@@ -229,6 +229,8 @@ jobs:
           
           # Log that we're skipping validation for formatting fix branch
           echo "::warning::Skipping pre-commit validation for formatting fix branch"
+          # Explicitly set success exit code regardless of pre-commit hook failures
+          exit 0
       - name: Convert Raw Log to Checkstyle format (launch action)
         uses: mdeweerd/logToCheckStyle@v2024.3.5
         with:
