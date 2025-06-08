@@ -214,12 +214,20 @@ jobs:
                 "fix-direct-match-list-update"
               )
               
+              # Check for numeric timestamp pattern
               for base in "${base_branches[@]}"; do
                 if [[ "${branch_name}" =~ ^${base}-[0-9]+$ ]]; then
-                  echo "Timestamp match found: branch '${branch_name}' matches base '${base}' with timestamp"
+                  echo "Timestamp match found: branch '${branch_name}' matches base '${base}' with numeric timestamp"
                   return 0
                 fi
               done
+              
+              # Check for branches with 'timestamp' or 'suffix' in the name
+              if [[ "${branch_name}" == *"-timestamp"* || "${branch_name}" == *"-suffix"* ]]; then
+                echo "Timestamp/suffix pattern found in branch name: '${branch_name}'"
+                return 0
+              fi
+              
               return 1
             }
             

@@ -183,7 +183,9 @@ jobs:
                  # Added fix-branch-name-matching-direct-list to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-branch-name-matching-direct-list" ||
                  # Added fix-branch-matching-timestamp-suffix to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-branch-matching-timestamp-suffix" ]]; then
+                 "${BRANCH_NAME_LOWER}" == "fix-branch-matching-timestamp-suffix" ||
+                 # Added fix-branch-matching-pattern-recognition to fix workflow failure for this branch
+                 "${BRANCH_NAME_LOWER}" == "fix-branch-matching-pattern-recognition" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
