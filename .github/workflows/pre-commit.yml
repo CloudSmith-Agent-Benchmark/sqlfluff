@@ -4,6 +4,7 @@ name: pre-commit
 # for more consistent behavior across different environments (local vs GitHub Actions)
 # Added direct branch name matching for known formatting fix branches
 # Updated to use both string pattern matching and regex for better keyword detection
+# Special handling for "solution" keyword to prevent false positives when combined with other keywords
 on:
   pull_request:
   push:
@@ -96,7 +97,7 @@ jobs:
             echo "Using robust bash string operation approach:"
 
             # Define keywords to look for
-            KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "branch" "detection" "newline" "workflow" "temp" "fix" "list" "match" "direct" "solution")
+            KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "branch" "detection" "newline" "workflow" "temp" "list" "match" "direct" "solution")
             echo "Checking branch name '${BRANCH_NAME_LOWER}' for keywords..."
             MATCH_FOUND=false
             MATCHED_KEYWORD=""
@@ -211,9 +212,37 @@ jobs:
             fi
             # Use the result of our simplified matching
             if [[ "$MATCH_FOUND" == "true" ]]; then
-              echo "Branch contains formatting keywords: YES (matched: ${MATCHED_KEYWORD:-'via grep'})"
-              echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
-              exit 0  # Always succeed on formatting-fixing branches
+              # Special handling for branches containing "solution" keyword
+              # Only allow direct matches or when "solution" is not the matched keyword
+              if [[ "${MATCHED_KEYWORD}" == "solution" || "${MATCHED_KEYWORD}" == "solution (normalized)" || "${MATCHED_KEYWORD}" == "solution (grep)" ]]; then
+                # If "solution" is the only matched keyword, don't treat it as a formatting fix branch
+                echo "Branch contains 'solution' keyword but this alone doesn't qualify as a formatting fix branch"
+                echo "Checking for other formatting keywords..."
+                
+                # Check for other formatting keywords besides "solution"
+                FORMATTING_KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "branch" "detection" "newline" "workflow")
+                OTHER_KEYWORD_FOUND=false
+                
+                for fmt_kw in "${FORMATTING_KEYWORDS[@]}"; do
+                  if [[ "${BRANCH_NAME_LOWER}" == *"${fmt_kw}"* ]]; then
+                    echo "Found formatting keyword '${fmt_kw}' - this is a valid formatting fix branch"
+                    OTHER_KEYWORD_FOUND=true
+                    MATCHED_KEYWORD="${fmt_kw} (with solution)"
+                    break
+                  fi
+                done
+                
+                if [[ "$OTHER_KEYWORD_FOUND" != "true" && "${MATCHED_KEYWORD}" != "direct match" ]]; then
+                  echo "No formatting keywords found besides 'solution' - treating as a regular branch"
+                  MATCH_FOUND=false
+                fi
+              fi
+              
+              if [[ "$MATCH_FOUND" == "true" ]]; then
+                echo "Branch contains formatting keywords: YES (matched: ${MATCHED_KEYWORD:-'via grep'})"
+                echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
+                exit 0  # Always succeed on formatting-fixing branches
+              fi
             else
               echo "Branch contains formatting keywords: NO"
             fi
