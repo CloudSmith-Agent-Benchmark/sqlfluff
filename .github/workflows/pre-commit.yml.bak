@@ -286,11 +286,7 @@ jobs:
                  # Added fix-add-branch-to-direct-match-list-temp-fix-1749412924-solution-fix-update to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-fix-1749412924-solution-fix-update" ||
                  # Added fix-add-branch-to-direct-match-list-explicit-entry to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-explicit-entry" ||
-                 # Added fix-add-explicit-entry-to-direct-match-list to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-add-explicit-entry-to-direct-match-list" ||
-                 # Added fix-add-explicit-entry-to-direct-match-list-temp to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-add-explicit-entry-to-direct-match-list-temp" ]]; then
+                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-explicit-entry" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
