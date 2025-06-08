@@ -182,8 +182,12 @@ jobs:
           fi
 
           # Set output for use in subsequent steps
-          # Fix: Use the correct GitHub Actions output syntax
-          echo "is_formatting_fix=${IS_FORMATTING_FIX}" >> $GITHUB_OUTPUT
+          # Fix: Use the correct GitHub Actions output syntax for GitHub Actions runner v2
+          if [[ "$IS_FORMATTING_FIX" == "true" ]]; then
+            echo "is_formatting_fix=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_formatting_fix=false" >> $GITHUB_OUTPUT
+          fi
           # Debug output to verify the value is being set correctly
           echo "Debug: Setting is_formatting_fix output to '${IS_FORMATTING_FIX}'"
 
