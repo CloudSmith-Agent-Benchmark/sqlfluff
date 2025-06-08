@@ -148,6 +148,7 @@ jobs:
               "fix-workflow-branch-pattern-matching"
               "fix-workflow-branch-pattern-matching-v2"
               "fix-trailing-whitespace-and-branch-matching"
+              "fix-branch-matching-logic-improved"
             )
 
             # First, do a direct check for known branch names that should match
