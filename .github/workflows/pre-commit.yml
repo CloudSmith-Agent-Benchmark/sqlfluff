@@ -141,6 +141,7 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-1749366525" ||
                  # Added fix-direct-match-list-update-1749366526 to fix pattern matching issue with timestamp suffix
                  "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-1749366526" ||
+                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-1749366526" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-v4" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-v4-fix" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-branch" ||
