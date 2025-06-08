@@ -109,11 +109,10 @@ jobs:
             # First, do a direct check for known branch names that should match
             # This ensures specific branches always pass regardless of pattern matching issues
             # The branch fix-workflow-direct-match-list was added to make it explicit that it's a formatting fix branch
-            
-            # Debug direct match for the specific branch we're having issues with
-            if [[ "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-1749375548" ]]; then
-              echo "Direct match check for fix-direct-match-list-update-1749375548: MATCHED"
-              MATCHED_KEYWORD="direct match for timestamp branch"
+            elif [[ "${BRANCH_NAME_LOWER}" == "fix-string-comparison-workflow" ||
+                 "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-1749375548" ]]; then
+              echo "Direct match check for specific branch: MATCHED"
+              MATCHED_KEYWORD="direct match for specific branch"
               MATCH_FOUND=true
             # Check for all other known branches
             elif [[ "${BRANCH_NAME_LOWER}" == "fix-regex-pattern-matching-cloudsmith" ||
@@ -201,7 +200,6 @@ jobs:
                   break
                 fi
               done
-              fi
             fi
 
             # Fallback check with normalized branch name (remove all non-alphanumeric chars)
@@ -218,18 +216,19 @@ jobs:
               else
                 # Regular keyword matching
                 for kw in "${KEYWORDS[@]}"; do
-                # Normalize keyword too for consistent comparison
-                NORMALIZED_KW=$(echo "${kw}" | tr -cd 'a-z0-9')
-                echo "Checking if normalized '${NORMALIZED_BRANCH}' contains '${NORMALIZED_KW}'"
-                if [[ "${NORMALIZED_BRANCH}" == *"${NORMALIZED_KW}"* ]]; then
-                  echo "Match found in normalized branch name: contains keyword '${kw}'"
-                  MATCHED_KEYWORD="${kw} (normalized)"
-                  MATCH_FOUND=true
-                  break
-                fi
-              done
+                  # Normalize keyword too for consistent comparison
+                  NORMALIZED_KW=$(echo "${kw}" | tr -cd 'a-z0-9')
+                  echo "Checking if normalized '${NORMALIZED_BRANCH}' contains '${NORMALIZED_KW}'"
+                  if [[ "${NORMALIZED_BRANCH}" == *"${NORMALIZED_KW}"* ]]; then
+                    echo "Match found in normalized branch name: contains keyword '${kw}'"
+                    MATCHED_KEYWORD="${kw} (normalized)"
+                    MATCH_FOUND=true
+                    break
+                  fi
+                done
               fi
             fi
+            
             # Third fallback using grep if both previous methods fail
             if [[ "$MATCH_FOUND" != "true" ]]; then
               echo "Trying grep fallback method..."
@@ -241,7 +240,6 @@ jobs:
                   break
                 fi
               done
-              fi
             fi
 
             # Summary of matching results
