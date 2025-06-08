@@ -131,7 +131,7 @@ jobs:
               echo "Using normalized branch name for fallback check: ${NORMALIZED_BRANCH}"
               for kw in "${KEYWORDS[@]}"; do
                 # Normalize keyword too for consistent comparison
-                # IMPORTANT: Do not quote the pattern part (*${NORMALIZED_KW}*) as it prevents glob pattern matching
+                # IMPORTANT: Always quote the pattern part (*"${NORMALIZED_KW}"*) to ensure reliable glob pattern matching
                 NORMALIZED_KW=$(echo "${kw}" | tr -cd 'a-z0-9')
                 echo "Checking if normalized '${NORMALIZED_BRANCH}' contains '${NORMALIZED_KW}'"
                 if [[ "${NORMALIZED_BRANCH}" == *"${NORMALIZED_KW}"* ]]; then
