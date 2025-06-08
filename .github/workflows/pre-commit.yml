@@ -225,6 +225,8 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-20250609" ||
                  # Added fix-workflow-direct-match-list-update-20250610 to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-workflow-direct-match-list-update-20250610" ||
+                 # Added fix-direct-match-list-update-20250610 to fix workflow failure for this branch
+                 "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-20250610" ||
                  # Added fix-add-branch-to-direct-match-list-20250610 to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-20250610" ||
                  # Added fix-add-branch-to-direct-match-list-20250610-temp-fix-solution-v2 to fix workflow failure for this branch
