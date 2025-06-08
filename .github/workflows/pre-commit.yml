@@ -143,7 +143,9 @@ jobs:
                  # Added fix-add-branch-to-direct-match-list-temp-branch-fix-solution to the direct match list
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-branch-fix-solution" ||
                  # Added fix-add-branch-to-direct-match-list-temp-branch-fix-solution-fix to the direct match list
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-branch-fix-solution-fix" ]]; then
+                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-branch-fix-solution-fix" ||
+                 # Added fix-pre-commit-workflow-status-reporting to the direct match list
+                 "${BRANCH_NAME_LOWER}" == "fix-pre-commit-workflow-status-reporting" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
