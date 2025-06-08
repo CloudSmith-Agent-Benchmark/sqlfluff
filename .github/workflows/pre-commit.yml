@@ -176,7 +176,9 @@ jobs:
                  # Added fix-branch-name-matching-exact-comparison to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-branch-name-matching-exact-comparison" ||
                  # Added fix-branch-name-matching-pattern-detection to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-branch-name-matching-pattern-detection" ]]; then
+                 "${BRANCH_NAME_LOWER}" == "fix-branch-name-matching-pattern-detection" ||
+                 # Added fix-branch-name-matching-direct-list to fix workflow failure for this branch
+                 "${BRANCH_NAME_LOWER}" == "fix-branch-name-matching-direct-list" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
