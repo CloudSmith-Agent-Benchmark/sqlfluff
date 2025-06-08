@@ -98,7 +98,7 @@ jobs:
 
             # Define keywords to look for - using more specific terms to avoid false positives
             # Removed generic "branch" keyword and replaced with more specific "format-branch" and "branch-format"
-            KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "format-branch" "branch-format" "detection" "newline" "workflow" "temp" "fix-format" "format-fix" "list" "match" "direct" "logic" "entry")
+            KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "format-branch" "branch-format" "detection" "newline" "workflow" "temp" "fix-format" "format-fix" "list" "match" "direct" "logic" "entry" "missing")
             echo "Checking branch name '${BRANCH_NAME_LOWER}' for keywords..."
             MATCH_FOUND=false
             MATCHED_KEYWORD=""
