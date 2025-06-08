@@ -184,11 +184,6 @@ jobs:
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
-            # Check for branches with date/timestamp suffixes that match our pattern
-            elif [[ "${BRANCH_NAME_LOWER}" =~ ^fix-.*-(temp|fix).*-[0-9]{8}$ ]]; then
-              echo "Match found for branch with date suffix: ${BRANCH_NAME_LOWER}"
-              MATCHED_KEYWORD="date suffix pattern"
-              MATCH_FOUND=true
             else
               # Use bash's native string operations for more consistent behavior across environments
               for kw in "${KEYWORDS[@]}"; do
