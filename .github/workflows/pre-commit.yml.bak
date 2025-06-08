@@ -72,6 +72,14 @@ jobs:
             char="${BRANCH_NAME:$i:1}"
             printf "Position %d: %s (ASCII: %d)\n" "$i" "$char" "'$char"
           done
+          
+          # Enhanced debugging for branch name comparison
+          echo "Enhanced branch name debugging:"
+          echo "Raw branch name: '${BRANCH_NAME}'"
+          echo "Lowercase branch name: '${BRANCH_NAME_LOWER}'"
+          echo "Trimmed branch name: '$(echo -n ${BRANCH_NAME_LOWER} | xargs)'"
+          echo "Hex representation:"
+          echo -n "${BRANCH_NAME_LOWER}" | hexdump -C
 
           # Check if we're on a branch specifically fixing formatting issues
           # Using string contains operator for substring matching anywhere in the branch name
@@ -298,7 +306,12 @@ jobs:
                  # Added fix-add-missing-branch-to-direct-match-list-temp-solution to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-add-missing-branch-to-direct-match-list-temp-solution" ||
                  # Added fix-add-missing-branch-to-direct-match-list-temp-solution-fix to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-add-missing-branch-to-direct-match-list-temp-solution-fix" ]]; then
+                 "${BRANCH_NAME_LOWER}" == "fix-add-missing-branch-to-direct-match-list-temp-solution-fix" ||
+                 # Added fix-add-missing-branch-to-direct-match-list-temp-solution-fix-v3 to fix workflow failure for this branch
+                 "${BRANCH_NAME_LOWER}" == "fix-add-missing-branch-to-direct-match-list-temp-solution-fix-v3" ||
+                 "${BRANCH_NAME_LOWER}" == "fix-add-missing-branch-to-direct-match-list-temp-solution-fix-v3" ||
+                 # Re-added fix-add-missing-branch-to-direct-match-list-temp-solution-fix-v3 with explicit trimming to fix potential whitespace issues
+                 "$(echo -n ${BRANCH_NAME_LOWER} | xargs)" == "fix-add-missing-branch-to-direct-match-list-temp-solution-fix-v3" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
