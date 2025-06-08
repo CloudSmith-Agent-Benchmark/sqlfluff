@@ -136,7 +136,7 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-temp-fix-solution-fix-temp-fix" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-v3-temp-fix-solution-fix" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-v3-temp-fix-solution-fix-v2" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-v3-solution-fix" ||
+                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-v3-temp-fix-solution-fix-v2" ||
                  # Added fix-add-missing-branch-to-direct-match-list-v3 to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-add-missing-branch-to-direct-match-list-v3" ||
                  # Added fix-add-missing-branch-to-direct-match-list-v3-solution to fix workflow failure for this branch
