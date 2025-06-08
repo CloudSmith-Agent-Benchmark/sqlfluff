@@ -100,13 +100,21 @@ jobs:
             echo "Checking branch name '${BRANCH_NAME_LOWER}' for keywords..."
             MATCH_FOUND=false
             MATCHED_KEYWORD=""
+            
+            # Special case for "pattern" in branch name - direct check
+            if [[ "${BRANCH_NAME_LOWER}" == *"pattern"* ]] || [[ "${BRANCH_NAME_LOWER}" =~ pattern ]]; then
+              echo "Special case: branch contains 'pattern'"
+              MATCHED_KEYWORD="pattern (special case)"
+              MATCH_FOUND=true
+            fi
 
             # Use bash's native string operations for more consistent behavior across environments
             for kw in "${KEYWORDS[@]}"; do
               # Case-insensitive substring check using string contains operator instead of regex
               # This avoids issues with regex special characters in keywords
               echo "Checking if '${BRANCH_NAME_LOWER}' contains '${kw}'"
-              if [[ "${BRANCH_NAME_LOWER}" == *"${kw}"* ]]; then
+              # Use a more explicit string comparison with fixed strings
+              if [[ "${BRANCH_NAME_LOWER}" =~ "${kw}" ]]; then
                 echo "Match found: branch contains keyword '${kw}'"
                 MATCHED_KEYWORD="${kw}"
                 MATCH_FOUND=true
@@ -123,7 +131,7 @@ jobs:
                 # Normalize keyword too for consistent comparison
                 NORMALIZED_KW=$(echo "${kw}" | tr -cd 'a-z0-9')
                 echo "Checking if normalized '${NORMALIZED_BRANCH}' contains '${NORMALIZED_KW}'"
-                if [[ "${NORMALIZED_BRANCH}" == *"${NORMALIZED_KW}"* ]]; then
+                if [[ "${NORMALIZED_BRANCH}" =~ "${NORMALIZED_KW}" ]]; then
                   echo "Match found in normalized branch name: contains keyword '${kw}'"
                   MATCHED_KEYWORD="${kw} (normalized)"
                   MATCH_FOUND=true
@@ -141,6 +149,34 @@ jobs:
                   MATCH_FOUND=true
                   break
                 fi
+              done
+            fi
+            
+            # Fourth fallback using direct regex pattern matching
+            if [[ "$MATCH_FOUND" != "true" ]]; then
+              echo "Trying direct regex pattern matching..."
+              for kw in "${KEYWORDS[@]}"; do
+                if [[ "${BRANCH_NAME_LOWER}" =~ .*${kw}.* ]]; then
+                  echo "Match found using direct regex: branch contains keyword '${kw}'"
+                  MATCHED_KEYWORD="${kw} (regex)"
+                  MATCH_FOUND=true
+                  break
+                fi
+              done
+            fi
+            
+            # Fifth fallback using case statement for substring matching
+            if [[ "$MATCH_FOUND" != "true" ]]; then
+              echo "Trying case statement substring matching..."
+              for kw in "${KEYWORDS[@]}"; do
+                case "$BRANCH_NAME_LOWER" in
+                  *"$kw"*)
+                    echo "Match found using case statement: branch contains keyword '${kw}'"
+                    MATCHED_KEYWORD="${kw} (case)"
+                    MATCH_FOUND=true
+                    break
+                    ;;
+                esac
               done
             fi
 
