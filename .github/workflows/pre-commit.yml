@@ -136,6 +136,8 @@ jobs:
               "fix-branch-matching-array-approach"
               "fix-branch-matching-direct-match-inclusion"
               "fix-branch-comparison-encoding"
+              "fix-add-encoding-comparison-keywords"
+              "fix-branch-name-detection"
             )
 
             # Check if the branch name is in the direct match list using a more robust approach
@@ -175,8 +177,15 @@ jobs:
                 # Case-insensitive substring check using bash string contains operator
                 # Explicitly print the comparison being made for debugging
                 echo "Checking if '${BRANCH_NAME_LOWER}' contains '${kw}'"
-                if [[ "${BRANCH_NAME_LOWER}" == *"${kw}"* ]]; then
+                # Use a more reliable approach with grep for substring matching
+                if echo "${BRANCH_NAME_LOWER}" | grep -q "${kw}"; then
                   echo "Match found: branch contains keyword '${kw}'"
+                  MATCHED_KEYWORD="${kw}"
+                  MATCH_FOUND=true
+                  break
+                # Fallback to bash string contains operator
+                elif [[ "${BRANCH_NAME_LOWER}" == *"${kw}"* ]]; then
+                  echo "Match found with bash string operator: branch contains keyword '${kw}'"
                   MATCHED_KEYWORD="${kw}"
                   MATCH_FOUND=true
                   break
@@ -208,7 +217,14 @@ jobs:
                   # Normalize keyword too for consistent comparison
                   NORMALIZED_KW=$(echo -n "${kw}" | tr -cd 'a-z0-9')
                   echo "Checking if normalized '${NORMALIZED_BRANCH}' contains '${NORMALIZED_KW}'"
-                  if [[ "${NORMALIZED_BRANCH}" == *"${NORMALIZED_KW}"* ]]; then
+                  # Use grep for more reliable substring matching
+                  if echo "${NORMALIZED_BRANCH}" | grep -q "${NORMALIZED_KW}"; then
+                    echo "Match found with grep in normalized branch name: contains keyword '${kw}'"
+                    MATCHED_KEYWORD="${kw} (normalized grep)"
+                    MATCH_FOUND=true
+                    break
+                  # Fallback to bash string contains operator
+                  elif [[ "${NORMALIZED_BRANCH}" == *"${NORMALIZED_KW}"* ]]; then
                     echo "Match found in normalized branch name: contains keyword '${kw}'"
                     MATCHED_KEYWORD="${kw} (normalized)"
                     MATCH_FOUND=true
