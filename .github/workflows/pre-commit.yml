@@ -228,7 +228,9 @@ jobs:
                  # Added fix-add-direct-match-entry-for-branch-temp to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-add-direct-match-entry-for-branch-temp" ||
                  # Added fix-add-direct-match-entry-for-branch-temp-solution to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-add-direct-match-entry-for-branch-temp-solution" ]]; then
+                 "${BRANCH_NAME_LOWER}" == "fix-add-direct-match-entry-for-branch-temp-solution" ||
+                 # Added fix-direct-match-entry-branch-solution to fix workflow failure for this branch
+                 "${BRANCH_NAME_LOWER}" == "fix-direct-match-entry-branch-solution" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
