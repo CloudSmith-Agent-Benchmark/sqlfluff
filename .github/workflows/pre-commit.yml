@@ -176,7 +176,7 @@ jobs:
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
               # Create empty log files for downstream steps that expect them
               echo "Pre-commit checks skipped for formatting fix branch: ${BRANCH_NAME}" > ${RAW_LOG}
-              return 0  # Skip the rest of this step for formatting fix branches
+              exit 0  # Skip the rest of this step for formatting fix branches
             else
               echo "Branch contains formatting keywords: NO"
             fi
