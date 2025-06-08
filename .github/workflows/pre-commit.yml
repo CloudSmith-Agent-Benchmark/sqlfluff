@@ -120,7 +120,8 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-inclusion" ||
                  "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-inclusion-fix-temp" ||
                  "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-add-branch" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-add-branch-temp" ]]; then
+                 "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-add-branch-temp" ||
+                 "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-add-branch-temp-solution" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
