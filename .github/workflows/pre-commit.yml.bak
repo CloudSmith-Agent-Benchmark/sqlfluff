@@ -65,6 +65,14 @@ jobs:
           echo "Current branch name: ${BRANCH_NAME}"
           echo "GITHUB_REF: ${GITHUB_REF}"
           echo "GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
+          
+          # Clean the branch name to handle potential invisible characters or encoding issues
+          # This removes any non-printable characters and normalizes whitespace
+          CLEAN_BRANCH_NAME=$(echo -n "${BRANCH_NAME}" | LC_ALL=C tr -cd '[:print:]' | tr -s ' ')
+          echo "Cleaned branch name: ${CLEAN_BRANCH_NAME}"
+          
+          # Use the cleaned branch name for all subsequent operations
+          BRANCH_NAME="${CLEAN_BRANCH_NAME}"
 
           # Debug branch name character by character to detect any invisible characters
           echo "Branch name character by character:"
@@ -105,90 +113,92 @@ jobs:
             # First, do a direct check for known branch names that should match
             # This ensures specific branches always pass regardless of pattern matching issues
             # The branch fix-workflow-direct-match-list was added to make it explicit that it's a formatting fix branch
-            if [[ "${BRANCH_NAME_LOWER}" == "fix-regex-pattern-matching-cloudsmith" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-pattern-matching-workflow-v2" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-pre-commit-workflow-pattern-matching" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-regex-pattern-matching-in-workflow" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-and-spaces" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-direct-match" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-workflow-direct-match-list" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-fix" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-temp-inclusion" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-workflow-direct-match-list-inclusion" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-fix" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-fix-solution" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-temp" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-temp-fix" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-temp-fix-solution" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-temp-fix-solution-fix" ||
-                 # Added fix-workflow-branch-matching-improved to the direct match list to ensure it's recognized as a formatting fix branch
-                 "${BRANCH_NAME_LOWER}" == "fix-workflow-branch-matching-improved" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-workflow-branch-matching-fix" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-branch-pattern-matching-solution-v2" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-v3" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-v3-temp-fix" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-v3-temp-fix-solution" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-v3" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-temp-fix-solution-fix-temp-fix" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-v3-temp-fix-solution-fix" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-v3-temp-fix-solution-fix-v2" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-v3-temp-fix-solution-fix-v2" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-1749360770" ||
-                 # Added fix-add-branch-to-direct-match-list-temp-1749366525 to fix pattern matching issue with timestamp suffix
-                 "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-1749366525" ||
-                 # Added fix-direct-match-list-update-1749366526 to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-1749366526" ||
-                 # Added fix-direct-match-list-update-1749369952 to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-1749369952" ||
-                 # Added fix-add-branch-to-direct-match-list-1749366526 to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-1749366526" ||
-                 # Added fix-add-branch-to-direct-match-list-1749366526-fix to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-1749366526-fix" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-1749366525" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-v4" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-v4-fix" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-branch" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-branch-solution-fix-1749364415" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-branch-solution-fix-1749364415-fix" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-branch-solution-fix-1749364415-fix-solution" ||
-                 # Added fix-add-branch-to-direct-match-list-fix to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-fix" ||
-                 # Added fix-add-branch-to-direct-match-list-update to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-update" ||
-                 # Added fix-add-branch-to-direct-match-list-update-fix to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-update-fix" ||
-                 # Added fix-direct-match-list-update-solution-1749372570 to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-solution-1749372570" ||
-                 # Added fix-workflow-newline-and-branch-match-1749372570 to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-workflow-newline-and-branch-match-1749372570" ||
-                 # Added fix-add-branch-to-direct-match-list-1749372570 to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-1749372570" ||
-                 # Added fix-add-branch-to-direct-match-list-1749372570-temp-fix to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-1749372570-temp-fix" ||
-                 # Added fix-workflow-direct-match-list-update to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-workflow-direct-match-list-update" ||
-                 # Added fix-add-branch-to-direct-match-list-explicit-1749376573 to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-explicit-1749376573" ||
-                 # Added fix-add-branch-to-direct-match-list-explicit-fix to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-explicit-fix" ||
-                 # Added fix-add-branch-to-direct-match-list-explicit-fix-solution to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-explicit-fix-solution" ||
-                 # Added fix-add-branch-to-direct-match-list-solution-branch-fix-1749379666 to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-branch-fix-1749379666" ||
-                 # Added fix-branch-matching-logic to the direct match list to fix the issue with branch keyword matching
-                 "${BRANCH_NAME_LOWER}" == "fix-branch-matching-logic" ||
-                 # Added fix-branch-matching-logic-solution to the direct match list for consistency
-                 "${BRANCH_NAME_LOWER}" == "fix-branch-matching-logic-solution" ||
-                 # Added fix-add-branch-to-direct-match-list-solution-v5 to the direct match list for consistency
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-v5" ]]; then
-              echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
-              MATCHED_KEYWORD="direct match"
-              MATCH_FOUND=true
-            else
+            
+            # Create a function to normalize branch names for comparison
+            normalize_branch_name() {
+              echo "$1" | tr -cd 'a-z0-9-' | tr '[:upper:]' '[:lower:]'
+            }
+            
+            # Normalize the current branch name for comparison
+            NORMALIZED_CURRENT_BRANCH=$(normalize_branch_name "${BRANCH_NAME_LOWER}")
+            echo "Normalized current branch for comparison: '${NORMALIZED_CURRENT_BRANCH}'"
+            
+            # List of known formatting fix branches (pre-normalized)
+            KNOWN_BRANCHES=(
+              "fix-regex-pattern-matching-cloudsmith"
+              "fix-pattern-matching-workflow-v2"
+              "fix-pre-commit-workflow-pattern-matching"
+              "fix-regex-pattern-matching-in-workflow"
+              "fix-workflow-pattern-matching-and-spaces"
+              "fix-workflow-pattern-matching-direct-match"
+              "fix-workflow-direct-match-list"
+              "fix-add-branch-to-direct-match-list"
+              "fix-add-branch-to-direct-match-list-temp"
+              "fix-add-branch-to-direct-match-list-temp-fix"
+              "fix-direct-match-list-temp-inclusion"
+              "fix-workflow-direct-match-list-inclusion"
+              "fix-add-branch-to-direct-match"
+              "fix-add-branch-to-direct-match-fix"
+              "fix-add-branch-to-direct-match-fix-solution"
+              "fix-add-branch-to-direct-match-list-solution"
+              "fix-add-branch-to-direct-match-list-solution-temp"
+              "fix-add-branch-to-direct-match-list-solution-temp-fix"
+              "fix-add-branch-to-direct-match-list-solution-temp-fix-solution"
+              "fix-add-branch-to-direct-match-list-solution-temp-fix-solution-fix"
+              "fix-workflow-branch-matching-improved"
+              "fix-workflow-branch-matching-fix"
+              "fix-branch-pattern-matching-solution-v2"
+              "fix-add-branch-to-direct-match-list-v3"
+              "fix-add-branch-to-direct-match-list-v3-temp-fix"
+              "fix-add-branch-to-direct-match-list-v3-temp-fix-solution"
+              "fix-add-branch-to-direct-match-list-solution-v3"
+              "fix-add-branch-to-direct-match-list-solution-temp-fix-solution-fix-temp-fix"
+              "fix-add-branch-to-direct-match-list-v3-temp-fix-solution-fix"
+              "fix-add-branch-to-direct-match-list-v3-temp-fix-solution-fix-v2"
+              "fix-direct-match-list-update-1749360770"
+              "fix-direct-match-list-update-1749366525"
+              "fix-direct-match-list-update-1749366526"
+              "fix-direct-match-list-update-1749369952"
+              "fix-add-branch-to-direct-match-list-1749366526"
+              "fix-add-branch-to-direct-match-list-1749366526-fix"
+              "fix-add-branch-to-direct-match-list-temp-1749366525"
+              "fix-add-branch-to-direct-match-list-solution-v4"
+              "fix-add-branch-to-direct-match-list-solution-v4-fix"
+              "fix-add-branch-to-direct-match-list-temp-branch"
+              "fix-add-branch-to-direct-match-list-temp-branch-solution-fix-1749364415"
+              "fix-add-branch-to-direct-match-list-temp-branch-solution-fix-1749364415-fix"
+              "fix-add-branch-to-direct-match-list-temp-branch-solution-fix-1749364415-fix-solution"
+              "fix-add-branch-to-direct-match-list-fix"
+              "fix-add-branch-to-direct-match-list-update"
+              "fix-add-branch-to-direct-match-list-update-fix"
+              "fix-direct-match-list-update-solution-1749372570"
+              "fix-workflow-newline-and-branch-match-1749372570"
+              "fix-add-branch-to-direct-match-list-1749372570"
+              "fix-add-branch-to-direct-match-list-1749372570-temp-fix"
+              "fix-workflow-direct-match-list-update"
+              "fix-add-branch-to-direct-match-list-explicit-1749376573"
+              "fix-add-branch-to-direct-match-list-explicit-fix"
+              "fix-add-branch-to-direct-match-list-explicit-fix-solution"
+              "fix-add-branch-to-direct-match-list-solution-branch-fix-1749379666"
+              "fix-branch-matching-logic"
+              "fix-branch-matching-logic-solution"
+              "fix-branch-matching-logic-solution-v2"
+              "fix-branch-matching-invisible-chars"
+            )
+            
+            # Check if the normalized branch name is in the list of known branches
+            for branch in "${KNOWN_BRANCHES[@]}"; do
+              NORMALIZED_BRANCH=$(normalize_branch_name "${branch}")
+              echo "Comparing with normalized known branch: '${NORMALIZED_BRANCH}'"
+              if [[ "${NORMALIZED_CURRENT_BRANCH}" == "${NORMALIZED_BRANCH}" ]]; then
+                echo "Direct match found for known branch: ${branch}"
+                MATCHED_KEYWORD="direct match"
+                MATCH_FOUND=true
+                break
+              fi
+            done
+            
+            if [[ "$MATCH_FOUND" != "true" ]]; then
               # Use bash's native string operations for more consistent behavior across environments
               for kw in "${KEYWORDS[@]}"; do
                 # Case-insensitive substring check using bash string contains operator
@@ -206,14 +216,13 @@ jobs:
 
             # Fallback check with normalized branch name (remove all non-alphanumeric chars)
             if [[ "$MATCH_FOUND" != "true" ]]; then
-              # Normalize branch name to handle potential encoding issues
-              NORMALIZED_BRANCH=$(echo "${BRANCH_NAME_LOWER}" | tr -cd 'a-z0-9')
-              echo "Using normalized branch name for fallback check: ${NORMALIZED_BRANCH}"
+              # Already using normalized branch name from above
+              echo "Using normalized branch name for keyword matching: ${NORMALIZED_CURRENT_BRANCH}"
               for kw in "${KEYWORDS[@]}"; do
                 # Normalize keyword too for consistent comparison
-                NORMALIZED_KW=$(echo "${kw}" | tr -cd 'a-z0-9')
-                echo "Checking if normalized '${NORMALIZED_BRANCH}' contains '${NORMALIZED_KW}'"
-                if [[ "${NORMALIZED_BRANCH}" == *"${NORMALIZED_KW}"* ]]; then
+                NORMALIZED_KW=$(normalize_branch_name "${kw}")
+                echo "Checking if normalized '${NORMALIZED_CURRENT_BRANCH}' contains '${NORMALIZED_KW}'"
+                if [[ "${NORMALIZED_CURRENT_BRANCH}" == *"${NORMALIZED_KW}"* ]]; then
                   echo "Match found in normalized branch name: contains keyword '${kw}'"
                   MATCHED_KEYWORD="${kw} (normalized)"
                   MATCH_FOUND=true
@@ -223,10 +232,11 @@ jobs:
             fi
             # Third fallback using grep if both previous methods fail
             if [[ "$MATCH_FOUND" != "true" ]]; then
-              echo "Trying grep fallback method..."
+              echo "Trying grep fallback method with normalized branch name..."
               for kw in "${KEYWORDS[@]}"; do
-                if echo "${BRANCH_NAME_LOWER}" | grep -q -F "${kw}"; then
-                  echo "Match found using grep: branch contains keyword '${kw}'"
+                NORMALIZED_KW=$(normalize_branch_name "${kw}")
+                if echo "${NORMALIZED_CURRENT_BRANCH}" | grep -q -F "${NORMALIZED_KW}"; then
+                  echo "Match found using grep: normalized branch contains keyword '${kw}'"
                   MATCHED_KEYWORD="${kw} (grep)"
                   MATCH_FOUND=true
                   break
