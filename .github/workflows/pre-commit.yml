@@ -64,6 +64,9 @@ jobs:
           echo "Current branch name: ${BRANCH_NAME}"
           echo "GITHUB_REF: ${GITHUB_REF}"
           echo "GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
+          
+          # Convert branch name to lowercase for case-insensitive matching
+          BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
 
           # Additional debug information for branch name
           echo "Branch name hex dump:"
@@ -140,6 +143,8 @@ jobs:
               "fix-add-branch-to-direct-match-list-temp-branch-fix-solution-fix"
               "fix-string-comparison-in-workflow"
               "fix-string-comparison-in-workflow-v2"
+              "fix-workflow-trailing-spaces-and-comparison"
+              "fix-workflow-branch-pattern-matching"
             )
 
             # First, do a direct check for known branch names that should match
@@ -197,10 +202,12 @@ jobs:
             fi
             # Final fallback - check if the branch name contains any formatting-related keywords
             # This is a more robust approach that doesn't rely on complex string comparisons
-            if [[ "$MATCH_FOUND" != "true" && "${BRANCH_NAME_LOWER}" =~ (fix|pattern|whitespace|regex|grep|trailing|spaces|formatting|branch|detection|newline|workflow|temp|list|match|direct) ]]; then
-              echo "Match found using regex pattern: branch contains formatting-related keywords"
-              MATCHED_KEYWORD="regex pattern match"
-              MATCH_FOUND=true
+            if [[ "$MATCH_FOUND" != "true" ]]; then
+              if [[ "${BRANCH_NAME_LOWER}" =~ (fix|pattern|whitespace|regex|grep|trailing|spaces|formatting|branch|detection|newline|workflow|temp|list|match|direct|comparison) ]]; then
+                echo "Match found using regex pattern: branch contains formatting-related keywords"
+                MATCHED_KEYWORD="regex pattern match"
+                MATCH_FOUND=true
+              fi
             fi
 
             # Special case check for known problematic branch names
