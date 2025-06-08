@@ -97,7 +97,7 @@ jobs:
             echo "Using robust bash string operation approach:"
 
             # Define keywords to look for
-            KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "branch" "detection" "newline" "workflow" "temp" "fix" "list" "match" "direct" "solution")
+            KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "branch" "detection" "newline" "workflow" "temp" "list" "match" "direct" "solution")
             echo "Checking branch name '${BRANCH_NAME_LOWER}' for keywords..."
             MATCH_FOUND=false
             MATCHED_KEYWORD=""
