@@ -4,8 +4,9 @@ name: pre-commit
 # for more consistent behavior across different environments (local vs GitHub Actions)
 # Added direct branch name matching for known formatting fix branches
 # Updated to use both string pattern matching and regex for better keyword detection
+# Improved status reporting for formatting fix branches
+# Improved status reporting for formatting fix branches
 # Improved status reporting to clearly indicate when formatting failures are allowed
-# Added final status check step to ensure workflow shows success for formatting-fix branches
 on:
   pull_request:
   push:
