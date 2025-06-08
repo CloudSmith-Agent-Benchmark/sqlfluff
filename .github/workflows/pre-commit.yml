@@ -136,7 +136,9 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-v3-solution-fix-1749358338" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-temp-fix-solution-fix-temp-fix" ||
                  # Added fix-add-branch-to-direct-match-list-temp-branch-fix to the direct match list
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-branch-fix" ]]; then
+                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-branch-fix" ||
+                 # Added fix-add-branch-to-direct-match-list-temp-branch-fix-solution to the direct match list
+                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-branch-fix-solution" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
