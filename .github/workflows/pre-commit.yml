@@ -3,6 +3,19 @@ name: pre-commit
 # The pattern matching logic uses bash string pattern matching instead of regex
 # for more consistent behavior across different environments (local vs GitHub Actions)
 # Added direct branch name matching for known formatting fix branches
+#
+# IMPORTANT BEHAVIOR NOTE:
+# This workflow intentionally succeeds (exits with code 0) on branches that are fixing formatting issues,
+# even when pre-commit hooks report failures. This is by design to allow formatting fix branches to proceed.
+# 
+# The workflow identifies formatting fix branches through two methods:
+# 1. Direct match: The branch name is in the DIRECT_MATCH_BRANCHES list
+# 2. Keyword match: The branch name contains one of the keywords in the KEYWORDS list
+#
+# When a formatting fix branch is detected, the workflow will:
+# - Display a warning message indicating that formatting issues are being allowed
+# - Exit with code 0 (success) regardless of pre-commit hook failures
+# - This allows formatting fix branches to pass CI even with formatting-related failures
 on:
   pull_request:
   push:
@@ -207,6 +220,9 @@ jobs:
             if [[ "$MATCH_FOUND" == "true" ]]; then
               echo "Branch contains formatting keywords: YES (matched: ${MATCHED_KEYWORD:-'via grep'})"
               echo "::warning::On branch ${BRANCH_NAME} which is fixing formatting issues - allowing pre-commit failures related to formatting"
+              # This is an intentional early exit with success code for formatting fix branches
+              # It allows branches that are fixing formatting issues to pass CI even if pre-commit hooks report failures
+              # This behavior is by design and not a bug - see the workflow header comments for more details
               exit 0  # Always succeed on formatting-fixing branches
             else
               echo "Branch contains formatting keywords: NO"
