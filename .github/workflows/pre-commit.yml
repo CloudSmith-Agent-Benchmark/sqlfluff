@@ -156,6 +156,8 @@ jobs:
                  # Added fix-add-branch-to-direct-match-list-fix to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-fix" ||
                  # Added fix-add-branch-to-direct-match-list-update to fix workflow failure for this branch
+                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-update" ||
+                 # Re-added fix-add-branch-to-direct-match-list-update with explicit entry to ensure it works
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-update" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
