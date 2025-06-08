@@ -95,7 +95,7 @@ jobs:
             echo "Using robust bash string operation approach:"
 
             # Define keywords to look for
-            KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "branch" "detection" "newline" "workflow" "matching")
+            KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "branch" "detection" "newline" "workflow" "matching" "encoding" "comparison")
             echo "Checking branch name '${BRANCH_NAME_LOWER}' for keywords..."
             MATCH_FOUND=false
             MATCHED_KEYWORD=""
@@ -135,6 +135,7 @@ jobs:
               "fix-branch-matching-in-workflow"
               "fix-branch-matching-array-approach"
               "fix-branch-matching-direct-match-inclusion"
+              "fix-branch-comparison-encoding"
             )
 
             # Check if the branch name is in the direct match list using a more robust approach
@@ -216,6 +217,19 @@ jobs:
                 done
               fi
             fi
+            # Third fallback using grep if both previous methods fail
+            if [[ "$MATCH_FOUND" != "true" ]]; then
+              echo "Trying grep fallback method..."
+              for kw in "${KEYWORDS[@]}"; do
+                if echo -n "${BRANCH_NAME_LOWER}" | grep -q -F "${kw}"; then
+                  echo "Match found using grep: branch contains keyword '${kw}'"
+                  MATCHED_KEYWORD="${kw} (grep)"
+                  MATCH_FOUND=true
+                  break
+                fi
+              done
+            fi
+            
             # Final fallback - check if the branch name contains the string "fix-branch-matching"
             # This is a last resort to catch branches that are specifically fixing branch matching issues
             if [[ "$MATCH_FOUND" != "true" ]]; then
