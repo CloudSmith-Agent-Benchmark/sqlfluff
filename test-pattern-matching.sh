@@ -1,62 +1,74 @@
 #!/bin/bash
 
-# Test script to verify our pattern matching solution works correctly
-# This simulates the branch name detection logic in the GitHub Actions workflow
+# Test the pattern matching logic with our branch name
+BRANCH_NAME="fix-workflow-pattern-matching-and-spaces"
+echo "Testing with branch name: ${BRANCH_NAME}"
 
-# Test cases
-TEST_BRANCHES=(
-  "fix-pattern-matching-and-whitespace-improved"
-  "fix-formatting-issues"
-  "fix-branch-detection"
-  "feature-new-functionality"
-  "bugfix-unrelated"
-)
+# Convert branch name to lowercase for case-insensitive matching
+BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
+echo "Lowercase branch name: ${BRANCH_NAME_LOWER}"
 
-for BRANCH_NAME in "${TEST_BRANCHES[@]}"; do
-  echo "========================================"
-  echo "Testing branch name: $BRANCH_NAME"
-  echo "========================================"
-  
-  # Convert to lowercase
-  BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
-  
-  # Define keywords to look for
-  KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "branch" "detection")
-  echo "Checking branch name '${BRANCH_NAME_LOWER}' for keywords..."
-  MATCH_FOUND=false
-  MATCHED_KEYWORD=""
-  
-  # Use bash's native string operations
-  for kw in "${KEYWORDS[@]}"; do
+# Define keywords to look for
+KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "branch" "detection" "newline" "workflow")
+
+# Test direct match
+echo "Testing direct match..."
+if [[ "${BRANCH_NAME_LOWER}" == "fix-regex-pattern-matching-cloudsmith" ||
+       "${BRANCH_NAME_LOWER}" == "fix-pattern-matching-workflow-v2" ||
+       "${BRANCH_NAME_LOWER}" == "fix-pre-commit-workflow-pattern-matching" ||
+       "${BRANCH_NAME_LOWER}" == "fix-regex-pattern-matching-in-workflow" ||
+       "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-and-spaces" ]]; then
+    echo "✅ Direct match found!"
+else
+    echo "❌ Direct match not found"
+fi
+
+# Test keyword matching
+echo "Testing keyword matching..."
+MATCH_FOUND=false
+for kw in "${KEYWORDS[@]}"; do
+    echo "Checking if '${BRANCH_NAME_LOWER}' contains '${kw}'"
     if [[ "${BRANCH_NAME_LOWER}" == *"${kw}"* ]]; then
-      echo "Match found: branch contains keyword '${kw}'"
-      MATCHED_KEYWORD="${kw}"
-      MATCH_FOUND=true
-      break
-    fi
-  done
-  
-  # Fallback check with normalized branch name
-  if [[ "$MATCH_FOUND" != "true" ]]; then
-    NORMALIZED_BRANCH=$(echo "${BRANCH_NAME_LOWER}" | tr -cd 'a-z0-9')
-    echo "Using normalized branch name for fallback check: ${NORMALIZED_BRANCH}"
-    
-    for kw in "${KEYWORDS[@]}"; do
-      NORMALIZED_KW=$(echo "${kw}" | tr -cd 'a-z0-9')
-      if [[ "${NORMALIZED_BRANCH}" == *"${NORMALIZED_KW}"* ]]; then
-        echo "Match found in normalized branch name: contains keyword '${kw}'"
-        MATCHED_KEYWORD="${kw} (normalized)"
+        echo "✅ Match found: branch contains keyword '${kw}'"
         MATCH_FOUND=true
         break
-      fi
-    done
-  fi
-  
-  # Output result
-  if [[ "$MATCH_FOUND" == "true" ]]; then
-    echo "RESULT: Branch contains formatting keywords: YES (matched: ${MATCHED_KEYWORD})"
-  else
-    echo "RESULT: Branch contains formatting keywords: NO"
-  fi
-  echo ""
+    fi
 done
+
+if [[ "$MATCH_FOUND" != "true" ]]; then
+    echo "❌ No keyword match found"
+fi
+
+# Test normalized matching
+echo "Testing normalized matching..."
+NORMALIZED_BRANCH=$(echo "${BRANCH_NAME_LOWER}" | tr -cd 'a-z0-9')
+echo "Normalized branch name: ${NORMALIZED_BRANCH}"
+MATCH_FOUND=false
+for kw in "${KEYWORDS[@]}"; do
+    NORMALIZED_KW=$(echo "${kw}" | tr -cd 'a-z0-9')
+    echo "Checking if normalized '${NORMALIZED_BRANCH}' contains '${NORMALIZED_KW}'"
+    if [[ "${NORMALIZED_BRANCH}" == *"${NORMALIZED_KW}"* ]]; then
+        echo "✅ Match found in normalized branch name: contains keyword '${kw}'"
+        MATCH_FOUND=true
+        break
+    fi
+done
+
+if [[ "$MATCH_FOUND" != "true" ]]; then
+    echo "❌ No normalized match found"
+fi
+
+# Test grep matching
+echo "Testing grep matching..."
+MATCH_FOUND=false
+for kw in "${KEYWORDS[@]}"; do
+    if echo "${BRANCH_NAME_LOWER}" | grep -q -F "${kw}"; then
+        echo "✅ Match found using grep: branch contains keyword '${kw}'"
+        MATCH_FOUND=true
+        break
+    fi
+done
+
+if [[ "$MATCH_FOUND" != "true" ]]; then
+    echo "❌ No grep match found"
+fi
