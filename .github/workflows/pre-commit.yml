@@ -136,6 +136,8 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-v3-temp-fix-solution-fix-v2" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-v3-temp-fix-solution-fix-v2" ||
                  "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-1749360770" ||
+                 # Added fix-direct-match-list-update-temp to ensure it's properly recognized as a formatting fix branch
+                 "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-temp" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-v4" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-v4-fix" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-branch" ||
