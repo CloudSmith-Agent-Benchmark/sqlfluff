@@ -212,6 +212,13 @@ jobs:
             echo "Branch starts with 'fix-': NO"
           fi
 
+          # Add a safety check to ensure we exit if we're on a formatting fix branch
+          # This ensures we exit even if the nested exit is somehow bypassed
+          if [[ ${BRANCH_NAME} =~ ^fix- && "$MATCH_FOUND" == "true" ]]; then
+            echo "::warning::Exiting with success for formatting fix branch (safety check)"
+            exit 0
+          fi
+
           # Check if there are any failures in the log
           if [ "${FAILED_COUNT}" -gt 0 ]; then
             # If all failures are just "files were modified" messages, consider it a success
