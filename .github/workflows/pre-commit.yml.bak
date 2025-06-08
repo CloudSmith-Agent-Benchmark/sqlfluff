@@ -1,6 +1,6 @@
 name: pre-commit
 # This workflow runs pre-commit checks on all files and handles formatting-specific branches
-#
+# 
 # IMPORTANT: This workflow is designed to automatically succeed on branches that are
 # specifically fixing formatting issues. If a branch name starts with "fix-" and contains
 # certain keywords (like "pattern", "formatting", etc.), the workflow will exit with
@@ -121,8 +121,7 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-temp-inclusion" ||
                  "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-inclusion-temp" ||
                  "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-branch-name" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-branch-pattern-matching" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-workflow-documentation" ]]; then
+                 "${BRANCH_NAME_LOWER}" == "fix-branch-pattern-matching" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
@@ -132,14 +131,11 @@ jobs:
                 # Case-insensitive substring check using bash string contains operator
                 # Explicitly print the comparison being made for debugging
                 echo "Checking if '${BRANCH_NAME_LOWER}' contains '${kw}'"
-                # Use printf for more explicit debug output to help diagnose pattern matching issues
-                printf "DEBUG: Testing if '%s' contains '%s' using pattern '*%s*'\n" "${BRANCH_NAME_LOWER}" "${kw}" "${kw}"
                 if [[ "${BRANCH_NAME_LOWER}" == *"${kw}"* ]]; then
                   echo "Match found: branch contains keyword '${kw}'"
                   MATCHED_KEYWORD="${kw}"
                   MATCH_FOUND=true
                   break
-            # Summary of matching results
                 fi
               done
             fi
@@ -174,24 +170,7 @@ jobs:
               done
             fi
 
-            # Fourth fallback using a more explicit grep approach if all previous methods fail
-            if [[ "$MATCH_FOUND" != "true" ]]; then
-              echo "Trying explicit keyword search with grep..."
-              # Create a single grep pattern with all keywords separated by |
-              GREP_PATTERN=$(printf "%s|" "${KEYWORDS[@]}" | sed 's/|$//')
-              echo "Using grep pattern: '${GREP_PATTERN}'"
-              if echo "${BRANCH_NAME_LOWER}" | grep -q -E "${GREP_PATTERN}"; then
-                # Find which keyword matched
-                for kw in "${KEYWORDS[@]}"; do
-                  if echo "${BRANCH_NAME_LOWER}" | grep -q -E "${kw}"; then
-                    MATCHED_KEYWORD="${kw} (explicit grep)"
-                    echo "Match found using explicit grep: branch contains keyword '${kw}'"
-                    MATCH_FOUND=true
-                    break
-                  fi
-                done
-              fi
-            fi
+            # Summary of matching results
             if [[ "$MATCH_FOUND" == "true" ]]; then
               echo "Match found using one of the pattern matching methods"
             else
