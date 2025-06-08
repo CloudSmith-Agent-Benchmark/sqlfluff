@@ -117,8 +117,9 @@ jobs:
               # Case-insensitive substring check using string contains operator instead of regex
               # This avoids issues with regex special characters in keywords
               echo "Checking if '${BRANCH_NAME_LOWER}' contains '${kw}'"
-              # Use a more explicit string comparison with fixed strings
-              if [[ "${BRANCH_NAME_LOWER}" =~ "${kw}" ]]; then
+              # Note: When using =~ operator, the pattern should NOT be quoted
+              # Using unquoted pattern to ensure proper regex matching
+              if [[ "${BRANCH_NAME_LOWER}" =~ ${kw} ]]; then
                 echo "Match found: branch contains keyword '${kw}'"
                 MATCHED_KEYWORD="${kw}"
                 MATCH_FOUND=true
@@ -135,7 +136,8 @@ jobs:
                 # Normalize keyword too for consistent comparison
                 NORMALIZED_KW=$(echo "${kw}" | tr -cd 'a-z0-9')
                 echo "Checking if normalized '${NORMALIZED_BRANCH}' contains '${NORMALIZED_KW}'"
-                if [[ "${NORMALIZED_BRANCH}" =~ "${NORMALIZED_KW}" ]]; then
+                # Note: When using =~ operator, the pattern should NOT be quoted
+                if [[ "${NORMALIZED_BRANCH}" =~ ${NORMALIZED_KW} ]]; then
                   echo "Match found in normalized branch name: contains keyword '${kw}'"
                   MATCHED_KEYWORD="${kw} (normalized)"
                   MATCH_FOUND=true
