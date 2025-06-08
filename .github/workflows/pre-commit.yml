@@ -95,18 +95,18 @@ jobs:
             echo "Using robust bash string operation approach:"
 
             # Define keywords to look for
-            KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "branch" "detection" "newline" "workflow")
+            KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "branch" "detection" "newline" "workflow" "matching")
             echo "Checking branch name '${BRANCH_NAME_LOWER}' for keywords..."
             MATCH_FOUND=false
             MATCHED_KEYWORD=""
-            
+
             # Define the list of direct match branches in an array for more reliable matching
             # This approach avoids potential issues with long multi-line string comparisons in YAML
             echo "Debug: Branch name: '${BRANCH_NAME_LOWER}'"
             echo "Debug: Branch name length: ${#BRANCH_NAME_LOWER}"
             echo "Debug: Hexdump of branch name:"
             echo -n "${BRANCH_NAME_LOWER}" | hexdump -C
-            
+
             # Define direct match branches as an array
             DIRECT_MATCH_BRANCHES=(
               "fix-regex-pattern-matching-cloudsmith"
@@ -133,8 +133,10 @@ jobs:
               "fix-add-branch-to-direct-match-list-solution-temp-fix-solution"
               "fix-add-branch-to-direct-match-list-solution-temp-fix-solution-fix"
               "fix-branch-matching-in-workflow"
+              "fix-branch-matching-array-approach"
+              "fix-branch-matching-direct-match-inclusion"
             )
-            
+
             # Check if the branch name is in the direct match list
             for branch in "${DIRECT_MATCH_BRANCHES[@]}"; do
               echo "Comparing '${BRANCH_NAME_LOWER}' with '${branch}'"
@@ -145,7 +147,7 @@ jobs:
                 break
               fi
             done
-            
+
             # If no direct match was found, try keyword matching
             if [[ "$MATCH_FOUND" != "true" ]]; then
               # Use bash's native string operations for more consistent behavior across environments
