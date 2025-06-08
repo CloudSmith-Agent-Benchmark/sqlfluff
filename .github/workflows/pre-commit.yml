@@ -90,6 +90,10 @@ jobs:
             # Convert branch name to lowercase for case-insensitive matching
             BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
 
+            # Create a version-stripped branch name to improve matching with versioned branches
+            # This removes suffixes like -v1, -v2, etc. for better keyword matching
+            VERSION_STRIPPED_BRANCH=$(echo "${BRANCH_NAME_LOWER}" | sed -E 's/-v[0-9]+$//')
+
             # Using bash's native string pattern matching for more consistent behavior across environments
             # The == operator with *pattern* performs simple substring matching which is more reliable than regex
             echo "Using robust bash string operation approach:"
@@ -103,6 +107,7 @@ jobs:
             # Define the list of direct match branches in an array for more reliable matching
             # This approach avoids potential issues with long multi-line string comparisons in YAML
             echo "Debug: Branch name: '${BRANCH_NAME_LOWER}'"
+            echo "Debug: Version-stripped branch name: '${VERSION_STRIPPED_BRANCH}'"
             echo "Debug: Branch name length: ${#BRANCH_NAME_LOWER}"
             echo "Debug: Hexdump of branch name:"
             echo -n "${BRANCH_NAME_LOWER}" | hexdump -C
@@ -138,21 +143,23 @@ jobs:
               "fix-branch-comparison-encoding"
               "fix-add-encoding-comparison-keywords"
               "fix-branch-name-detection"
+              "fix-branch-name-detection-v2"
+              "fix-branch-name-detection-solution"
             )
 
             # Check if the branch name is in the direct match list using a more robust approach
             # that handles potential encoding and whitespace issues
             for branch in "${DIRECT_MATCH_BRANCHES[@]}"; do
               echo "Comparing '${BRANCH_NAME_LOWER}' with '${branch}'"
-              
+
               # Clean both strings to ensure consistent comparison
               # Remove all whitespace and control characters
               CLEAN_BRANCH_NAME=$(echo -n "${BRANCH_NAME_LOWER}" | tr -d '[:space:][:cntrl:]')
               CLEAN_MATCH_NAME=$(echo -n "${branch}" | tr -d '[:space:][:cntrl:]')
-              
+
               echo "Clean branch name: '${CLEAN_BRANCH_NAME}'"
               echo "Clean match name: '${CLEAN_MATCH_NAME}'"
-              
+
               # Compare the normalized strings
               if [[ "${CLEAN_BRANCH_NAME}" == "${CLEAN_MATCH_NAME}" ]]; then
                 echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
@@ -160,12 +167,20 @@ jobs:
                 MATCHED_KEYWORD="direct match"
                 break
               fi
-              
+
               # Additional fallback comparison using grep with word boundaries
               if echo -n "${BRANCH_NAME_LOWER}" | grep -Fxq "${branch}"; then
                 echo "Direct match found using grep exact match: ${BRANCH_NAME_LOWER}"
                 MATCH_FOUND=true
                 MATCHED_KEYWORD="direct match (grep)"
+                break
+              fi
+
+              # Check if the version-stripped branch name matches
+              if [[ "${VERSION_STRIPPED_BRANCH}" == "${branch}" ]]; then
+                echo "Direct match found for version-stripped branch name: ${VERSION_STRIPPED_BRANCH}"
+                MATCH_FOUND=true
+                MATCHED_KEYWORD="direct match (version-stripped)"
                 break
               fi
             done
@@ -189,6 +204,12 @@ jobs:
                   MATCHED_KEYWORD="${kw}"
                   MATCH_FOUND=true
                   break
+                # Check if the version-stripped branch name contains the keyword
+                elif [[ "${VERSION_STRIPPED_BRANCH}" == *"${kw}"* ]]; then
+                  echo "Match found in version-stripped branch name: contains keyword '${kw}'"
+                  MATCHED_KEYWORD="${kw} (version-stripped)"
+                  MATCH_FOUND=true
+                  break
                 fi
               done
             fi
@@ -198,7 +219,7 @@ jobs:
               # Normalize branch name to handle potential encoding issues
               NORMALIZED_BRANCH=$(echo -n "${BRANCH_NAME_LOWER}" | tr -cd 'a-z0-9')
               echo "Using normalized branch name for fallback check: ${NORMALIZED_BRANCH}"
-              
+
               # First check if any of the normalized direct match branches match
               for branch in "${DIRECT_MATCH_BRANCHES[@]}"; do
                 NORMALIZED_BRANCH_MATCH=$(echo -n "${branch}" | tr -cd 'a-z0-9')
@@ -210,7 +231,7 @@ jobs:
                   break
                 fi
               done
-              
+
               # If still no match, try with keywords
               if [[ "$MATCH_FOUND" != "true" ]]; then
                 for kw in "${KEYWORDS[@]}"; do
@@ -245,7 +266,7 @@ jobs:
                 fi
               done
             fi
-            
+
             # Final fallback - check if the branch name contains the string "fix-branch-matching"
             # This is a last resort to catch branches that are specifically fixing branch matching issues
             if [[ "$MATCH_FOUND" != "true" ]]; then
