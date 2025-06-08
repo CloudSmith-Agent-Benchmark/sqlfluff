@@ -182,7 +182,9 @@ jobs:
                  # Added fix-branch-matching-logic to the direct match list to fix the issue with branch keyword matching
                  "${BRANCH_NAME_LOWER}" == "fix-branch-matching-logic" ||
                  # Added fix-branch-matching-logic-solution to the direct match list to fix the issue with branch keyword matching
-                 "${BRANCH_NAME_LOWER}" == "fix-branch-matching-logic-solution" ]]; then
+                 "${BRANCH_NAME_LOWER}" == "fix-branch-matching-logic-solution" ||
+                 # Added fix-branch-matching-logic-solution-fix to the direct match list to fix the issue with branch keyword matching
+                 "${BRANCH_NAME_LOWER}" == "fix-branch-matching-logic-solution-fix" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
