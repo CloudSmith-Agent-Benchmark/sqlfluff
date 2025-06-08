@@ -4,6 +4,7 @@ name: pre-commit
 # for more consistent behavior across different environments (local vs GitHub Actions)
 # Added direct branch name matching for known formatting fix branches
 # Updated to use both string pattern matching and regex for better keyword detection
+# Fixed issue with generic "branch" keyword causing false positives in branch name matching
 on:
   pull_request:
   push:
