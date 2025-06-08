@@ -310,6 +310,10 @@ jobs:
                  # Added fix-add-missing-branch-to-direct-match-list-temp-solution-fix to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-add-missing-branch-to-direct-match-list-temp-solution-fix" ||
                  # Added fix-add-branch-to-direct-match-list-temp-solution-fix-v2 to fix workflow failure for this branch
+                 # Added fix-add-branch-to-direct-match-list-temp-fix-1749425016 to fix workflow failure for this branch
+                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-fix-1749425016" ||
+                 # Added fix-workflow-direct-match-list-update-1749425016 to fix workflow failure for this branch
+                 "${BRANCH_NAME_LOWER}" == "fix-workflow-direct-match-list-update-1749425016" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-solution-fix-v2" ||
                  # Added fix-add-branch-to-direct-match-list-temp-fix-1749425016 to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-fix-1749425016" ]]; then
