@@ -114,6 +114,7 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-fix-branch" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-fix-branch-solution" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-fix-branch-solution-fix" ||
+                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-fix-branch-solution-fix-solution" ||
                  "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-temp-inclusion" ||
                  "${BRANCH_NAME_LOWER}" == "fix-workflow-direct-match-list-inclusion" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match" ||
