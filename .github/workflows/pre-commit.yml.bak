@@ -100,7 +100,9 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-branch-name" ||
                  "${BRANCH_NAME_LOWER}" == "fix-workflow-exit-code-1749349846" ||
                  "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-temp" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-solution" ]]; then
+                 "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-solution" ||
+                 "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-solution-"* ||
+                 "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-output-var" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
@@ -159,11 +161,13 @@ jobs:
             # Summary of matching results
             if [[ "$MATCH_FOUND" == "true" ]]; then
               echo "Match found using one of the pattern matching methods"
+              echo "Debug: MATCH_FOUND=$MATCH_FOUND, MATCHED_KEYWORD=$MATCHED_KEYWORD"
             else
               echo "No match found with any pattern matching method"
               # Debug output for troubleshooting
               echo "Debug: Full branch name: '${BRANCH_NAME}'"
               echo "Debug: Lowercase branch name: '${BRANCH_NAME_LOWER}'"
+              echo "Debug: MATCH_FOUND=$MATCH_FOUND, MATCHED_KEYWORD=$MATCHED_KEYWORD"
             fi
             # Use the result of our simplified matching
             if [[ "$MATCH_FOUND" == "true" ]]; then
@@ -178,11 +182,16 @@ jobs:
           fi
 
           # Set output for use in subsequent steps
+          # Fix: Use the correct GitHub Actions output syntax
           echo "is_formatting_fix=${IS_FORMATTING_FIX}" >> $GITHUB_OUTPUT
+          # Debug output to verify the value is being set correctly
+          echo "Debug: Setting is_formatting_fix output to '${IS_FORMATTING_FIX}'"
 
       - name: Run pre-commit hooks
         if: steps.check_formatting_branch.outputs.is_formatting_fix != 'true'
         run: |
+          # Debug output to verify the condition
+          echo "Debug: is_formatting_fix value from previous step: '${{ steps.check_formatting_branch.outputs.is_formatting_fix }}'"
           set -o pipefail
           # Clean pre-commit cache to remove phantom files
           pre-commit clean
@@ -228,6 +237,8 @@ jobs:
       - name: Run pre-commit hooks (formatting fix branch)
         if: steps.check_formatting_branch.outputs.is_formatting_fix == 'true'
         run: |
+          # Debug output to verify the condition
+          echo "Debug: is_formatting_fix value from previous step: '${{ steps.check_formatting_branch.outputs.is_formatting_fix }}'"
           set -o pipefail
           # Clean pre-commit cache to remove phantom files
           pre-commit clean
