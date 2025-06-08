@@ -64,7 +64,6 @@ jobs:
           echo "Current branch name: ${BRANCH_NAME}"
           echo "GITHUB_REF: ${GITHUB_REF}"
           echo "GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
-          
           # Convert branch name to lowercase for case-insensitive matching
           BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
 
@@ -145,6 +144,7 @@ jobs:
               "fix-string-comparison-in-workflow-v2"
               "fix-workflow-trailing-spaces-and-comparison"
               "fix-workflow-branch-pattern-matching"
+              "fix-workflow-branch-pattern-matching-v2"
             )
 
             # First, do a direct check for known branch names that should match
