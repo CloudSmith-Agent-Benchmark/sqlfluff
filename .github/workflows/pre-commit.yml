@@ -191,6 +191,8 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-fix-1749384114" ||
                  # Added fix-direct-match-list-update-1749384114 to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-1749384114" ||
+                 # Added fix-direct-match-list-update-1749404957 to fix workflow failure for this branch
+                 "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-1749404957" ||
                  # Added fix-add-branch-to-direct-match-list-solution-timestamp to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-timestamp" ||
                  # Added fix-add-branch-to-direct-match-list-timestamp-fix to fix workflow failure for this branch
