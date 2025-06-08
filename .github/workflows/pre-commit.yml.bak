@@ -178,7 +178,7 @@ jobs:
             
             # If still no match, proceed with keyword matching
             if [[ "$MATCH_FOUND" != "true" ]]
-            then
+            else
               # Use bash's native string operations for more consistent behavior across environments
               for kw in "${KEYWORDS[@]}"; do
                 # Case-insensitive substring check using bash string contains operator
