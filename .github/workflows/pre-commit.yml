@@ -113,6 +113,7 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-inclusion" ||
+                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-inclusion-v2" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-inclusion-fix" ||
                  "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-temp-inclusion" ||
                  "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-inclusion" ||
