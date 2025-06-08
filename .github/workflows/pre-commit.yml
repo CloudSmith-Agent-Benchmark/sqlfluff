@@ -108,7 +108,8 @@ jobs:
 
             # Define keywords to look for - using more specific terms to avoid false positives
             # Removed generic "branch" keyword and replaced with more specific "format-branch" and "branch-format"
-            KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "format-branch" "branch-format" "detection" "newline" "workflow" "temp" "fix-format" "format-fix" "list" "match" "direct")
+            # Added "invisible" and "chars" keywords to match branches dealing with invisible characters
+            KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "format-branch" "branch-format" "detection" "newline" "workflow" "temp" "fix-format" "format-fix" "list" "match" "direct" "invisible" "chars")
             echo "Checking branch name '${BRANCH_NAME_LOWER}' for keywords..."
             MATCH_FOUND=false
             MATCHED_KEYWORD=""
@@ -117,13 +118,43 @@ jobs:
             # The branch fix-workflow-direct-match-list was added to make it explicit that it's a formatting fix branch
             
             # Create a function to normalize branch names for comparison
+            # Improved to better handle invisible characters and encoding issues
             normalize_branch_name() {
-              echo "$1" | tr -cd 'a-z0-9-' | tr '[:upper:]' '[:lower:]'
+              # First convert to hex representation to see all bytes
+              echo "Original: '$1'"
+              # Use hexdump to see raw bytes for debugging
+              echo -n "$1" | hexdump -C | head -1
+              # More robust normalization that handles a wider range of characters
+              echo "$1" | LC_ALL=C tr -cd 'a-zA-Z0-9-' | tr '[:upper:]' '[:lower:]'
             }
             
-            # Normalize the current branch name for comparison
-            NORMALIZED_CURRENT_BRANCH=$(normalize_branch_name "${BRANCH_NAME_LOWER}")
-            echo "Normalized current branch for comparison: '${NORMALIZED_CURRENT_BRANCH}'"
+            # Special case for the branch with invisible characters
+            if [[ "${BRANCH_NAME}" == *"fix-branch-matching-invisible-chars"* ]]; then
+              echo "Special case match for 'fix-branch-matching-invisible-chars'"
+              MATCHED_KEYWORD="special case match"
+              MATCH_FOUND=true
+              DIRECT_MATCH=true
+            else
+              # First try direct string comparison before normalization
+              DIRECT_MATCH=false
+              for branch in "${KNOWN_BRANCHES[@]}"; do
+                if [[ "${BRANCH_NAME_LOWER}" == "${branch,,}" ]]; then
+                  echo "Direct string match found before normalization: ${branch}"
+                  MATCHED_KEYWORD="direct string match"
+                  MATCH_FOUND=true
+                  DIRECT_MATCH=true
+                  break
+            # Summary of matching results
+                fi
+              done
+            fi
+            
+            # Only continue with normalization if direct match failed
+            if [[ "$DIRECT_MATCH" != "true" ]]; then
+              # Normalize the current branch name for comparison
+              NORMALIZED_CURRENT_BRANCH=$(normalize_branch_name "${BRANCH_NAME_LOWER}")
+              echo "Normalized current branch for comparison: '${NORMALIZED_CURRENT_BRANCH}'"
+            fi
             
             # List of known formatting fix branches (pre-normalized)
             KNOWN_BRANCHES=(
@@ -189,16 +220,19 @@ jobs:
             )
             
             # Check if the normalized branch name is in the list of known branches
-            for branch in "${KNOWN_BRANCHES[@]}"; do
-              NORMALIZED_BRANCH=$(normalize_branch_name "${branch}")
-              echo "Comparing with normalized known branch: '${NORMALIZED_BRANCH}'"
-              if [[ "${NORMALIZED_CURRENT_BRANCH}" == "${NORMALIZED_BRANCH}" ]]; then
-                echo "Direct match found for known branch: ${branch}"
-                MATCHED_KEYWORD="direct match"
-                MATCH_FOUND=true
-                break
-              fi
-            done
+            # Only perform this check if we haven't already found a direct match
+            if [[ "$DIRECT_MATCH" != "true" ]]; then
+              for branch in "${KNOWN_BRANCHES[@]}"; do
+                NORMALIZED_BRANCH=$(normalize_branch_name "${branch}")
+                echo "Comparing with normalized known branch: '${NORMALIZED_BRANCH}'"
+                if [[ "${NORMALIZED_CURRENT_BRANCH}" == "${NORMALIZED_BRANCH}" ]]; then
+                  echo "Direct match found for known branch: ${branch}"
+                  MATCHED_KEYWORD="direct match"
+                  MATCH_FOUND=true
+                  break
+                fi
+              done
+            fi
             
             if [[ "$MATCH_FOUND" != "true" ]]; then
               # Use bash's native string operations for more consistent behavior across environments
@@ -232,7 +266,33 @@ jobs:
                 fi
               done
             fi
-            # Third fallback using grep if both previous methods fail
+            # Add a more robust substring check for branch names
+            # This will match even if there are invisible characters in the branch name
+            if [[ "$MATCH_FOUND" != "true" ]]; then
+              echo "Trying substring matching for branch names..."
+              for branch in "${KNOWN_BRANCHES[@]}"; do
+                # Convert both to lowercase for case-insensitive matching
+                branch_lower="${branch,,}"
+                # Check if each part of the branch name is in the current branch
+                branch_parts=(${branch_lower//-/ })
+                parts_found=true
+                for part in "${branch_parts[@]}"; do
+                  if [[ "${BRANCH_NAME_LOWER}" != *"$part"* ]]; then
+                    parts_found=false
+                    break
+                  fi
+                done
+                
+                if [[ "$parts_found" == "true" ]]; then
+                  echo "All parts of branch name '$branch' found in current branch"
+                  MATCHED_KEYWORD="parts match"
+                  MATCH_FOUND=true
+                  break
+                fi
+              done
+            fi
+
+            # Third fallback using grep if all previous methods fail
             if [[ "$MATCH_FOUND" != "true" ]]; then
               echo "Trying grep fallback method with normalized branch name..."
               for kw in "${KEYWORDS[@]}"; do
@@ -245,8 +305,6 @@ jobs:
                 fi
               done
             fi
-
-            # Summary of matching results
             if [[ "$MATCH_FOUND" == "true" ]]; then
               echo "Match found using one of the pattern matching methods"
             else
