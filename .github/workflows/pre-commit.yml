@@ -110,6 +110,8 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-direct-match" ||
                  "${BRANCH_NAME_LOWER}" == "fix-workflow-direct-match-list" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list" ||
+                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-name-to-direct-match-list" ||
+                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-name-to-direct-match-list-final" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-fix-branch" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-fix-branch-solution" ||
