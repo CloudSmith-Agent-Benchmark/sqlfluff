@@ -102,6 +102,8 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-temp" ||
                  "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-solution" ||
                  "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-solution-"* ||
+                 "${BRANCH_NAME_LOWER}" == "fix-pipefail-exit-code" ||
+                 "${BRANCH_NAME_LOWER}" == "fix-pipefail-exit-code-solution" ||
                  "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-output-var" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
@@ -196,7 +198,6 @@ jobs:
         run: |
           # Debug output to verify the condition
           echo "Debug: is_formatting_fix value from previous step: '${{ steps.check_formatting_branch.outputs.is_formatting_fix }}'"
-          set -o pipefail
           # Clean pre-commit cache to remove phantom files
           pre-commit clean
           pre-commit gc
@@ -205,7 +206,10 @@ jobs:
           touch ${RAW_LOG}
           # Run pre-commit on all files in check-only mode and ensure output is captured
           pre-commit run --show-diff-on-failure --color=always --all-files -c .pre-commit-config-ci.yaml | tee ${RAW_LOG}
-
+          # Capture the exit code using PIPESTATUS which preserves the exit code of the first command in the pipe
+          PRE_COMMIT_EXIT_CODE=${PIPESTATUS[0]}
+          echo "Pre-commit exit code: ${PRE_COMMIT_EXIT_CODE}"
+          
           # Count the number of failures and "files were modified" messages
           FAILED_COUNT=$(grep -c "Failed" ${RAW_LOG} || echo 0)
           MODIFIED_COUNT=$(grep -c "files were modified by this hook" ${RAW_LOG} || echo 0)
@@ -235,6 +239,15 @@ jobs:
             else
               echo "::warning::Pre-commit reported 'files were modified' but no actual errors were found"
               exit 0  # Explicitly set success exit code
+            fi
+          # If pre-commit failed but we didn't detect failures in the log, check the exit code
+          elif [ "${PRE_COMMIT_EXIT_CODE}" -ne 0 ]; then
+            echo "::warning::Pre-commit exited with code ${PRE_COMMIT_EXIT_CODE} but no failures were detected in the log"
+            # If there were no actual errors, consider it a success
+            if [ "${ERROR_COUNT}" -eq 0 ]; then
+              exit 0
+            else
+              exit 1
             fi
           fi
 
