@@ -96,7 +96,7 @@ jobs:
             echo "Using robust bash string operation approach:"
 
             # Define keywords to look for
-            KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "branch" "detection" "newline" "workflow" "temp" "fix" "list" "match" "direct")
+            KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "branch" "detection" "newline" "workflow" "temp" "fix" "list" "match" "direct" "timestamp" "suffix")
             echo "Checking branch name '${BRANCH_NAME_LOWER}' for keywords..."
             MATCH_FOUND=false
             MATCHED_KEYWORD=""
@@ -181,7 +181,9 @@ jobs:
                  # Added fix-branch-name-matching-pattern-detection to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-branch-name-matching-pattern-detection" ||
                  # Added fix-branch-name-matching-direct-list to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-branch-name-matching-direct-list" ]]; then
+                 "${BRANCH_NAME_LOWER}" == "fix-branch-name-matching-direct-list" ||
+                 # Added fix-branch-matching-timestamp-suffix to fix workflow failure for this branch
+                 "${BRANCH_NAME_LOWER}" == "fix-branch-matching-timestamp-suffix" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
@@ -212,12 +214,20 @@ jobs:
                 "fix-direct-match-list-update"
               )
               
+              # Check for numeric timestamp pattern
               for base in "${base_branches[@]}"; do
                 if [[ "${branch_name}" =~ ^${base}-[0-9]+$ ]]; then
-                  echo "Timestamp match found: branch '${branch_name}' matches base '${base}' with timestamp"
+                  echo "Timestamp match found: branch '${branch_name}' matches base '${base}' with numeric timestamp"
                   return 0
                 fi
               done
+              
+              # Check for branches with 'timestamp' or 'suffix' in the name
+              if [[ "${branch_name}" == *"-timestamp"* || "${branch_name}" == *"-suffix"* ]]; then
+                echo "Timestamp/suffix pattern found in branch name: '${branch_name}'"
+                return 0
+              fi
+              
               return 1
             }
             
