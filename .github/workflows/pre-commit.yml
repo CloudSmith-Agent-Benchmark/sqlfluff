@@ -259,6 +259,8 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-add-missing-branch-to-direct-match-list" ||
                  # Added fix-add-missing-branch-to-direct-match-list-fix to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-add-missing-branch-to-direct-match-list-fix" ||
+                 # Added fix-add-missing-branch-to-direct-match-list-temp to fix workflow failure for this branch
+                 "${BRANCH_NAME_LOWER}" == "fix-add-missing-branch-to-direct-match-list-temp" ||
                  # Added fix-add-branch-to-direct-match-list-temp-fix-1749406812 to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-fix-1749406812" ||
                  # Added fix-add-branch-to-direct-match-list-temp-fix-1749406812-solution to fix workflow failure for this branch
