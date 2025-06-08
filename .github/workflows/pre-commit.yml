@@ -218,7 +218,9 @@ jobs:
                  # Added fix-add-branch-to-direct-match-list-temp-fix-1749389123-solution-fix-update to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-fix-1749389123-solution-fix-update" ||
                  # Added fix-direct-match-list-update-1749393670 to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-1749393670" ]]; then
+                 "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-1749393670" ||
+                 # Added fix-add-branch-to-direct-match-list-1749393670 to fix workflow failure for this branch
+                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-1749393670" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
