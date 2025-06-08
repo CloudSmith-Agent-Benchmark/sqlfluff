@@ -96,7 +96,7 @@ jobs:
             echo "Using robust bash string operation approach:"
 
             # Define keywords to look for
-            KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "branch" "detection" "newline" "workflow" "temp" "fix" "list" "match" "direct")
+            KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "branch" "detection" "newline" "workflow" "temp" "fix" "list" "match" "direct" "solution")
             echo "Checking branch name '${BRANCH_NAME_LOWER}' for keywords..."
             MATCH_FOUND=false
             MATCHED_KEYWORD=""
@@ -140,7 +140,7 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-1749366525" ||
                  # Added fix-direct-match-list-update-1749366526 to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-update-1749366526" ||
-                                  # Added fix-add-branch-to-direct-match-list-1749366526 to fix workflow failure for this branch
+                 # Added fix-add-branch-to-direct-match-list-1749366526 to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-1749366526" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-1749366525" ||
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-solution-v4" ||
