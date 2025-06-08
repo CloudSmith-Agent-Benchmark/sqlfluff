@@ -196,6 +196,16 @@ To run pre-commit in check-only mode (like CI):
 pre-commit run --all-files --config .pre-commit-config-ci.yaml
 ```
 
+## Local Workflow Validation
+
+To validate GitHub Actions workflows locally before pushing changes:
+
+1. Install the `act` tool by following instructions in `docs/local-workflow-validation.md`
+2. Or use our helper script: `./scripts/setup-act.sh`
+3. Run the workflow: `act -W .github/workflows/pre-commit.yml`
+
+This helps catch workflow issues early without needing to push to GitHub.
+
 # Sponsors
 
 <img src="images/datacoves.png" alt="Datacoves" width="150"/><br>
