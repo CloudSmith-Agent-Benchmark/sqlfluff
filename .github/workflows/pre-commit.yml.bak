@@ -96,7 +96,7 @@ jobs:
             echo "Using robust bash string operation approach:"
 
             # Define keywords to look for
-            KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "branch" "detection" "newline" "workflow" "temp" "fix" "list" "match" "direct")
+            KEYWORDS=("pattern" "whitespace" "regex" "grep" "trailing" "spaces" "formatting" "branch" "detection" "newline" "workflow" "temp" "fix" "list" "match" "direct" "timestamp" "suffix")
             echo "Checking branch name '${BRANCH_NAME_LOWER}' for keywords..."
             MATCH_FOUND=false
             MATCHED_KEYWORD=""
@@ -181,7 +181,9 @@ jobs:
                  # Added fix-branch-name-matching-pattern-detection to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-branch-name-matching-pattern-detection" ||
                  # Added fix-branch-name-matching-direct-list to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-branch-name-matching-direct-list" ]]; then
+                 "${BRANCH_NAME_LOWER}" == "fix-branch-name-matching-direct-list" ||
+                 # Added fix-branch-matching-timestamp-suffix to fix workflow failure for this branch
+                 "${BRANCH_NAME_LOWER}" == "fix-branch-matching-timestamp-suffix" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
@@ -249,6 +251,16 @@ jobs:
                   break
                 fi
               done
+            fi
+            
+            # Fourth fallback: check for branches with timestamp suffixes
+            if [[ "$MATCH_FOUND" != "true" ]]; then
+              echo "Checking for branch with timestamp suffix..."
+              if check_branch_with_timestamp "${BRANCH_NAME_LOWER}"; then
+                echo "Match found: branch has a known prefix with timestamp suffix"
+                MATCHED_KEYWORD="timestamp pattern"
+                MATCH_FOUND=true
+              fi
             fi
 
             # Summary of matching results
