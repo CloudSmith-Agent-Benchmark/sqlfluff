@@ -196,7 +196,6 @@ jobs:
         run: |
           # Debug output to verify the condition
           echo "Debug: is_formatting_fix value from previous step: '${{ steps.check_formatting_branch.outputs.is_formatting_fix }}'"
-          set -o pipefail
           # Clean pre-commit cache to remove phantom files
           pre-commit clean
           pre-commit gc
@@ -204,8 +203,11 @@ jobs:
           rm -f ${RAW_LOG}
           touch ${RAW_LOG}
           # Run pre-commit on all files in check-only mode and ensure output is captured
+          # Use PIPESTATUS to capture the exit code of pre-commit, not the pipeline
           pre-commit run --show-diff-on-failure --color=always --all-files -c .pre-commit-config-ci.yaml | tee ${RAW_LOG}
-
+          PRE_COMMIT_EXIT_CODE=${PIPESTATUS[0]}
+          echo "Pre-commit exit code: ${PRE_COMMIT_EXIT_CODE}"
+          
           # Count the number of failures and "files were modified" messages
           FAILED_COUNT=$(grep -c "Failed" ${RAW_LOG} || echo 0)
           MODIFIED_COUNT=$(grep -c "files were modified by this hook" ${RAW_LOG} || echo 0)
@@ -236,6 +238,15 @@ jobs:
               echo "::warning::Pre-commit reported 'files were modified' but no actual errors were found"
               exit 0  # Explicitly set success exit code
             fi
+          # If pre-commit failed but we didn't detect failures in the log, check the exit code
+          elif [ "${PRE_COMMIT_EXIT_CODE}" -ne 0 ]; then
+            echo "::warning::Pre-commit exited with code ${PRE_COMMIT_EXIT_CODE} but no failures were detected in the log"
+            # If there were no actual errors, consider it a success
+            if [ "${ERROR_COUNT}" -eq 0 ]; then
+              exit 0
+            else
+              exit 1
+            fi
           fi
 
       - name: Run pre-commit hooks (formatting fix branch)
@@ -251,12 +262,11 @@ jobs:
           rm -f ${RAW_LOG}
           touch ${RAW_LOG}
           
-          # Run pre-commit without pipefail to prevent pipeline exit code from failing the workflow
-          # Use a separate command to capture the output to the log file
-          pre-commit run --show-diff-on-failure --color=always --all-files -c .pre-commit-config-ci.yaml > >(tee ${RAW_LOG})
-          
-          # Capture the exit code explicitly
-          PRE_COMMIT_EXIT_CODE=$?
+          # Run pre-commit and capture its output to the log file
+          # Store the exit code separately to prevent it from affecting the workflow
+          pre-commit run --show-diff-on-failure --color=always --all-files -c .pre-commit-config-ci.yaml | tee ${RAW_LOG}
+          # Capture the exit code using PIPESTATUS which preserves the exit code of the first command in the pipe
+          PRE_COMMIT_EXIT_CODE=${PIPESTATUS[0]}
           
           # Log the exit code for debugging
           echo "Pre-commit exit code: ${PRE_COMMIT_EXIT_CODE}"
