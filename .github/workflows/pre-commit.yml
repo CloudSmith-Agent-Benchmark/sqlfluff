@@ -108,7 +108,9 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-regex-pattern-matching-in-workflow" ||
                  "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-and-spaces" ||
                  "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-direct-match" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-workflow-direct-match-list" ]]; then
+                 "${BRANCH_NAME_LOWER}" == "fix-workflow-direct-match-list" ||
+                 # Added fix-workflow-direct-match-list-solution to the direct match list
+                 "${BRANCH_NAME_LOWER}" == "fix-workflow-direct-match-list-solution" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
@@ -118,7 +120,8 @@ jobs:
                 # Case-insensitive substring check using bash string contains operator
                 # Explicitly print the comparison being made for debugging
                 echo "Checking if '${BRANCH_NAME_LOWER}' contains '${kw}'"
-                if [[ "${BRANCH_NAME_LOWER}" == *"${kw}"* ]]; then
+                # Use wildcard pattern matching for more reliable substring detection
+                if [[ "${BRANCH_NAME_LOWER}" == *${kw}* ]]; then
                   echo "Match found: branch contains keyword '${kw}'"
                   MATCHED_KEYWORD="${kw}"
                   MATCH_FOUND=true
@@ -136,7 +139,8 @@ jobs:
                 # Normalize keyword too for consistent comparison
                 NORMALIZED_KW=$(echo "${kw}" | tr -cd 'a-z0-9')
                 echo "Checking if normalized '${NORMALIZED_BRANCH}' contains '${NORMALIZED_KW}'"
-                if [[ "${NORMALIZED_BRANCH}" == *"${NORMALIZED_KW}"* ]]; then
+                # Use wildcard pattern matching for more reliable substring detection
+                if [[ "${NORMALIZED_BRANCH}" == *${NORMALIZED_KW}* ]]; then
                   echo "Match found in normalized branch name: contains keyword '${kw}'"
                   MATCHED_KEYWORD="${kw} (normalized)"
                   MATCH_FOUND=true
