@@ -134,8 +134,6 @@ jobs:
                 # Case-insensitive substring check using bash string contains operator
                 # Explicitly print the comparison being made for debugging
                 echo "Checking if '${BRANCH_NAME_LOWER}' contains '${kw}'"
-                # Add extra debug to show the exact comparison being made
-                echo "Debug: Testing [[ \"${BRANCH_NAME_LOWER}\" == *\"${kw}\"* ]]"
                 if [[ "${BRANCH_NAME_LOWER}" == *"${kw}"* ]]; then
                   echo "Match found: branch contains keyword '${kw}'"
                   MATCHED_KEYWORD="${kw}"
