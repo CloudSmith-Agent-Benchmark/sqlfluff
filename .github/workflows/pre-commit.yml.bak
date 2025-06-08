@@ -90,8 +90,8 @@ jobs:
             # Convert branch name to lowercase for case-insensitive matching
             BRANCH_NAME_LOWER=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]')
 
-            # Using a more robust approach with native bash string operations
-            # This avoids environment-specific issues with grep and character encoding
+            # Using bash's native string pattern matching for more consistent behavior across environments
+            # The == operator with *pattern* performs simple substring matching which is more reliable than regex
             echo "Using robust bash string operation approach:"
 
             # Define keywords to look for
