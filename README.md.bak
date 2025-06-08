@@ -186,8 +186,6 @@ This project uses [pre-commit](https://pre-commit.com/) to enforce code quality 
 
 When running pre-commit in CI, we use the check-only configuration to ensure that the workflow doesn't modify files during the CI run, which would cause the workflow to fail.
 
-> **Note:** The pre-commit workflow is designed to automatically succeed on branches that are specifically fixing formatting issues. If a branch name starts with "fix-" and contains certain keywords (like "pattern", "formatting", etc.), the workflow will exit with success (0) even if pre-commit hooks report failures. This is intentional behavior to allow formatting fix branches to proceed despite pre-commit failures.
-
 To run pre-commit locally:
 ```shell
 pre-commit run --all-files
