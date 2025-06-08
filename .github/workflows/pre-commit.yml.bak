@@ -100,16 +100,6 @@ jobs:
             echo "Checking branch name '${BRANCH_NAME_LOWER}' for keywords..."
             MATCH_FOUND=false
             MATCHED_KEYWORD=""
-            
-            # Check if the branch name contains a date suffix (YYYYMMDD format)
-            # This will help match formatting fix branches with date suffixes automatically
-            if [[ "${BRANCH_NAME_LOWER}" =~ ^fix-.*-[0-9]{8}$ ]]; then
-              echo "Branch appears to have a date suffix in YYYYMMDD format"
-              echo "Treating as a formatting fix branch"
-              MATCH_FOUND=true
-              MATCHED_KEYWORD="date-suffixed branch"
-            fi
-            
             # First, do a direct check for known branch names that should match
             # This ensures specific branches always pass regardless of pattern matching issues
             # The branch fix-workflow-direct-match-list was added to make it explicit that it's a formatting fix branch
