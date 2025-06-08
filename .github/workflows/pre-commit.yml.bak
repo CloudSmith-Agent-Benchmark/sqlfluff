@@ -109,7 +109,6 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-and-spaces" ||
                  "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-direct-match" ||
                  "${BRANCH_NAME_LOWER}" == "fix-workflow-direct-match-list" ||
-                 # Added fix-workflow-direct-match-list-solution to the direct match list
                  "${BRANCH_NAME_LOWER}" == "fix-workflow-direct-match-list-solution" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
