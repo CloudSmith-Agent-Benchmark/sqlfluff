@@ -250,7 +250,13 @@ jobs:
                  # Added fix-add-direct-match-entry-to-workflow-temp-solution-fix to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-add-direct-match-entry-to-workflow-temp-solution-fix" ||
                  # Added fix-add-direct-match-entry-to-workflow-temp-solution-fix-fix to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-add-direct-match-entry-to-workflow-temp-solution-fix-fix" ]]; then
+                 "${BRANCH_NAME_LOWER}" == "fix-add-direct-match-entry-to-workflow-temp-solution-fix-fix" ||
+                 # Added fix-add-direct-match-entry-to-workflow-temp-solution-fix-fix-solution to fix workflow failure for this branch
+                 "${BRANCH_NAME_LOWER}" == "fix-add-direct-match-entry-to-workflow-temp-solution-fix-fix-solution" ||
+                 # Re-added fix-add-direct-match-entry-to-workflow-temp-solution-fix-fix-solution with exact string matching to fix workflow failure
+                 "${BRANCH_NAME_LOWER}" == "fix-add-direct-match-entry-to-workflow-temp-solution-fix-fix-solution" ||
+                 # Added fix-add-direct-match-entry-to-workflow-temp-solution-fix-fix-solution-fix to fix workflow failure for this branch
+                 "${BRANCH_NAME_LOWER}" == "fix-add-direct-match-entry-to-workflow-temp-solution-fix-fix-solution-fix" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
