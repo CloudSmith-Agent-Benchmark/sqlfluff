@@ -243,20 +243,24 @@ jobs:
         run: |
           # Debug output to verify the condition
           echo "Debug: is_formatting_fix value from previous step: '${{ steps.check_formatting_branch.outputs.is_formatting_fix }}'"
-          set -o pipefail
           # Clean pre-commit cache to remove phantom files
           pre-commit clean
           pre-commit gc
           # Remove any existing log file and create a new empty one
           rm -f ${RAW_LOG}
           touch ${RAW_LOG}
-          # Run pre-commit on all files in check-only mode and ensure output is captured
+          
+          # Run pre-commit and capture its exit code without using pipefail
+          # This ensures the pipeline won't fail even if pre-commit returns non-zero
+          set +o pipefail
           pre-commit run --show-diff-on-failure --color=always --all-files -c .pre-commit-config-ci.yaml | tee ${RAW_LOG}
-
+          PRE_COMMIT_EXIT_CODE=${PIPESTATUS[0]}  # Capture the exit code of pre-commit
+          
+          # Log the exit code for debugging
+          echo "Pre-commit exit code: ${PRE_COMMIT_EXIT_CODE}"
+          
           # Log that we're skipping validation for formatting fix branch
           echo "::warning::Skipping pre-commit validation for formatting fix branch"
-          # Always exit with success for formatting fix branches regardless of pre-commit exit code
-          exit 0
           # Always exit with success for formatting fix branches regardless of pre-commit exit code
           exit 0
       - name: Convert Raw Log to Checkstyle format (launch action)
