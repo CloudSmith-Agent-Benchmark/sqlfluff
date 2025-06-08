@@ -100,7 +100,8 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-direct-match-list-branch-name" ||
                  "${BRANCH_NAME_LOWER}" == "fix-workflow-exit-code-1749349846" ||
                  "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-temp" ||
-                 "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-solution" ]]; then
+                 "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-solution" ||
+                 "${BRANCH_NAME_LOWER}" == "fix-workflow-pattern-matching-solution-"* ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
