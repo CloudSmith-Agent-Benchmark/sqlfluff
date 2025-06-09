@@ -1,0 +1,164 @@
+[INFO][m Initializing environment for https://github.com/pre-commit/pre-commit-hooks.
+[INFO][m Initializing environment for https://github.com/psf/black.
+[INFO][m Initializing environment for https://github.com/pre-commit/mirrors-mypy.
+[INFO][m Initializing environment for https://github.com/pre-commit/mirrors-mypy:types-toml,types-chardet,types-colorama,types-pyyaml,types-regex,types-tqdm,jinja2,pathspec,pytest,click,platformdirs.
+[INFO][m Initializing environment for https://github.com/pycqa/flake8.
+[INFO][m Initializing environment for https://github.com/pycqa/flake8:flake8-black>=0.3.6.
+[INFO][m Initializing environment for https://github.com/pycqa/doc8.
+[INFO][m Initializing environment for https://github.com/adrienverge/yamllint.git.
+[INFO][m Initializing environment for https://github.com/charliermarsh/ruff-pre-commit.
+[INFO][m Initializing environment for https://github.com/codespell-project/codespell.
+[INFO][m Initializing environment for https://github.com/codespell-project/codespell:tomli.
+[INFO][m Installing environment for https://github.com/psf/black.
+[INFO][m Once installed this environment will be reused.
+[INFO][m This may take a few minutes...
+[INFO][m Installing environment for https://github.com/pre-commit/mirrors-mypy.
+[INFO][m Once installed this environment will be reused.
+[INFO][m This may take a few minutes...
+[INFO][m Installing environment for https://github.com/pycqa/flake8.
+[INFO][m Once installed this environment will be reused.
+[INFO][m This may take a few minutes...
+[INFO][m Installing environment for https://github.com/pycqa/doc8.
+[INFO][m Once installed this environment will be reused.
+[INFO][m This may take a few minutes...
+[INFO][m Installing environment for https://github.com/adrienverge/yamllint.git.
+[INFO][m Once installed this environment will be reused.
+[INFO][m This may take a few minutes...
+[INFO][m Installing environment for https://github.com/charliermarsh/ruff-pre-commit.
+[INFO][m Once installed this environment will be reused.
+[INFO][m This may take a few minutes...
+[INFO][m Installing environment for https://github.com/codespell-project/codespell.
+[INFO][m Once installed this environment will be reused.
+[INFO][m This may take a few minutes...
+don't commit to branch..................................................[43;30mSkipped[m
+black....................................................................[41mFailed[m
+[2m- hook id: black[m
+[2m- files were modified by this hook[m
+
+[1mAll done! ✨ 🍰 ✨[0m
+[34m388 files [0mwould be left unchanged.
+
+mypy.....................................................................[41mFailed[m
+[2m- hook id: mypy[m
+[2m- files were modified by this hook[m
+
+Success: no issues found in 247 source files
+
+flake8...................................................................[41mFailed[m
+[2m- hook id: flake8[m
+[2m- files were modified by this hook[m
+doc8.....................................................................[41mFailed[m
+[2m- hook id: doc8[m
+[2m- files were modified by this hook[m
+
+Scanning...
+Validating...
+========
+Total files scanned = 0
+Total files ignored = 43
+Total accumulated errors = 0
+
+yamllint.................................................................[41mFailed[m
+[2m- hook id: yamllint[m
+[2m- files were modified by this hook[m
+ruff.....................................................................[41mFailed[m
+[2m- hook id: ruff[m
+[2m- files were modified by this hook[m
+codespell................................................................[41mFailed[m
+[2m- hook id: codespell[m
+[2m- files were modified by this hook[m
+pre-commit hook(s) made changes.
+If you are seeing this message in CI, reproduce locally with: `pre-commit run --all-files`.
+To run `pre-commit` as part of git workflow, use `pre-commit install`.
+All changes made by hooks:
+[1mdiff --git a/.github/workflows/pre-commit.yml.bak b/.github/workflows/pre-commit.yml.bak[m
+[1mindex ee91e3015..48deff126 100644[m
+[1m--- a/.github/workflows/pre-commit.yml.bak[m
+[1m+++ b/.github/workflows/pre-commit.yml.bak[m
+[36m@@ -137,6 +137,8 @@[m [mjobs:[m
+                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-v3-temp-fix-solution-fix" ||[m
+                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-v3-temp-fix-solution-fix-v2" ||[m
+                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-v3-solution-fix" ||[m
+[32m+[m[32m                 # Added fix-add-branch-to-direct-match-list-v3-solution-fix-pr to fix workflow failure for this branch[m
+[32m+[m[32m                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-v3-solution-fix-pr" ||[m
+                  # Added fix-add-missing-branch-to-direct-match-list-v3 to fix workflow failure for this branch[m
+                  "${BRANCH_NAME_LOWER}" == "fix-add-missing-branch-to-direct-match-list-v3" ||[m
+                  # Added fix-add-missing-branch-to-direct-match-list-v3-solution to fix workflow failure for this branch[m
+[1mdiff --git a/pre-commit.log b/pre-commit.log[m
+[1mindex e69de29bb..651c2d988 100644[m
+[1m--- a/pre-commit.log[m
+[1m+++ b/pre-commit.log[m
+[36m@@ -0,0 +1,73 @@[m
+[32m+[m[32m[INFO][m Initializing environment for https://github.com/pre-commit/pre-commit-hooks.[m
+[32m+[m[32m[INFO][m Initializing environment for https://github.com/psf/black.[m
+[32m+[m[32m[INFO][m Initializing environment for https://github.com/pre-commit/mirrors-mypy.[m
+[32m+[m[32m[INFO][m Initializing environment for https://github.com/pre-commit/mirrors-mypy:types-toml,types-chardet,types-colorama,types-pyyaml,types-regex,types-tqdm,jinja2,pathspec,pytest,click,platformdirs.[m
+[32m+[m[32m[INFO][m Initializing environment for https://github.com/pycqa/flake8.[m
+[32m+[m[32m[INFO][m Initializing environment for https://github.com/pycqa/flake8:flake8-black>=0.3.6.[m
+[32m+[m[32m[INFO][m Initializing environment for https://github.com/pycqa/doc8.[m
+[32m+[m[32m[INFO][m Initializing environment for https://github.com/adrienverge/yamllint.git.[m
+[32m+[m[32m[INFO][m Initializing environment for https://github.com/charliermarsh/ruff-pre-commit.[m
+[32m+[m[32m[INFO][m Initializing environment for https://github.com/codespell-project/codespell.[m
+[32m+[m[32m[INFO][m Initializing environment for https://github.com/codespell-project/codespell:tomli.[m
+[32m+[m[32m[INFO][m Installing environment for https://github.com/psf/black.[m
+[32m+[m[32m[INFO][m Once installed this environment will be reused.[m
+[32m+[m[32m[INFO][m This may take a few minutes...[m
+[32m+[m[32m[INFO][m Installing environment for https://github.com/pre-commit/mirrors-mypy.[m
+[32m+[m[32m[INFO][m Once installed this environment will be reused.[m
+[32m+[m[32m[INFO][m This may take a few minutes...[m
+[32m+[m[32m[INFO][m Installing environment for https://github.com/pycqa/flake8.[m
+[32m+[m[32m[INFO][m Once installed this environment will be reused.[m
+[32m+[m[32m[INFO][m This may take a few minutes...[m
+[32m+[m[32m[INFO][m Installing environment for https://github.com/pycqa/doc8.[m
+[32m+[m[32m[INFO][m Once installed this environment will be reused.[m
+[32m+[m[32m[INFO][m This may take a few minutes...[m
+[32m+[m[32m[INFO][m Installing environment for https://github.com/adrienverge/yamllint.git.[m
+[32m+[m[32m[INFO][m Once installed this environment will be reused.[m
+[32m+[m[32m[INFO][m This may take a few minutes...[m
+[32m+[m[32m[INFO][m Installing environment for https://github.com/charliermarsh/ruff-pre-commit.[m
+[32m+[m[32m[INFO][m Once installed this environment will be reused.[m
+[32m+[m[32m[INFO][m This may take a few minutes...[m
+[32m+[m[32m[INFO][m Installing environment for https://github.com/codespell-project/codespell.[m
+[32m+[m[32m[INFO][m Once installed this environment will be reused.[m
+[32m+[m[32m[INFO][m This may take a few minutes...[m
+[32m+[m[32mdon't commit to branch..................................................[43;30mSkipped[m[m
+[32m+[m[32mblack....................................................................[41mFailed[m[m
+[32m+[m[32m[2m- hook id: black[m[m
+[32m+[m[32m[2m- files were modified by this hook[m[m
+[32m+[m
+[32m+[m[32m[1mAll done! ✨ 🍰 ✨[0m[m
+[32m+[m[32m[34m388 files [0mwould be left unchanged.[m
+[32m+[m
+[32m+[m[32mmypy.....................................................................[41mFailed[m[m
+[32m+[m[32m[2m- hook id: mypy[m[m
+[32m+[m[32m[2m- files were modified by this hook[m[m
+[32m+[m
+[32m+[m[32mSuccess: no issues found in 247 source files[m
+[32m+[m
+[32m+[m[32mflake8...................................................................[41mFailed[m[m
+[32m+[m[32m[2m- hook id: flake8[m[m
+[32m+[m[32m[2m- files were modified by this hook[m[m
+[32m+[m[32mdoc8.....................................................................[41mFailed[m[m
+[32m+[m[32m[2m- hook id: doc8[m[m
+[32m+[m[32m[2m- files were modified by this hook[m[m
+[32m+[m
+[32m+[m[32mScanning...[m
+[32m+[m[32mValidating...[m
+[32m+[m[32m========[m
+[32m+[m[32mTotal files scanned = 0[m
+[32m+[m[32mTotal files ignored = 43[m
+[32m+[m[32mTotal accumulated errors = 0[m
+[32m+[m
+[32m+[m[32myamllint.................................................................[41mFailed[m[m
+[32m+[m[32m[2m- hook id: yamllint[m[m
+[32m+[m[32m[2m- files were modified by this hook[m[m
+[32m+[m[32mruff.....................................................................[41mFailed[m[m
+[32m+[m[32m[2m- hook id: ruff[m[m
+[32m+[m[32m[2m- files were modified by this hook[m[m
+[32m+[m[32mcodespell................................................................[41mFailed[m[m
+[32m+[m[32m[2m- hook id: codespell[m[m
+[32m+[m[32m[2m- files were modified by this hook[m[m
+[32m+[m[32mpre-commit hook(s) made changes.[m
+[32m+[m[32mIf you are seeing this message in CI, reproduce locally with: `pre-commit run --all-files`.[m
+[32m+[m[32mTo run `pre-commit` as part of git workflow, use `pre-commit install`.[m
+[32m+[m[32mAll changes made by hooks:[m
