@@ -350,9 +350,7 @@ jobs:
                  # Added fix-add-missing-branch-direct-match-temp-solution to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-add-missing-branch-direct-match-temp-solution" ||
                  # Added fix-add-missing-branch-direct-match-temp-solution-fix to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-add-missing-branch-direct-match-temp-solution-fix" ||
-                 # Added fix-add-missing-branch-direct-match-temp-solution-fix-branch to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-add-missing-branch-direct-match-temp-solution-fix-branch" ]]; then
+                 "${BRANCH_NAME_LOWER}" == "fix-add-missing-branch-direct-match-temp-solution-fix" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
