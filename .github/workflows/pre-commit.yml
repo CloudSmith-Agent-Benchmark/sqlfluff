@@ -362,7 +362,9 @@ jobs:
                  # Added fix-add-branch-to-direct-match-list-1749425016-temp-fix-solution-fix-update-fix-direct-match-fix-solution to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-1749425016-temp-fix-solution-fix-update-fix-direct-match-fix-solution" ||
                  # Added fix-add-branch-to-direct-match-list-1749425016-temp-fix-solution-fix-update-fix-direct-match-fix-solution-fix to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-1749425016-temp-fix-solution-fix-update-fix-direct-match-fix-solution-fix" ]]; then
+                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-1749425016-temp-fix-solution-fix-update-fix-direct-match-fix-solution-fix" ||
+                 # Added fix-add-branch-to-direct-match-list-direct-match-entry to fix workflow failure for this branch
+                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-direct-match-entry" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
