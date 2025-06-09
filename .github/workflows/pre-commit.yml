@@ -317,6 +317,8 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-fix-1749425016-solution" ||
                  # Added fix-add-branch-to-direct-match-list-1749425016-solution to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-1749425016-solution" ||
+                 # Added fix-add-branch-to-direct-match-list-1749425016-solution to fix workflow failure for this branch
+                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-1749425016-solution" ||
                  # Added fix-add-branch-to-direct-match-list-temp-fix-1749425016-solution-fix to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-temp-fix-1749425016-solution-fix" ||
                  # Added fix-direct-match-list-update-1749425016-solution-fix to fix workflow failure for this branch
