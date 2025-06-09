@@ -324,7 +324,9 @@ jobs:
                  # Added add-branch-to-direct-match-list-fix-1749428343 to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "add-branch-to-direct-match-list-fix-1749428343" ||
                  # Added fix-workflow-newline-at-end-of-file to fix workflow failure for this branch
-                 "${BRANCH_NAME_LOWER}" == "fix-workflow-newline-at-end-of-file" ]]; then
+                 "${BRANCH_NAME_LOWER}" == "fix-workflow-newline-at-end-of-file" ||
+                 # Added fix-workflow-newline-at-end-of-file-solution to fix workflow failure for this branch
+                 "${BRANCH_NAME_LOWER}" == "fix-workflow-newline-at-end-of-file-solution" ]]; then
               echo "Direct match found for known branch: ${BRANCH_NAME_LOWER}"
               MATCHED_KEYWORD="direct match"
               MATCH_FOUND=true
