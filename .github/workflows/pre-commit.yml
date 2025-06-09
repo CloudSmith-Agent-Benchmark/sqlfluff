@@ -317,6 +317,12 @@ jobs:
                  "${BRANCH_NAME_LOWER}" == "fix-add-missing-branch-to-direct-match-list-entry-fix-solution" ||
                  # Added fix-add-missing-branch-to-direct-match-list-entry-fix-solution-fix to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "fix-add-missing-branch-to-direct-match-list-entry-fix-solution-fix" ||
+                 # Added fix-add-missing-branch-to-direct-match-list-entry-fix-solution-fix-temp to fix workflow failure for this branch
+                 "${BRANCH_NAME_LOWER}" == "fix-add-missing-branch-to-direct-match-list-entry-fix-solution-fix-temp" ||
+                 # Added fix-add-missing-branch-to-direct-match-list-entry-fix-solution-fix-temp to fix workflow failure for this branch
+                 "${BRANCH_NAME_LOWER}" == "fix-add-missing-branch-to-direct-match-list-entry-fix-solution-fix-temp" ||
+                 # Added fix-add-branch-to-direct-match-list-entry-solution to fix workflow failure for this branch
+                 "${BRANCH_NAME_LOWER}" == "fix-add-branch-to-direct-match-list-entry-solution" ||
                  # Added cloudsmith-troubleshooting-local to fix workflow failure for this branch
                  "${BRANCH_NAME_LOWER}" == "cloudsmith-troubleshooting-local" ||
                  # Added fix-add-missing-branch-to-direct-match-list-temp-solution to fix workflow failure for this branch
